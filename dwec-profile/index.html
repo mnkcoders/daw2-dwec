@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <title>Jaume's Web Portfolio</title>
+
+        <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,800,900" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,300,400,600,700,900" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+        <link href="assets/style.css" rel="stylesheet" />
+        
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+        <!--script type="text/javascript" src="assets/script.js"></script-->
+    </head>
+    <body>
+        <nav class="top-menu">
+            <ul class="menu">
+                <li class="item icon-user">
+                    <a href="#section-profile" target="_self">Profile</a>
+                </li>
+                <li class="item icon-user">
+                    <a href="#section-interests" target="_self">Interests</a>
+                </li>
+                <li class="item icon-user">
+                    <a href="#section-cv" target="_self">C.V.</a>
+                </li>
+                <li class="item icon-user">
+                    <a href="#section-projects" target="_self">Portfolio</a>
+                </li>
+                <li class="item icon-envelope">
+                    <a href="#section-contact" target="_self">Contact Me</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="section" id="section-profile">
+            <h1 class="title">My Profile</h1>
+            <div class="content clear left">
+                <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        </div>
+        <div class="section clear" id="section-interests">
+            <h1 class="title">About Me</h1>
+            <div class="content clear right">
+                <p> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+        </div>
+        <div class="section" id="section-cv">
+            <h1 class="title">History / C.V.</h1>
+            <div class="content dark right">
+                <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>   
+        </div>
+        <div class="section" id="section-projects">
+            <h1 class="title">My PortFolio</h1>
+            <div class="content dark right">
+                <p> Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+            </div>
+        </div>
+        <div class="section" id="section-contact">
+            <h1 class="title">Contact Me</h1>
+            <div class="content full clear">
+                <form name="contact" method="post" action="index.html">
+                    <input type="text" name="name" placeholder="Your name" />
+                    <input type="email" name="email" placeholder="Your email" />
+                    <input type="tel" name="telephone" placeholder="Your telephone no." />
+                    <select name="contact_type">
+                        <option value="request">Request</option>
+                        <option value="partnership">Partnership</option>
+                        <option value="hire">Job</option>
+                    </select>
+                    <textarea name="message" placeholder="Your message"></textarea>
+                    <button name="action" value="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+        <footer class="branding">
+            <span class="owner">Jaume Llopis &copy; 2016</span>
+            <ul class="links">
+                <li><a href="mailto:jaume.llopis1@gmail.com" target="_self">jaume.llopis1@gmail.com</a></li>
+            </ul>
+        </footer>
+    </body>
+</html>

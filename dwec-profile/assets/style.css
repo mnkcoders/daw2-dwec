@@ -64,7 +64,7 @@ nav.top-menu{
     border-color: rgba(255,255,255,0.5);
 }
 .section input,.section select,.section textarea,.section button{
-    border-radius: 4px;
+    border-radius: 2px;
     box-sizing: border-box;
     padding: 10px 16px;
     text-transform: uppercase;
@@ -86,7 +86,7 @@ nav.top-menu{
     box-shadow: 1px 1px 4px rgba(0,0,0,0.25);
 }
 .section button{
-    border-radius: 4px;
+    border-radius: 2px;
     padding: 10px 16px;
     border: 2px solid  #fafafa;
     color: #fafafa;
@@ -103,6 +103,9 @@ nav.top-menu{
     text-shadow: none;
     box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
+.section > .content ul > li{
+    margin: 0 0 10px;
+}
 .section > .content ul{
     list-style-type: square;
     text-align: initial;
@@ -111,7 +114,7 @@ nav.top-menu{
     display: inline-block;
     padding: 20px;
     margin-bottom: 40px;
-    border-radius: 10px;
+    border-radius: 2px;
     box-sizing: border-box;
 
     text-align: justify;
@@ -279,7 +282,7 @@ nav.top-menu{
     nav.top-menu > ul.menu > li.item > a{
         display: block;
         padding: 40px 10px;
-        border-radius: 4px;
+        border-radius: 2px;
         text-transform: uppercase;
         font-weight: 200;
         color: #f5f5f5;

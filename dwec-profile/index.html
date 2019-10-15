@@ -8,7 +8,7 @@
 
         <link href="assets/style.css" rel="stylesheet" />
         
-        <!---->script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script-->
+        <!--script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script-->
 
         <!--script type="text/javascript" src="assets/script.js"></script-->
     </head>
@@ -21,7 +21,7 @@
                 <li class="item icon-user">
                     <a href="#section-interests" target="_self">Mi perfil</a>
                 </li>
-                <li class="item icon-building">
+                <li class="item icon-professional">
                     <a href="#section-cv" target="_self">Experiencia</a>
                 </li>
                 <li class="item icon-clipboard">
@@ -34,50 +34,52 @@
         </nav>
         <div class="section clear" id="section-profile">
             <h1 class="title">Bienvenid@</h1>
-            <div class="content clear left">
-                    Soy Jaume Llopis, programador, animador y 3d modeller, autónomo freelance con poco tiempo
+            <div class="container rounded boxed margin-lg centered">
+                <img class="image" src="media/foto-perfil.png" />
+            </div>
+            <div class="content bordered clear left">
+                    Soy Jaume Llopis, programador, animador y 3d modeller, aut&oacute;nomo freelance con poco tiempo
                     tiempo libre.
                     He trabajado en algunos proyectos web y en varias  empresas del sector.
         </div>
         </div>
         <div class="section dark" id="section-interests">
             <h1 class="title">Mi perfil</h1>
-            <div class="content clear right">
+            <div class="content clear right bordered">
                     <ul class="profile icon-cursor">
                             <li>
-                                <label>Jaume Llopis</label>
+                                <label class="icon icon-user">Jaume Llopis</label>
                             </li>
                             <li>
-                                <label>Web-CMS Dev</label>
+                                <label class="icon icon-code">Web-CMS Dev</label>
                             </li>
                             <li>
-                                <label>Designer</label>
+                                <label class="icon icon-design">Designer</label>
                             </li>
                             <li>
-                                <label>Animator & 3D Modeller</label>
+                                <label class="icon icon-3d">Animator & 3D Modeller</label>
                             </li>
                             <li>
-                                <label><a href="#">https://mywebsucks.com</a></label>
+                                <a class="icon icon-linkedin" href="https://www.linkedin.com/in/jaume-llopis-de-andres/">Mi Linked In</a>
+                            </li>
+                            <li>
+                                <a class="icon icon-website" href="https://mnkcoders.com">https://mnkcoders.com</a>
                             </li>
                         </ul>
             </div>
         </div>
         <div class="section clear" id="section-cv">
             <h1 class="title">Historial y C.V.</h1>
-            <div class="content dark right">
-                <ul class="history"> 
-                    <li><i>2014 - 2018</i> - WEB-CMS Developer at bestwebddevs.com</li>
-                    <li><i>2010 - 2014</i> - Senior IT admin consultor at bestbusiness.com</li>
-                    <li><i>2008 - 2010</i> - CRM developer and integrator at wesellboats.com</li>
-                </ul>
-            </div>   
+            <div class="content bordered dark right icon icon-professional icon-large"><i>2014 - 2018</i><hr/> WEB-CMS Developer at bestwebddevs.com</div>
+            <div class="content bordered dark right icon icon-professional icon-large"><i>2010 - 2014</i><hr/> Senior IT admin consultor at bestbusiness.com</div>
+            <div class="content bordered dark right icon icon-professional icon-large"><i>2008 - 2010</i><hr/> CRM developer and integrator at wesellboats.com</div>
         </div>
         <div class="section" id="section-projects">
             <h1 class="title">Proyectos</h1>
-            <a class="content dark full" target="_blank" href="https://fastbend.com">https://fastbend.com</a>
-            <a class="content dark full" target="_blank" href="https://menorcablava.com">https://menorcablava.com</a>
-            <a class="content dark full" target="_blank" href="https://apalliser.com">https://apalliser.com</a>
-            <a class="content dark full" target="_blank" href="http://canrocanou.com">http://canrocanou.com</a>
+            <a class="content bordered clear full icon icon-project icon-medium" target="_blank" href="https://fastbend.com">https://fastbend.com</a>
+            <a class="content bordered clear full icon icon-project icon-medium" target="_blank" href="https://menorcablava.com">https://menorcablava.com</a>
+            <a class="content bordered clear full icon icon-project icon-medium" target="_blank" href="https://apalliser.com">https://apalliser.com</a>
+            <a class="content bordered clear full icon icon-project icon-medium" target="_blank" href="http://canrocanou.com">http://canrocanou.com</a>
         </div>
         <div class="section clear" id="section-contact">
             <h1 class="title">Contactar</h1>
@@ -85,7 +87,7 @@
                 <form name="contact" method="post" action="index.html">
                     <input type="text" name="name" placeholder="Your name" />
                     <input type="email" name="email" placeholder="Your email" />
-                    <input ttype="tel" name="telephone" placeholder="Your telephone no." />
+                    <input type="tel" name="telephone" placeholder="Your telephone no." />
                     <select name="contact_type">
                         <option value="request">Request</option>
                         <option value="partnership">Partnership</option>
@@ -97,8 +99,8 @@
             </div>
         </div>
         <footer class="branding">
-            <span class="owner">Jaume Llopis &copy; 2016</span>
             <ul class="links">
+                <li class="owner">Jaume Llopis &copy; 2019</li>
                 <li><a href="mailto:jaume.llopis1@gmail.com" target="_self">jaume.llopis1@gmail.com</a></li>
             </ul>
         </footer>

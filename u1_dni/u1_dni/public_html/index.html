@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DNI</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form>
+            <fieldset>
+                <label>DNI</label>
+                <label id="resultado"></label>
+                <input id="dni" type="text" name="DNI" value="" />
+            </fieldset>
+            <fieldset>
+                <button class="teclado" name="num" value="0">0</button>
+                <button class="teclado" name="num" value="1">1</button>
+                <button class="teclado" name="num" value="2">2</button>
+                <button class="teclado" name="num" value="3">3</button>
+                <button class="teclado" name="num" value="4">4</button>
+                <button class="teclado" name="num" value="5">5</button>
+                <button class="teclado" name="num" value="6">6</button>
+                <button class="teclado" name="num" value="7">7</button>
+                <button class="teclado" name="num" value="8">8</button>
+                <button class="teclado" name="num" value="9">9</button>
+            </fieldset>
+            <fieldset>
+                <button id="calcular">Calcular</button>
+                <button id="limpiar">Borrar</button>
+            </fieldset>
+        </form>
+        
+        <script type="text/javascript">
+            
+            /**
+             * @author Jaume Llopis - DAW2 DWEC
+             */
+            
+            var btn_calcular = document.getElementById('calcular');
+            
+            var btn_limpiar = document.getElementById('limpiar');
+            
+            var teclado = document.getElementsByClassName('teclado');
+
+            for( var e = 0 ; e < teclado.length ; e++ ){
+                teclado[ e ].addEventListener( 'click' , function(e){
+
+                   //console.log( this.value );
+                   e.preventDefault();
+                   
+                   var input_dni = document.getElementById('dni');
+                   
+                   input_dni.value += this.value;
+                });
+            }
+            
+            //var numero = input_dni.value;
+            
+            btn_limpiar.addEventListener( 'click' , function(e){
+
+                e.preventDefault();
+                
+                var input_dni = document.getElementById('dni');
+                
+                input_dni.innerHTML = '';
+            });
+            
+            btn_calcular.addEventListener( 'click' , function(e){
+
+                e.preventDefault();
+                
+                var input_dni = document.getElementById('dni');
+
+                var lbl_resultado = document.getElementById('resultado');
+
+                var resultado = calcular_letra( parseInt( input_dni.value ) );
+              
+                lbl_resultado.innerHTML = resultado;
+                
+                return false;
+            });
+            /**
+             * @param {Number} numero
+             * @returns {String}
+             */
+            function calcular_letra( numero ){
+                
+                //var numero = input_dni.value;
+
+                if( numero >= 0 && numero <= 99999999 ){
+
+                    var LETRAS = ['T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E' ];
+
+                    var letra = numero % LETRAS.length;
+
+                    //document.write( numero + LETRAS[ letra ] );
+                    return numero + LETRAS[ letra ];
+                }
+                else{
+                    return 'ERR_NUMERO_INVALIDO';
+                }
+            }
+            
+        </script>
+    </body>
+</html>
+

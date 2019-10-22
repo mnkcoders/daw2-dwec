@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Number Types - DAW2 - DWEC</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <script type="text/javascript">
+            
+            /**
+             * 
+             * @author Jaume Llopis - DAW2 - DWEC
+             * @description Exercici u1e1_numeros
+             */
+            
+            //var integer = 726;
+            //var float = 3.75;
+            //var ctn = 3e7;
+            //var octal = 06;
+            //var hex = 0x12;
+            
+            //document.write( '<p>int: ' + integer + '</p>' );
+            //document.write( '<p>float: ' + float + '</p>' );
+            //document.write( '<p>ctn: ' + ctn + '</p>' );
+            //document.write( '<p>oct: ' + octal + '</p>' );
+            //document.write( '<p>hex: ' + hex + '</p>' );
+
+            var numbers = {
+                'integer': 726,
+                'float': 3.75,
+                'scientific': 3e7,
+                'octal': 011,
+                'hex': 0x12,
+            };
+    
+            for( var k in numbers ){
+                document.write( '<p>' + k + ': ' + numbers[ k ]  + '</p>' );
+            }
+    
+        </script>
+    </body>
+</html>

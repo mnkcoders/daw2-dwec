@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>u1e4_ifelse</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form>
+            <label>DNI</label>
+            <input id="dni" type="text" name="DNI" value="" />
+            <button id="calcular" type="button">Calcular</button>
+        </form>
+        
+        <script type="text/javascript">
+            
+            /**
+             * @author Jaume Llopis - DAW2 DWEC
+             */
+            var input_dni = document.getElementById('dni');
+            var btn_calcular = document.getElementById('calcular');
+
+            var numero = input_dni.value;
+
+            if( numero >= 0 && numero <= 99999999 ){
+                
+                var valor = numero % 23;
+
+                var letras = ['T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E', 'T'];
+
+            }
+            else{
+                //
+            }
+            
+        </script>
+    </body>
+</html>
+

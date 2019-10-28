@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JS - Lista de ejercicios - Jaume Llopis</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            .page{
+                margin: 0 auto 20px;
+                padding: 20px 100px;
+                background-color: #fafafa;
+            }
+            .page:not(:last-child){
+                /*border-bottom: 1px dashed #6a6a6a;*/
+            }
+            .page .titulo{
+                color: #5a5a5a;
+                text-transform: uppercase;
+                font-size: 18px;
+                font-weight: 500;
+                letter-spacing: 1px;
+            }
+            .resultado{
+                border: 1px solid #9a9a9a;
+                padding: 20px;
+                background-color: #f5f5f5;
+                margin: 0 auto 80px;
+            }
+        </style>
+        <script type="text/javascript">
+            
+            /**
+             * 
+             * @param {String} contenido
+             */
+            function imprimir_mensaje( contenido ){
+                
+                var output = document.getElementById('id_resultado');
+                
+                if( output !== null ){
+                    output.innerHTML = contenido;
+                }
+                else{
+                    console.log( contenido );
+                }
+            }
+            /**
+             * Imprimir tabla de multiplicar
+             * @param {Number} numero
+             * @returns {String}
+             */
+            function tabla_multiplicar( numero ){
+                
+                var output = '<ul>';
+
+                for (var n = 1; n <= 10; ++n) {
+                    var res = (numero * n);
+                    output += '<li>' + numero + ' x ' + n + ' = ' + res + '</li>';
+
+                }
+
+                output += '</ul>';
+
+                return output;
+            }
+            /**
+             * @returns {String}
+             */
+            function mostrar_cabeceras(){
+                
+                var output = '';
+                
+                for( var i = 1 ; i <= 6 ; i++ ){
+                    
+                    output += '<h' + i + '>JavaScript</h' + i + '>';
+                    
+                }
+                
+                return output;
+            }
+            
+            function factorial( numero ){
+                
+            }
+            /**
+             * 
+             * @param {String} texto
+             * @returns {String}
+             */
+            function info_cadena_texto( texto ){
+                
+                var upper = 0;
+                var lower = 0;
+
+                for (var i = 0; i < texto.length; i++) {
+                    
+                    var char = texto.charCodeAt( i );
+                    
+                    //console.log(texto.charCodeAt(i));
+                    switch( true ){
+                        case char >= 65 && char <= 90: upper++; break;
+                        case char >= 97 && char <= 122: lower++; break;
+                    }
+                }
+                //console.log( 'Mayusculas: ' +  upper);
+                //console.log( 'Minusculas: ' + lower);
+                
+                return '<p>UPPERCASE: ' + upper + '</p><p>LOWERCASE: ' + lower + '</p>';
+            }
+            /**
+             * @returns {String}
+             */
+            function string_prompt( texto ){
+                
+                var palabras = texto.split(' ');
+                
+                return 'Palablras: ' + palabras.length
+                        + '<br/>Primera: ' + palabras[0]
+                        + '<br/>Ultima: ' + palabras[ palabras.length - 1 ]
+                        + '<br/>Al revés: ' + palabras.reverse().join(',')
+                        + '<br/>A-Z: ' + palabras.sort( function(a,b){
+                            switch( true ){
+                                case a > b: return 1;
+                                case a < b: return -1;
+                                case a = b: return 0;
+                            }
+                        })
+                        + '<br/>Z-A: ' + palabras.sort( function(a,b){
+                            switch( true ){
+                                case a < b: return 1;
+                                case a > b: return -1;
+                                case a = b: return 0;
+                            }
+                        });
+            }
+            /**
+             * @returns {Boolean}
+             */
+            function mostrar_meses(){
+                
+                var meses = ['Enero','Febrero','Marzo',
+                    'Abril','Mayo','Junio','Julio',
+                    'Agosto','Septiembre','Octubre',
+                    'Noviembre','Diciembre'];
+                
+                for( var m = 0 ; m < meses.length ; m++ ){
+                    alert( meses[ m ] );
+                }
+                return true;
+            }
+            /**
+             * @param {Number} numero
+             * @returns {Boolean}
+             */
+            function comprobar_numero_par( numero ){
+                
+                return parseInt( numero ) % 2 === 0;
+            }
+            /**
+             * @param {String} texto
+             * @returns {Boolean}
+             */
+            function palindromo( texto ){
+                var car = texto.toLowerCase().split('');
+                var rev = car.reverse();
+                
+                for( var c = 0 ; c < car.length ; c++ ){
+                    console.log( car[c] + '  -  ' + rev[c] );
+                    if( car[c] !== rev[c] ){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            /**
+             * 
+             * @param {Number} nivel
+             * @returns {Ahorcado}
+             */
+            function Ahorcado( nivel ){
+                
+                var _juego = {
+                    'nivel': typeof nivel === 'number' ? nivel : 1,
+                    'palabra': [],
+                    'resultado': [],
+                    'estado': Ahorcado.Estados.Jugando,
+                    'intentos': 0
+                };
+                /**
+                 * @param {Number} dificultad
+                 * @returns {String}
+                 */
+                this.generarPalabra = function( dificultad ){
+                    
+                    switch( dificultad ){
+                        default:
+                            break;
+                    }
+
+                    //dificultad
+                    var db = [
+                        'Camello',
+                        'Jugador',
+                        'Dinero',
+                        'Holocausto',
+                        'JavaScript',
+                    ];
+                    
+                    var rand = Math.floor( Math.random() * db.length );
+                    
+                    return db[ rand ];
+                };
+                /**
+                 * @param {String} letra
+                 * @returns {Boolean}
+                 */
+                this.usada = function( letra ){
+                    
+                    for( var c = 0 ; c < _juego.resultado.length ; c++ ){
+                        
+                        if( _juego.resultado[ c ].toLowerCase() === letra.toLowerCase() ){
+                            //esta letra ya se ha suado, peta el bucle
+                            return true;
+                        }
+                        
+                    }
+                    
+                    return false;
+                };
+                /**
+                 * @returns {Number}
+                 */
+                this.estado = function(){ return _juego.estado; };
+                /**
+                 * @returns {String}
+                 */
+                this.verEstado = function(){
+                    switch( _juego.estado ){
+                        case Ahorcado.Estados.Jugando:
+                            return 'Jugando';
+                        case Ahorcado.Estados.Ganado:
+                            return 'GANADO';
+                        case Ahorcado.Estados.Perdido:
+                            return 'PERDIDO';
+                    }
+                };
+                /**
+                 * Aplica penalización
+                 * @returns {Ahorcado}
+                 */
+                this.validar = function(){
+                    
+                    if( _juego.estado === Ahorcado.Estados.Jugando ){
+                        //hemos ganado?
+                        var ganado = true;
+                        for( var c = 0 ; c < _juego.resultado.length ; c++ ){
+                            //console.log(_juego.palabra[ c ].toLowerCase());
+                            //console.log(_juego.resultado[ c ].toLowerCase());
+                            if( _juego.resultado[ c ].toLowerCase() !== _juego.palabra[ c ].toLowerCase() ){
+                                ganado = false;
+                            }
+                        }
+                        if( ganado ){
+                            _juego.estado = Ahorcado.Estados.Ganado;
+                        }
+                        else{
+                            //hemos perdido?
+                            if( _juego.intentos >= 10 ){
+                                _juego.estado = Ahorcado.Estados.Perdido;
+                            }
+                        }
+                    }
+
+                    return this;
+                };
+                /**
+                 * 
+                 * @param {String} letra
+                 * @returns {Ahorcado}
+                 */
+                this.turno = function( letra ){
+                    
+                    var char = letra.toLowerCase();
+                    
+                    if( !this.usada( char )){
+                        
+                        for( var c = 0 ; c < _juego.palabra.length ; c++ ){
+
+                            if( _juego.palabra[ c ].toLowerCase() === char ){
+                                //registra letra en el resultado
+                                _juego.resultado[ c ] = char;
+                                
+                                //return  true;
+                            }
+                        }
+                    }
+                    //actualizar contador
+                    _juego.intentos++;
+                    
+                    return this.validar();
+                };
+                /**
+                 * 
+                 * @returns {Number}
+                 */
+                this.intentos = function(){ return _juego.intentos; };
+                /**
+                 * 
+                 * @returns {Ahorcado}
+                 */
+                this.reiniciar = function(){
+                    
+                    _juego.palabra = this.generarPalabra( _juego.nivel );
+                    
+                    _juego.intentos = 0;
+                    
+                    _juego.estado = Ahorcado.Estados.Jugando;
+                    
+                    _juego.resultado = [];
+                    
+                    for( var r = 0 ; r < _juego.palabra.length ; r++ ){
+                        _juego.resultado.push('-');
+                    }
+                    
+                    return this;
+                };
+                /**
+                 * @returns {String}
+                 */
+                this.resultado = function(){
+                    
+                    return _juego.resultado.join('');
+                };
+                
+                return this.reiniciar();
+            }
+            
+            Ahorcado.Estados = {
+                'Jugando': 0,
+                'Ganado': 1,
+                'Perdido': 2
+            };
+            
+        </script>
+    </head>
+    <body>
+        <div class="page page-1">
+            <h2 class="titulo">Ejercicio 1 - Tabla de multiplicar</h2>
+
+            <input id="id_num" type="number" name="numero" value="1" min="1" max="10" />
+            
+            <button type="button" id="id_boton_1">Calcular</button>
+            
+            <script type="text/javascript">
+                
+                var btn = document.getElementById('id_boton_1');
+                
+                btn.addEventListener( 'click' , function(e){
+                    
+                    var input = document.getElementById( 'id_num' );
+                    
+                    imprimir_mensaje( tabla_multiplicar( input.value ) );
+                } );
+                
+            </script>
+        
+        </div>
+        <div class="page page-2">
+            
+            <h2 class="titulo">Ejercicio 2 - Cabeceras</h2>
+            
+            <button type="button" id="id_boton_2">Mostrar cabeceras</button>
+            
+            <script type="text/javascript">
+                
+                var btn = document.getElementById('id_boton_2');
+                
+                btn.addEventListener( 'click' , function(e){
+                    
+                    imprimir_mensaje( mostrar_cabeceras( ) );
+                } );
+                
+            </script>
+        </div>
+        <div class="page page-3">
+            
+            <h2 class="titulo">Ejercicio 3 - Factorial</h2>
+            
+            <button type="button" id="id_boton_3">Calcular</button>
+            
+            <script type="text/javascript">
+                
+                document.getElementById('id_boton_3').addEventListener( 'click' , function(e){
+                    
+                    e.prevetDefault();
+                    
+                    imprimir_mensaje( factorial( 100 ) );
+                    
+                    return true;
+                } );
+                
+            </script>
+        </div>
+        <div class="page page-4">
+            
+            <h2 class="titulo">Ejercicio 4 - Info Cadenas</h2>
+            
+            <input type="text" id="id_texto_info" placeholder="Escribe texto aqui" />
+            
+            <button type="button" id="id_boton_4">Info</button>
+            
+            <script type="text/javascript">
+                
+                document.getElementById('id_boton_4').addEventListener( 'click' , function(e){
+                    
+                    e.preventDefault();
+                    
+                    imprimir_mensaje( info_cadena_texto( document.getElementById('id_texto_info').value ) );
+                    
+                    return true;
+                } );
+                
+            </script>
+        </div>
+        <div class="page page-5">
+            
+            <h2 class="titulo">Ejercicio 5 - Prompt</h2>
+            
+            <button type="button" id="id_boton_5">Solicitar cadena</button>
+            
+            <script type="text/javascript">
+                
+                document.getElementById('id_boton_5').addEventListener( 'click' , function(e){
+                    
+                    e.preventDefault();
+                    
+                    imprimir_mensaje( string_prompt( window.prompt('Escribe cosa:' ) ) );
+                    
+                    return true;
+                } );
+                
+            </script>
+        </div>
+        <div class="page page-6">
+            
+            <h2 class="titulo">Ejercicio 6 - Meses</h2>
+            
+            <button type="button" id="id_boton_6">Mostrar meses</button>
+            
+            <script type="text/javascript">
+                
+                document.getElementById('id_boton_6').addEventListener( 'click' , function(e){
+                    
+                    e.preventDefault();
+                    
+                    mostrar_meses( );
+                    
+                    return true;
+                } );
+                
+            </script>
+        </div>
+        <div class="page page-7">
+            
+            <h2 class="titulo">Ejercicio 7 - Par - Impar</h2>
+            
+            <input type="number" id="id_parimpar" min="1" max="100000" />
+            <button type="button" id="id_boton_7">Caldular numero</button>
+            
+            <script type="text/javascript">
+                
+                document.getElementById('id_boton_7').addEventListener( 'click' , function(e){
+                    
+                    e.preventDefault();
+                    
+                    var espar = comprobar_numero_par( document.getElementById('id_parimpar').value  );
+                    
+                    imprimir_mensaje(  espar ? 'Es un número par' : 'Es un número impar'  );
+                    
+                    return true;
+                } );
+                
+            </script>
+        </div>
+        <div class="page page-8">
+            
+            <h2 class="titulo">Ejercicio 8 - Palindromo</h2>
+            
+            <input type="text" id="id_palindromo" />
+
+            <button type="button" id="id_boton_8">Comprobar</button>
+            
+            <script type="text/javascript">
+                
+                document.getElementById('id_boton_8').addEventListener( 'click' , function(e){
+                    
+                    e.preventDefault();
+                    
+                    var es_palindromo = palindromo( document.getElementById('id_palindromo').value  );
+                    
+                    imprimir_mensaje(  es_palindromo ? 'Es un palindromo' : 'NO es palindromo'  );
+                    
+                    return true;
+                } );
+                
+            </script>
+        </div>
+        <div class="page page-9">
+            
+            <h2 class="titulo">Ejercicio 9 - Ahorcado</h2>
+            
+            <fieldset>
+                <label>Palabra: <span id="id_ahorcado_palabra"></span></label>
+            </fieldset>
+            <fieldset>
+                <label>Intentos: <span id="id_ahorcado_turnos"></span></label>
+            </fieldset>
+            <fieldset>
+                <label>Estado: <span id="id_ahorcado_estado"></span></label>
+            </fieldset>
+
+            <input type="text" id="id_ahorcado_letra" size="1" />
+            <button type="button" id="id_ahorcado_turno" value="jugar">Turno</button>
+            
+            <script type="text/javascript">
+                
+                var AHORCADO = new Ahorcado();
+                
+                actualizar_vista_juego();
+                
+                document.getElementById('id_ahorcado_turno').addEventListener( 'click', function(e){
+                    
+                    e.preventDefault();
+                    
+                    if( AHORCADO.estado() === Ahorcado.Estados.Jugando ){
+                        switch( AHORCADO.turno( document.getElementById('id_ahorcado_letra').value ).estado() ){
+                            case Ahorcado.Estados.Ganado:
+                            case Ahorcado.Estados.Perdido:
+                                this.innerHtml = 'Reiniciar';
+                                this.value = 'iniciar';
+                                break;
+                            default:
+                                //actualizar_vista_juego();
+                                break;
+                        }
+                    }
+                    else{
+                        //reiniciar???
+                        //this.innerHtml = 'Nuevo Turno';
+                        //this.value = 'jugando';
+                        AHORCADO.reiniciar();
+                    }
+                    
+                    actualizar_vista_juego();
+                });
+                
+                function actualizar_vista_juego(){
+                    
+                    switch( AHORCADO.estado() ){
+                        case Ahorcado.Estados.Ganado:
+                        case Ahorcado.Estados.Perdido:
+                            document.getElementById('id_ahorcado_turno').innerHTML = 'Iniciar';
+                            //document.getElementById('id_ahorcado_turno').value = 'Iniciar';
+                            break;
+                        default:
+                            document.getElementById('id_ahorcado_turno').innerHTML = 'Nuevo Turno';
+                            break;
+                    }
+                    document.getElementById('id_ahorcado_palabra').innerHTML = AHORCADO.resultado();
+                    document.getElementById('id_ahorcado_estado').innerHTML = AHORCADO.verEstado();
+                    document.getElementById('id_ahorcado_turnos').innerHTML = AHORCADO.intentos();
+                }
+                
+            </script>
+        </div>
+        <fieldset class="resultado">
+            <label>Resultado</label>
+            <div id="id_resultado"></div>
+        </fieldset>
+    </body>
+</html>

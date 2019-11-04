@@ -1,0 +1,95 @@
+/**
+ * #590212
+ *
+ */
+
+body{
+    font-family: 'Exo';
+}
+
+.layer.overlay{
+    position: fixed;
+    top: 0;left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.25);
+    z-index: -1;
+}
+
+.fixed-top{ position: fixed; top:0; }
+
+.spacer{}
+.spacer.large{ height: 200px; }
+
+nav.header{
+    background-color: #590212;
+    z-index: 10;
+}
+nav.header .site-title{
+    height: 24px;
+    padding: 20px 0;
+    color: #590212;
+    text-transform: uppercase;
+    font-size: 24px;
+    line-height: 24px;
+    display:inline-block;
+    float: left;
+    vertical-align: top;
+    margin: 0;
+}
+
+nav.header ul.menu > li > a{
+    display: block;
+    color: #590212;
+    font-weight: 500;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.brand-logo{
+    height: 100%;
+    display: inline-block;
+}
+
+.brand-logo > .media{
+    height: 100%;
+    width: auto;
+    display: block;
+}
+
+.page-footer{
+    background-color: #590212;
+}
+
+
+.utility-form{
+    transition: ease-in 250ms;
+    height: 0;
+    overflow: 0;
+    opacity: 0;
+    vertical-align: top;
+}
+.utility-form.active{
+    opacity: 1;
+    height: auto;
+}
+
+.panel.forms{ position: relative; }
+.panel.forms > .utility-form{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.btn.btn-large{ width: 100%; margin: 0 0 20px; }
+
+
+#output{ min-height: 200px; }
+
+
+.background-clear{ background-color: rgba(255,255,255,0.85); }
+.background-cover{ background-size: cover; }
+.background-no-repeat{ background-repeat: no-repeat; }
+.background-runner-01{ background-image: url('../img/runner-01.jpg'); }
+.background-runner-02{ background-image: url('../img/runner-02.jpg'); }
+.background-gym-01{ background-image: url('../img/gym-01.jpg'); }
+.background-fitness-01{ background-image: url('../img/fitness-01.jpg'); }

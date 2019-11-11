@@ -96,3 +96,9 @@ nav.header ul.menu > li > a{
 
 
 select{ display: initial !important; }
+
+.block{ display: block; }
+
+ul.list-none,ol.list-none{
+    list-style-type: none;
+}

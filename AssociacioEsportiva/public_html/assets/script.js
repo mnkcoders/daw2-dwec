@@ -1,3 +1,52 @@
+var UTILIDAD = {
+    fcm: null,
+    imc: null,
+    categoria: null,
+    horario: null,
+    iniciar: function( app ){
+        
+        switch ( app ) {
+            case 'imc':
+                if( this.imc === null ){
+                    this.imc = new CalculadoraIMC();
+                }
+                else{
+                    this.imc.reset();
+                }
+                break;
+            case 'fcm':
+                if( this.fcm === null ){
+                    this.fcm = new CalculadoraFCM();
+                }
+                else{
+                    this.fcm.reset();
+                }
+                break;
+            case 'horari':
+                if( this.horario === null ){
+                    this.horario = new FormHorari();
+                }
+                else{
+                    this.horario.reset();
+                }
+                break;
+            case 'categoria':
+                if( this.categoria === null ){
+                    this.categoria = new Categoria();
+                }
+                else{
+                    this.categoria.reset();
+                }
+                break;
+            default:
+                //funció invalida
+                console.log('Utilidad inválida');
+                break;
+        }
+        
+    }
+};
+
 /**
  * 
  * @param {String|HTML} input
@@ -29,24 +78,7 @@ window.addEventListener( 'load' , function(){
                     form.classList.remove( 'active'); 
                 }
             
-                switch( _clicked ){
-                    case 'imc':
-                        new CalculadoraIMC();
-                        break;
-                    case 'fcm':
-                        new CalculadoraFCM();
-                        break;
-                    case 'horari':
-                        new FormHorari();
-                        break;
-                    case 'categoria':
-                        new CalculadoraCategoria();
-                        break;
-                    default:
-                        //funció invalida
-                        break;
-                }
-            
+                UTILIDAD.iniciar( _clicked );
             });
             
             return true;

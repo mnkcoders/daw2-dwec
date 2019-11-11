@@ -9,17 +9,6 @@ function CalculadoraIMC(){
      * @type CalculadoraIMC
      */
     var _self = this;
-    
-    var _inputs = {
-        'height': null,
-        'weight': null,
-        'button': null,
-        'output': null,
-    };
-    
-    var _settings = {
-
-    };
     /**
      * @param {Number} imc
      * @returns {Number}
@@ -98,6 +87,14 @@ function CalculadoraIMC(){
         output.innerHTML = '<h3>IMC: <span>'
                 + imc + '</span></h3>'
                 + '<p>' + this.mostrarClasificacion( imc ) + '</p>';
+        
+        return this;
+    };
+    /**
+     * 
+     * @returns {CalculadoraFCM}
+     */
+    this.reset = function(){
         
         return this;
     };

@@ -41,9 +41,11 @@ function CalculadoraFCM(){
         
         switch( sexo ){
             case CalculadoraFCM.Sexo.HOMBRE:
-                return ( ( 209 - parseInt(edad) ) * 0.7 ).toFixed(2);
+                //return ( ( 209 - parseInt(edad) ) * 0.7 ).toFixed(2);
+                return ( ( 209 - parseInt(edad) ) ).toFixed(2);
             case CalculadoraFCM.Sexo.MUJER:
-                return ( ( 214 - parseInt(edad) ) * 0.8 ).toFixed(2);
+                //return ( ( 214 - parseInt(edad) ) * 0.8 ).toFixed(2);
+                return ( ( 214 - parseInt(edad) ) ).toFixed(2);
         }
         
         return 0.0;
@@ -58,11 +60,27 @@ function CalculadoraFCM(){
         
         if( output !== null ){
             
-            output.innerHTML = '<h3>FCM: <span>'
-                    + fcm + '</span></h3>'
-                    + '<p>' + this.clasificacion( fcm ) + '</p>';
+            var lista = '<ul class="zonas list-none">';
             
+            for( var zona in CalculadoraFCM.Zona ){
+                lista += '<li>min: <strong>'
+                        + Math.floor( CalculadoraFCM.Zona[ zona ].min/100 * fcm ).toString()
+                        + '</strong>ppm</label> - max: <strong>'
+                        + Math.floor( CalculadoraFCM.Zona[ zona ].max/100 * fcm ).toString()
+                        +'</strong>ppm</li>';
+            }
+
+            output.innerHTML += '<h3>FCM: <span>' + fcm
+                    + '</span></h3>' + lista + '</ul>';
         }
+        
+        return this;
+    };
+    /**
+     * 
+     * @returns {CalculadoraFCM}
+     */
+    this.reset = function(){
         
         return this;
     };
@@ -78,7 +96,8 @@ function CalculadoraFCM(){
         document.getElementById('fcm_button').addEventListener( 'click' , function(e){
             
             e.preventDefault();
-            
+            e.stopPropagation();
+            //console.log('test');
             _self.display(_self.calcular(edad.value,sexo.value));
             
             return true;
@@ -96,7 +115,14 @@ function CalculadoraFCM(){
  */
 CalculadoraFCM.Sexo = {
     HOMBRE: 'h',
-    MUJER: 'm',
+    MUJER: 'm'
 };
-
-
+/**
+ * @type \CalcularFCM.Zona
+ */
+CalculadoraFCM.Zona = {
+    ZONA_RECUPERACION: { 'min' : 60 , 'max' : 70 },
+    ZONA_AEROBICA:{'min':70,'max':80},
+    ZONA_ANAEROBICA:{'min':80,'max':90},
+    ZONA_ROJA:{'min':90,'max':100}
+};

@@ -12,5 +12,14 @@ function FormHorari(){
         return this;
     };
     
+    /**
+     * 
+     * @returns {CalculadoraFCM}
+     */
+    this.reset = function(){
+        
+        return this;
+    };
+    
     return this.bind();
 }

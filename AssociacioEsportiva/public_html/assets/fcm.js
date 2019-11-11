@@ -60,18 +60,18 @@ function CalculadoraFCM(){
         
         if( output !== null ){
             
-            var lista = '<ul class="zonas list-none">';
+            var lista = '<table class="zonas list-none">';
             
             for( var zona in CalculadoraFCM.Zona ){
-                lista += '<li>min: <strong>'
+                lista += '<tr><td>min: <strong>'
                         + Math.floor( CalculadoraFCM.Zona[ zona ].min/100 * fcm ).toString()
-                        + '</strong>ppm</label> - max: <strong>'
+                        + '</strong>ppm</td><td>max: <strong>'
                         + Math.floor( CalculadoraFCM.Zona[ zona ].max/100 * fcm ).toString()
-                        +'</strong>ppm</li>';
+                        +'</strong>ppm</td></tr>';
             }
 
-            output.innerHTML += '<h3>FCM: <span>' + fcm
-                    + '</span></h3>' + lista + '</ul>';
+            output.innerHTML += '<h4 class="centered">FCM: <span class="remark">' + fcm
+                    + '</span>ppm</h4>' + lista + '</table>';
         }
         
         return this;

@@ -43,10 +43,10 @@
             <!-- capa de oscurecido -->
         </div>
         
-        <div class="spacer large"></div>
+        <div class="spacer medium"></div>
 
         <div class="row container">
-            <ul id="sidebar" class="col s4">
+            <ul id="sidebar" class="col s3 m4">
                 <li>
                     <button id="imc" class="utility  waves-effect waves-light btn btn-large">
                         <i class="material-icons right">navigate_next</i>
@@ -72,9 +72,9 @@
             </ul>
 
             
-            <div class="panel forms col s8">
+            <div class="section  panel forms col s9 m8">
 
-                <div class="background-clear  utility-form" data-bind="imc">
+                <div class="background-clear  full-width utility-form pad-md container" data-bind="imc">
                     <h5>Calculadora IMC</h5>
                     <fieldset>
                         <label>Altura</label>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 
-                <div class="background-clear utility-form" data-bind="fcm">
+                <div class="background-clear full-width utility-form pad-md container" data-bind="fcm">
                     <h5>Calculadora FCM</h5>
                     <fieldset>
                         <label>Edad</label>
@@ -109,19 +109,28 @@
                     </div>
                 </div>
 
-                <div class="background-clear utility-form" data-bind="categoria">
-                    <h5>Calculadora de Categoría</h5>
+                <div class="background-clear full-width utility-form pad-md container" data-bind="categoria">
+                    <h5>Categoría</h5>
+                    <fieldset>
+                        <label>Año de nacimiento</label>
+                        <!--input id="cat_fecha" type="date"  /-->
+                        <input id="cat_fecha" type="number" value="2000" min="1900" max="2019"  />
+                    </fieldset>
+                    <button id="cat_button" type="button" class="btn btn-large">Ver categor&iacute;a</button>
+                    <div id="cat_output" class="panel">
+                        <!-- -->
+                    </div>
                 </div>
 
-                <div class="background-clear utility-form" data-bind="horari">
-                    <h5>Horario</h5>
+                <div id="hor_output" class="background-clear full-width utility-form pad-md container" data-bind="horari">
+                    <!-- se escribe el horario -->
                 </div>
             </div>
         </div>
 
         
         <footer class="page-footer">
-          <div class="container">
+          <!--div class="container">
             <div class="row">
               <div class="col l6 s12">
                 <h5 class="white-text">Footer Content</h5>
@@ -137,7 +146,7 @@
                 </ul>
               </div>
             </div>
-          </div>
+          </div-->
           <div class="footer-copyright">
             <div class="container">
             &copy; 2019 - MNK Coders

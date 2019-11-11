@@ -24,7 +24,7 @@ var UTILIDAD = {
                 break;
             case 'horari':
                 if( this.horario === null ){
-                    this.horario = new FormHorari();
+                    this.horario = new Horario();
                 }
                 else{
                     this.horario.reset();

@@ -84,9 +84,9 @@ function CalculadoraIMC(){
 
         var output = document.getElementById('imc_output');
         
-        output.innerHTML = '<h3>IMC: <span>'
-                + imc + '</span></h3>'
-                + '<p>' + this.mostrarClasificacion( imc ) + '</p>';
+        output.innerHTML = '<h4 class="centered">IMC: <span class="remark">'
+                + imc + '</span></h4><h6 class="centered">--'
+                + this.mostrarClasificacion( imc ) + '--</h6>';
         
         return this;
     };

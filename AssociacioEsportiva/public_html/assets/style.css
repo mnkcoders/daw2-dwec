@@ -5,8 +5,9 @@
 
 body{
     font-family: 'Exo';
+    min-height: 100vh;
 }
-
+.page-footer{ position: fixed; left: 0; bottom: 0; right: 0; }
 .layer.overlay{
     position: fixed;
     top: 0;left: 0; right: 0; bottom: 0;
@@ -17,6 +18,7 @@ body{
 .fixed-top{ position: fixed; top:0; }
 
 .spacer{}
+.spacer.medium{ height: 100px; }
 .spacer.large{ height: 200px; }
 
 nav.header{
@@ -66,10 +68,15 @@ nav.header ul.menu > li > a{
     overflow: 0;
     opacity: 0;
     vertical-align: top;
+    border-radius: 2px;
+    box-shadow: 0 0 0 8px rgba(0,0,0,0.25);
+    pointer-events: none;
+    box-sizing: border-box;
 }
 .utility-form.active{
     opacity: 1;
     height: auto;
+    pointer-events: initial;
 }
 
 .panel.forms{ position: relative; }
@@ -102,3 +109,46 @@ select{ display: initial !important; }
 ul.list-none,ol.list-none{
     list-style-type: none;
 }
+
+ul li strong,ol li strong{
+    font-weight: 800;
+}
+
+.bold{ font-weight: 600; }
+.remark{ color: green; }
+.remark.clear{ color: white; background-color: rgba(0,0,0,0.25); padding: 5px;}
+.collection-item:not(.remark){ background-color: rgba(255,255,255,0.5); }
+
+
+.full-width{ width: 100%;}
+
+.container.pad-md{ padding: 20px;}
+
+
+fieldset{
+    border: 2px solid rgba(0,0,0,0.15);
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin: 10px auto 20px;
+}
+fieldset > label{
+    color: #590212;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin: 0 0 10px;
+}
+
+table th.header{
+    text-align: center;
+    text-transform: uppercase;
+}
+
+hr.separator{ margin: 20px auto; border: 2px solid rgba(64,0,0,0.25); }
+
+.centered{ text-align: center; }
+
+.container .header.large{ font-size: 64px; letter-spacing: 4px;  margin: 40px auto; }
+.container .header.clear{ color: #fff; }
+.container .header.uppercase{ text-transform:  uppercase; }

@@ -93,3 +93,6 @@ nav.header ul.menu > li > a{
 .background-runner-02{ background-image: url('../img/runner-02.jpg'); }
 .background-gym-01{ background-image: url('../img/gym-01.jpg'); }
 .background-fitness-01{ background-image: url('../img/fitness-01.jpg'); }
+
+
+select{ display: initial !important; }

@@ -63,14 +63,14 @@ function CalculadoraFCM(){
             var lista = '<table class="zonas list-none">';
             
             for( var zona in CalculadoraFCM.Zona ){
-                lista += '<tr><td>min: <strong>'
+                lista += '<tr><td>min: <strong class="remark">'
                         + Math.floor( CalculadoraFCM.Zona[ zona ].min/100 * fcm ).toString()
-                        + '</strong>ppm</td><td>max: <strong>'
+                        + '</strong>ppm</td><td>max: <strong class="remark">'
                         + Math.floor( CalculadoraFCM.Zona[ zona ].max/100 * fcm ).toString()
                         +'</strong>ppm</td></tr>';
             }
 
-            output.innerHTML += '<h4 class="centered">FCM: <span class="remark">' + fcm
+            output.innerHTML = '<h4 class="centered">FCM: <span class="remark">' + fcm
                     + '</span>ppm</h4>' + lista + '</table>';
         }
         

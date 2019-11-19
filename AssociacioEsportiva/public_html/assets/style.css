@@ -38,6 +38,9 @@ nav.header .site-title{
     margin: 0;
 }
 
+nav.header ul.menu > li{
+    position: relative;
+}
 nav.header ul.menu > li > a{
     display: block;
     color: #590212;
@@ -123,7 +126,9 @@ ul li strong,ol li strong{
 .full-width{ width: 100%;}
 
 .container.pad-md{ padding: 20px;}
-
+.shaded{
+    background-color: rgba(0,0,0,0.25);
+}
 
 fieldset{
     border: 2px solid rgba(0,0,0,0.15);
@@ -152,3 +157,38 @@ hr.separator{ margin: 20px auto; border: 2px solid rgba(64,0,0,0.25); }
 .container .header.large{ font-size: 64px; letter-spacing: 4px;  margin: 40px auto; }
 .container .header.clear{ color: #fff; }
 .container .header.uppercase{ text-transform:  uppercase; }
+
+
+#calendario{
+    background-color: #fff;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.25);
+    margin: 5px 0 0 0;
+}
+#calendario > span{
+    display: block;
+    text-align: center;
+    font-weight: 500;
+    padding: 4px;
+    text-transform: uppercase;
+    cursor: default;
+}
+#calendario > span.day{
+    font-size: 24px;
+    line-height: 48px;
+    color: #590212;
+}
+#calendario > span.month,
+#calendario > span.year{
+    background-color: #590212;
+    color: #fff;
+    height: 20px;
+    line-height: 13px;
+    font-size: 13px;
+}
+
+
+#login.popup{
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+}
+

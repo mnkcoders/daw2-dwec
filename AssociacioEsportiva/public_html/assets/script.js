@@ -1,88 +1,40 @@
-var UTILIDAD = {
-    fcm: null,
-    imc: null,
-    categoria: null,
-    horario: null,
-    iniciar: function( app ){
-        
-        switch ( app ) {
-            case 'imc':
-                if( this.imc === null ){
-                    this.imc = new CalculadoraIMC();
-                }
-                else{
-                    this.imc.reset();
-                }
-                break;
-            case 'fcm':
-                if( this.fcm === null ){
-                    this.fcm = new CalculadoraFCM();
-                }
-                else{
-                    this.fcm.reset();
-                }
-                break;
-            case 'horari':
-                if( this.horario === null ){
-                    this.horario = new Horario();
-                }
-                else{
-                    this.horario.reset();
-                }
-                break;
-            case 'categoria':
-                if( this.categoria === null ){
-                    this.categoria = new Categoria();
-                }
-                else{
-                    this.categoria.reset();
-                }
-                break;
-            default:
-                //funció invalida
-                console.log('Utilidad inválida');
-                break;
-        }
-        
-    }
-};
-
 /**
- * 
- * @param {String|HTML} input
- * @returns {Boolean}
+ * Iniciador
  */
-window.addEventListener( 'load' , function(){
-
-    //console.log(document.getElementsByClassName( 'utility' ));
+( function(){
     
-    Array.prototype.map.call(document.getElementsByClassName( 'utility' ), function(button){
+    var _self = this;
+    /**
+     * @param {Number} month
+     * @returns {String}
+     */
+    this.getMonth = function( month ){
         
-        button.addEventListener( 'click' , function(e){
-      
-            e.preventDefault();
-            
-            var _clicked = this.id;
-            
-            //console.log( 'Clicking ' + _clicked );
+        var months = ['Enero','Febrero','Marzo','Abril',
+            'Mayo','Junio','Julio','Agosto',
+            'Septiembre','Octubre','Noviembre','Diciembre'];
+        
+        return months[ month % 12 ];
+    };
+    /**
+     * 
+     * @returns {unresolved}
+     */
+    this.crearCalendario = function(){
 
-            Array.prototype.map.call( document.getElementsByClassName( 'utility-form' ) , function( form ){
+        document.addEventListener('DOMContentLoaded',function(e){
             
-                //console.log(form.getAttribute('data-bind'));
-                
-                if(form.getAttribute('data-bind') === _clicked ){
-                    
-                    form.classList.add( 'active' );
-                }
-                else{
-                    form.classList.remove( 'active'); 
-                }
-            
-                UTILIDAD.iniciar( _clicked );
-            });
-            
-            return true;
+            var date = new Date();
+
+            document.querySelector('#calendario .day').innerHTML = date.getUTCDate();
+            document.querySelector('#calendario .month').innerHTML = _self.getMonth( date.getUTCMonth() );
+            document.querySelector('#calendario .year').innerHTML = date.getUTCFullYear();
+
         });
-        
-    });
-});
+    };
+    
+    return this.crearCalendario();
+})();
+
+
+

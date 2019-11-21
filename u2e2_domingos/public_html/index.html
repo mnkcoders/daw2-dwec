@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>u2e2_domingos</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            
+            /**
+             * 
+             * @returns {DomingosDeAniversarios}
+             */
+            function DomingosDeAniversarios( mes , dia ){
+                
+                var _ani = {
+                    'mes': mes,
+                    'dia': dia
+                };
+                /**
+                 * @type Number
+                 */
+                this.dia = function(){ return 1000 * 60 * 60 * 24; };
+                /**
+                 * @returns {Number}
+                 */
+                this.year = function(){
+                    
+                    var today = new Date();
+                    
+                    if( today.getMonth() > _ani.mes ){
+                        today.setUTCFullYear( today.getUTCFullYear() + 1 );
+                    }
+                    
+                    return today.getUTCFullYear();
+                };
+                /**
+                 * 
+                 * @param {Number} toYear
+                 * @returns {Number}
+                 */
+                this.cuentaDomingos = function( toYear ){
+                    
+                    var domingos = 0;
+                    
+                    for( var y = this.year() ; y < toYear ; y++ ){
+
+                        var selected = new Date( y , _ani.mes , _ani.dia );
+                        
+                        if( selected.getDay() === 0 ){
+                            //console.log(selected.toDateString() + ' is Sunday!');
+                            domingos++;
+                        }
+                    }
+                    
+                    return domingos;
+                };
+                
+                return this;
+            }
+            
+            
+            document.addEventListener('DOMContentLoaded',function(e){
+                
+                this.getElementById('output').innerHTML = '<p>Toma domingos: '
+                        
+                    + ( new DomingosDeAniversarios( 1 , 17 )).cuentaDomingos(2100)
+                    + '</p>';
+                
+            });
+            
+        </script>
+    </head>
+    <body>
+        <div id="output">
+        
+        </div>
+    </body>
+</html>

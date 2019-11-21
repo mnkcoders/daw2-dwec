@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>u2e3_formatofechas</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+
+            function mostrar( contenido ) {
+
+                document.addEventListener('DOMContentLoaded', function (e) {
+
+                    this.getElementById('output').innerHTML += '<p>Resultado: ' + contenido + '</p>';
+
+                });
+
+            }
+
+        </script>
+    </head>
+    <body>
+        <div id="output">
+
+        </div>
+        <script type="text/javascript">
+            
+            function mostrar_fecha( modo  ){
+                
+                /**
+                 * @param {Number} dia
+                 * @returns {String}
+                 */
+                this.mostrarDia = function( dia ){
+                    
+                    var dias = [
+                        'Domingo','Lunes','Martes',
+                        'Miercoles','Jueves','Viernes','Sabado'
+                    ];
+                    
+                    return dias[ dia % 7 ];
+                };
+                /**
+                 * @param {Number} mes
+                 * @returns {String}
+                 */
+                this.mostrarMes = function( mes ){
+                    
+                    var meses = [
+                        'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio',
+                        'Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+                    ];
+
+                    return meses[ mes / 12 ];
+                };
+                
+                var fecha = new Date();
+                
+                switch( modo ){
+                    case 1:
+                        return fecha.getUTCDate()
+                                + '/' + fecha.getUTCMonth()
+                                + '/' + fecha.getUTCFullYear();
+                    case 2:
+                        return this.mostrarDia( fecha.getUTCDate() ) + '/'
+                                + this.mostrarMes( fecha.getUTCMonth() ) + '/'
+                                + fecha.getUTCFullYear();
+                    case 3:
+                        return '';
+                }
+            }
+        </script>
+    </body>
+</html>

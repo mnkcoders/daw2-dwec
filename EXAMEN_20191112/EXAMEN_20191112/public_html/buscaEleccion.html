@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>buscaEleccion</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="container">
+            
+            <script type="text/javascript">
+                /**
+                 * 
+                 * @param {String} texto
+                 * @param {String} buscar
+                 * @returns {Number}
+                 */
+                function buscaEleccion( texto , buscar ){
+                    
+                    //return buscar.indexOf( texto );
+                    
+                    var input = texto.toLowerCase().split(' ');
+                    //console.log(input);
+                    for( var i = 0 ; i < input.length ; i++ ){
+                        //console.log(input[i]);
+                        //console.log(buscar.toLowerCase());
+                        if( input[i] === buscar.toLowerCase()){
+                            return i;
+                        }
+                    }
+                    
+                    return -1;
+                }
+                
+                if( ( pos = buscaEleccion( 'Papel Piedra Tijeras Lagarto Spock' , 'tijeras') ) > -1 ){
+                    alert( 'Encontrado en la posición ' + pos );
+                }
+                else{
+                    alert( 'No encontrado :(' );
+                }
+                
+            </script>
+            
+        </div>
+    </body>
+</html>

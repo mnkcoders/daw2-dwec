@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>u2e1_fincurso</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            /**
+             * @param {Date} desde
+             * @param {Date} hasta
+             * @returns {ContadorDias}
+             */
+            function ContadorDias(desde, hasta) {
+
+                var _dias = {
+                    'desde': typeof desde !== 'undefined' ? desde : new Date(),
+                    'hasta': typeof hasta !== 'undefined' ? hasta : new Date('2020-06-24')
+                };
+                /**
+                 * @returns {Date}
+                 */
+                this.desde = function(){
+                    return _dias.desde.getFullYear()
+                        + '/' + _dias.desde.getMonth()
+                        + '/' + _dias.desde.getDay();
+                };
+                /**
+                 * @returns {Date}
+                 */
+                this.hasta = function(){
+                    return _dias.hasta.getUTCFullYear()
+                        + '/' + _dias.hasta.getUTCMonth()
+                        + '/' + _dias.hasta.getUTCDay();
+                };
+
+                /**
+                 * @returns {Number}
+                 */
+                this.cuantoFalta = function () {
+                    return Math.floor((_dias.hasta.getTime() - _dias.desde.getTime()) / ContadorDias.UnDia);
+                };
+                
+                return this;
+            }
+            /**
+             * @type Number
+             */
+            ContadorDias.UnDia = 1000 * 60 * 60 * 24;
+
+
+            document.addEventListener('DOMContentLoaded',function(e){
+                
+                var contador = new ContadorDias();
+                
+                this.getElementById('output').innerHTML += '<p>'+ contador.desde()+ '</p>';
+                this.getElementById('output').innerHTML += '<p>'+ contador.hasta() + '</p>';
+                this.getElementById('output').innerHTML += '<p>'+ contador.cuantoFalta() + '</p>';
+                
+            });
+        </script>
+
+    </head>
+    <body>
+        <div id="output">
+
+        </div>
+    </body>
+</html>

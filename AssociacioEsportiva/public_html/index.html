@@ -73,23 +73,24 @@
             <div class="container">
                 <span class="copyright">&copy; 2019 - Asociaci&oacute;n Deportiva</span>
                 <span class="designer">Diseñado por Jaume Llopis de Andr&eacute;s</span>
-                <a class="legal grey-text text-lighten-4 right" href="#!">Aviso Legal</a>
+                <a class="popup-link legal grey-text text-lighten-4 right" href="legal.html">Aviso Legal</a>
             </div>
           </div>
         </footer>
         <div id="login" class="popup shaded">
-            
-            <div class="login-form container centered clear">
-                <form name="login" action="#" method="post">
-                    
-                    <input type="text" name="name" placeholder="Tu nombre" />
-                    
-                    <input type="password" name="password" placeholder="Tu cotraseña" />
-                    
-                    <button class="btn btn-large" type="submit" name="action" value="login">Entrar</button>
-                </form>
+            <div class="container popup">
+                <div class="login-form container centered clear">
+                    <form name="login" action="#" method="post">
+
+                        <input type="text" name="name" placeholder="Tu nombre" />
+
+                        <input id="password" type="password" name="password" placeholder="Tu cotraseña" />
+
+                        <button id="login-btn" class="btn btn-large" type="submit" name="action" value="login">Entrar</button>
+                    </form>
+                    <label id="lbl_error"></label>
+                </div>
             </div>
-            
         </div>
     </body>
 </html>

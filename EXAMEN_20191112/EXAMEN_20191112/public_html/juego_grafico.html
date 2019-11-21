@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Piedra Papel Tijera Lagarto Spock</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            
+            .panel{
+                display: none;
+                width: 80%;
+                min-width: 400px;
+                max-width: 1200px;;
+                margin: 40px auto;
+                background-color: #fafafa;
+                border: 1px solid #dadada;
+                padding: 80px 40px;
+            }
+            .panel.activo{ display: block; }
+            
+            .container.oculto{ display: none; }
+            
+        </style>
+    </head>
+    <body>
+        <div class="contenido">
+
+            <div id="tab_nombre" class="panel activo">
+                <label id="lbl_nombre">Introduce tu nombre</label>
+                <input id="txt_nombre" type="text" />
+                <button id="btn_iniciar" type="button">Iniciar</button>
+            </div>
+            <div id="tab_juego" class="panel">
+                
+                
+                <label id="lbl_resultado">Inicia tu ronda!</label>
+                
+                <div class="container">
+                    <button id="btn_papel" type="button">Papel</button>
+                    <button id="btn_piedra" type="button">Piedra</button>
+                    <button id="btn_tijeras" type="button">Tijeras</button>
+                    <button id="btn_lagarto" type="button">Lagarto</button>
+                    <button id="btn_spock" type="button">Spock</button>
+                </div>
+
+                <div id="tab_resultado" class="container oculto">
+                    <button id="btn_reiniciar" type="button">Reiniciar</button>
+                </div>
+            </div>
+            
+        </div>
+            <script type="text/javascript">
+                
+                function Juego( turnos ){
+                    /**
+                     * @type Juego
+                     */
+                    var _self = this;
+                    
+                    var _config = {
+                        'nombre': '',
+                        //'nombre': typeof jugador !== 'undefined' ? jugador : 'Jugador',
+                        'turnos': typeof turnos === 'number' ? turnos : 5,
+                        'ronda': 0,
+                        'puntos': 0
+                    };
+                    
+                    this.bind = function(){
+                        
+                        document.getElementById('btn_iniciar').addEventListener( 'click' , function(e){
+                            
+                            e.preventDefault();
+                            
+                            var nombre = document.getElementById('txt_nombre').value;
+
+                            if( nombre.length  > 0 ){
+                                
+                                _config.nombre = nombre;
+                                
+                                document.getElementById('tab_nombre').className = 'panel';
+                                
+                                document.getElementById('tab_juego').className = 'panel activo';
+                            }
+                            
+                            return true;
+                        });
+                        
+                        document.getElementById('btn_papel').addEventListener('click',function(e){
+                            
+                            e.preventDefault();
+                            
+                            _self.turno( 'papel' );
+                            
+                            return true;
+                        });
+                        document.getElementById('btn_piedra').addEventListener('click',function(e){
+                            
+                            e.preventDefault();
+                            
+                            _self.turno( 'piedra' );
+                            
+                            return true;
+                        });
+                        document.getElementById('btn_tijeras').addEventListener('click',function(e){
+                            
+                            e.preventDefault();
+                            
+                            _self.turno( 'tijeras' );
+                            
+                            return true;
+                        });
+                        document.getElementById('btn_lagarto').addEventListener('click',function(e){
+                            
+                            e.preventDefault();
+                            
+                            _self.turno( 'lagarto' );
+                            
+                            return true;
+                        });
+                        document.getElementById('btn_spock').addEventListener('click',function(e){
+                            
+                            e.preventDefault();
+                            
+                            _self.turno( 'spock' );
+                            
+                            return true;
+                        });
+                    };
+                    /**
+                     * 
+                     * @param {String} mensaje
+                     * @returns {Juego}
+                     */
+                    this.mostrarResultado = function( mensaje ){
+                        document.getElementById('lbl_resultado').innerHTML = '<h2>' + mensaje + '</h2>';
+                        return this;
+                    };
+                    /**
+                     * 
+                     * @param {Number} jugador
+                     * @returns {Juego}
+                     */
+                    this.turno = function( jugador ){
+                        
+                        if( _config.ronda < _config.turnos ){
+                            
+                            var TJ = this.buscaEleccion( jugador );
+                            console.log(TJ);
+                            if( TJ < 0 ){
+                                this.mostrarResultado('Opcion invalida');
+                                return this;
+                            }
+                            
+                            
+                            var TM = this.maquina(0,4);
+
+                            if( this.juez( TJ , TM ) ){
+                                //GANA
+                                this.mostrarResultado( 'Gana ' + _config.nombre  );
+                            }
+                            else if( this.juez( TM , TJ )){
+                                //PIERDE
+                                this.mostrarResultado( 'Gana la maquina' );
+                            }
+                            else{
+                                //EMPATE
+                                this.mostrarResultado( 'Empate' );
+                            }
+
+                            _config.ronda++;
+                        }
+                        
+                        return this;
+                    };
+                    /**
+                     * 
+                     * @param {String} opcion
+                     * @param {String} buscar
+                     * @returns {Number}
+                     */
+                    this.buscaEleccion = function( opcion ){
+
+                        for( var i = 0 ; i < Juego.Opciones.length ; i++ ){
+
+                            if( opcion.toLowerCase() === Juego.Opciones[i].toLowerCase()){
+                                return i;
+                            }
+                        }
+
+                        return -1;
+                    };
+                    /**
+                     * @param {Number} min
+                     * @param {Number} max
+                     * @return {Number}
+                     */
+                    this.maquina = function( min , max){
+                        return Math.floor( Math.random() * ( max - min ) ) + min;
+                    }
+                    /**
+                     * Juez del turno que valida quien ha ganado la ronda
+                     * TRUE si el jugador (A)
+                     * FALSE si la maquina (B)
+                     * @param {Number} A
+                     * @param {Number} B
+                     * @returns {Boolean}
+                     */
+                    this.juez = function( A , B ){
+
+                        switch( true ){
+
+                                    case (A === 2 && B === 0): //tijeras > papel
+                                    case (A === 0 && B === 1): //papel > piedra
+                                    case (A === 1 && B === 3): //piedra > lagarto
+                                    case (A === 3 && B === 4): //Lagarto > spock
+                                    case (A === 4 && B === 2): //Spock > Tijeras
+                                    case (A === 2 && B === 3): //Tijeras > Lagarto
+                                    case (A === 3 && B === 0): //Lagarto > Papel
+                                    case (A === 0 && B === 4): //Papel > Spock
+                                    case (A === 4 && B === 1): //Spock > Piedra
+                                    case (A === 1 && B === 2): //Piedra > Tijeras
+                                        return true;
+                                }
+
+                                return false;
+                    };
+                    
+                    this.estado = function(){
+                        
+                        if( _config.ronda >= _config.turnos ){
+                            
+                        }
+                        
+                        return false;
+                    };
+                    
+                    return this.bind();
+                }
+                
+                //                  0       1       2           3       4
+                Juego.Opciones = ['Papel','Piedra','Tijeras','Lagarto','Spock'];
+                /**
+                 * 
+                 * @param {Number} opcion
+                 * @returns {String}
+                 */
+                Juego.mostrarOpcion = function( opcion ){
+                    return opcion >= 0 && opcion < juego.Opciones.length ?
+                            juego.Opciones[ opcion ] :
+                            'tirada invalida';
+                };
+
+                /**
+                 * @param {Number} min
+                 * @param {Number} max
+                 * @return {Number}
+                 */
+                function turnoMaquina( min , max){
+                    return Math.floor( Math.random() * ( max - min ) ) + min;
+                }
+
+
+            
+                new Juego( );
+                
+                
+            </script>
+            
+    </body>
+</html>

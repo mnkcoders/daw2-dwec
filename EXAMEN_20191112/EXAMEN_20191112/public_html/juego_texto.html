@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Piedra Papel Tijera Lagarto Spock</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="contenido">
+
+            <script type="text/javascript">
+                
+                function juego( turnos ){
+                    
+                    if( typeof turnos !== 'number' ){
+                        turnos = 5;
+                    }
+                    
+                    var nombre = prompt( 'Tu nombre');
+                    
+                    var puntuacion = 0;
+                    
+                    for( var t = 0 ; t < turnos ; ){
+
+                        var tj = buscaEleccion( juego.Opciones.join(' ') , prompt('Qué opción escoges?') );
+                        
+                        if( tj < 0 ){
+                            //error de input, repite de nuevo
+                            alert('Opción incorrecta');
+                            continue;
+                        }
+
+                        var tm = turnoMaquina(0,4);
+                        //incrementa el turno
+                        t++;
+                        
+                        //mostrar resultado del turno por pantalla
+                        alert( 'TURNO ' + t + "\n" + 
+                                nombre + ': ' + juego.mostrarOpcion( tj )
+                                + "\nMaquina: " + juego.mostrarOpcion( tm ) );
+
+                        if( turno( tj , tm ) ){
+                            //GANADO
+                            alert( 'Gana ' + nombre );
+                            puntuacion++;
+                        }
+                        else if( turno( tm , tj ) ){
+                            //PERDIDO
+                            alert( 'Gana la máquina' );
+                            puntuacion--;
+                        }
+                        else{
+                            //empate
+                            alert( 'Empate' );
+                        }
+                    }
+                    
+                    if( puntuacion > 2 ){
+                        alert( nombre + ' ha ganado!!');
+                    }
+                    else{
+                        alert( nombre + ' ha perdido :(');
+                    }
+                }
+                
+                //                  0       1       2           3       4
+                juego.Opciones = ['Papel','Piedra','Tijeras','Lagarto','Spock'];
+                /**
+                 * 
+                 * @param {Number} opcion
+                 * @returns {String}
+                 */
+                juego.mostrarOpcion = function( opcion ){
+                    return opcion >= 0 && opcion < juego.Opciones.length ?
+                            juego.Opciones[ opcion ] :
+                            'tirada invalida';
+                };
+                /**
+                 * Juez del turno que valida quien ha ganado la ronda
+                 * TRUE si el jugador (A)
+                 * FALSE si la maquina (B)
+                 * @param {Number} A
+                 * @param {Number} B
+                 * @returns {Boolean}
+                 */
+                function turno( A , B ){
+                    
+                    switch( true ){
+                        
+                        case ( A === 2 && B === 0 ): //tijeras > papel
+                        case ( A === 0 && B === 1 ): //papel > piedra
+                        case ( A === 1 && B === 3 ): //piedra > lagarto
+                        case ( A === 3 && B === 4 ): //Lagarto > spock
+                        case ( A === 4 && B === 2 ): //Spock > Tijeras
+                        case ( A === 2 && B === 3 ): //Tijeras > Lagarto
+                        case ( A === 3 && B === 0 ): //Lagarto > Papel
+                        case ( A === 0 && B === 4 ): //Papel > Spock
+                        case ( A === 4 && B === 1 ): //Spock > Piedra
+                        case ( A === 1 && B === 2 ): //Piedra > Tijeras
+                            return true;
+                    }
+                    
+                    return false;
+                }
+                /**
+                 * @param {Number} min
+                 * @param {Number} max
+                 * @return {Number}
+                 */
+                function turnoMaquina( min , max){
+                    return Math.floor( Math.random() * ( max - min ) ) + min;
+                }
+
+                /**
+                 * 
+                 * @param {String} texto
+                 * @param {String} buscar
+                 * @returns {Number}
+                 */
+                function buscaEleccion( texto , buscar ){
+                    
+                    //return buscar.indexOf( texto );
+                    
+                    var input = texto.toLowerCase().split(' ');
+                    //console.log(input);
+                    for( var i = 0 ; i < input.length ; i++ ){
+                        //console.log(input[i]);
+                        //console.log(buscar.toLowerCase());
+                        if( input[i] === buscar.toLowerCase()){
+                            return i;
+                        }
+                    }
+                    
+                    return -1;
+                }
+            
+                juego();
+                
+                
+            </script>
+            
+        </div>
+    </body>
+</html>

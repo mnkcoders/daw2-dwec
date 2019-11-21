@@ -136,30 +136,28 @@
 
         
         <footer class="page-footer">
-          <!--div class="container">
-            <div class="row">
-              <div class="col l6 s12">
-                <h5 class="white-text">Footer Content</h5>
-                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
-              </div>
-              <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Links</h5>
-                <ul>
-                  <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                </ul>
-              </div>
-            </div>
-          </div-->
           <div class="footer-copyright">
             <div class="container">
                 <span class="copyright">&copy; 2019 - Asociaci&oacute;n Deportiva</span>
                 <span class="designer">Diseñado por Jaume Llopis de Andr&eacute;s</span>
-                <a class="legal grey-text text-lighten-4 right" href="#!">Aviso Legal</a>
+                <a class="popup-link legal grey-text text-lighten-4 right" href="#!">Aviso Legal</a>
             </div>
           </div>
         </footer>
+        <div id="login" class="popup shaded">
+            <div class="container popup">
+                <div class="login-form container centered clear">
+                    <form name="login" action="#" method="post">
+
+                        <input type="text" name="name" placeholder="Tu nombre" />
+
+                        <input id="password" type="password" name="password" placeholder="Tu cotraseña" />
+
+                        <button id="login-btn" class="btn btn-large" type="submit" name="action" value="login">Entrar</button>
+                    </form>
+                    <label id="lbl_error"></label>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

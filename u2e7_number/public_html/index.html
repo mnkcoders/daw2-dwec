@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+
+Crea un programa que pida al usuario un número entero por pantalla y muestre:
+1. Su valor exponencial.
+2. El número con 4 decimales.
+3. El número en binario.
+4. El número en octal.
+5. El número en hexadecimal.
+■ Utiliza para ello los métodos del objeto Number.
+■ Como datos de muestra, si metes 50, deberías obtener: 5e1 / 50.0000 / 00110010 / 62 / 0x32
+
+-->
+<html>
+    <head>
+        <title>u2e7_number</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <script type="text/javascript">
+            
+            /**
+             * 
+             * @param {Number} numero
+             * @returns {Number}
+             */
+            function calcular( numero ){
+                
+                var N = Number.parseFloat(numero);
+                
+                var out = [
+                    'Exponencial: ' + N.toExponential(),
+                    '4 Decimales: ' + N.toPrecision(4),
+                    'Binario: ' + N.toString(2),
+                    'Octal: ' + N.toString(8),
+                    'Hexa: ' + N.toString(16)
+                ];
+                
+                return out.join('<br/>');
+            }
+            
+            
+            document.addEventListener('DOMContentLoaded',function(){
+                
+                var numero = prompt('Mete un numero');
+                
+                document.getElementById('resultado').innerHTML = calcular(numero);
+                
+            });
+            
+            
+        </script>
+        
+        <div id="resultado">
+            
+            <!-- -->
+            
+        </div>
+    </body>
+</html>

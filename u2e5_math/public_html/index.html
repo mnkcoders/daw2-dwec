@@ -4,6 +4,7 @@
         <title>u2e5_math</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" type="text/css" rel="stylesheet" /-->
         <!--
 Crea un programa que pida al usuario que elija una opción del siguiente menú:
 1. Potencia.
@@ -22,14 +23,26 @@ valores trigonométricos del seno, coseno y tangente.
         -->
         <script type="text/javascript">
             
-            function Mates(){
+            (function(){
+                
+                var _app = this;
+
                 /**
                  * @param {Number} resultado
                  * @returns {Mates}
                  */
-                this.mostrarResultado = function( resultado ){
+                this.mostrar = function( resultado ){
                     
-                    document.getElementById('resultado').innerHTML = resultado;
+                    if( typeof resultado === 'string' ){
+                        document.getElementById('resultado').innerHTML = resultado;
+                    }
+                    else{
+
+                        document.getElementById('resultado').innerHTML = !isNaN(resultado) ?
+                            'Resultado: ' + resultado :
+                            'Escribe bien, cony!';
+                    }
+                    
                     
                     return this;
                 };
@@ -39,22 +52,58 @@ valores trigonométricos del seno, coseno y tangente.
                 this.iniciar = function(){
                     
                     document.addEventListener('DOMContentLoaded',function(e){
-                        
-                        var base = document.getElementById('id_base');
-                        var exp = document.getElementById('id_exp');
-                        
-                        
+                        console.log(e);
                         document.getElementById('btn_ejecutar').addEventListener('click',function(e){
-                            
-                            
-                            
+                            console.log(e);
+                            e.preventDefault();
+                            switch( true ){
+                                case document.getElementById('opt_raiz').checked:
+                                    var num = prompt('Di un numero positivo');
+                                    if( num >= 0 ){
+                                        _app.mostrar( Math.sqrt(num) );
+                                    }
+                                    else{
+                                        _app.mostrar( 'No es un valor positivo!!' )
+                                    }
+                                    break;
+                                case document.getElementById('opt_redondeo').checked:
+                                    var num = parseInt( prompt('Di un numero decimal') );
+                                    if( !isNaN(num)){
+                                        _app.mostrar( Math.round(num));
+                                    }
+                                    else{
+                                        _app.mostrar('Escribe un numero');
+                                    }
+                                    
+                                    break;
+                                case document.getElementById('opt_trigo').checked:
+                                    var rad = parseInt( prompt('Dame un valor de 360º') );
+                                    if( typeof rad === 'number' ){
+                                        rad %= 360;
+                                        _app.mostrar( 'Seno: '+ Math.sin(rad)
+                                                + ' Coseno: ' + Math.cos(rad)
+                                                + ' Tangente: ' + Math.tan(rad));
+                                    }
+                                    else{
+                                        _app.mostrar('Escribe un numero');
+                                    }
+                                    break;
+                                case document.getElementById('opt_potencia').checked:
+                                    var base = prompt('Define una Base');
+                                    var exp  = prompt('Define un Exponente');
+                                    _app.mostrar( Math.pow(
+                                            parseInt( base ),
+                                            parseInt( exp ) ) );
+                                    break;
+                            }
+                            return true;
                         });
                     });
                     return this;
                 };
         
                 return this.iniciar();
-            }
+            })();
             
         </script>
     </head>
@@ -66,47 +115,31 @@ valores trigonométricos del seno, coseno y tangente.
                     <fieldset>
                         <input id="opt_potencia" type="radio" name="operacion" value="potencia" />
                         <label for="opt_potencia">Potencia</label>
-                        <div class="container">
-                            <input id="id_base" type="text" placeholder="Base" />
-                            <input id="id_base" type="text" placeholder="Exponente" />                            
-                        </div>
                     </fieldset>
                 </li>
                 <li>
                     <fieldset>
-                        <input id="opt_operacion" type="radio" name="operacion" value="raiz" />
+                        <input id="opt_raiz" type="radio" name="operacion" value="raiz" />
                         <label for="opt_operacion">Ra&iacute;z</label>
-                        <div class="container">
-                            
-                            
-                        </div>
                     </fieldset>
                 </li>
                 <li>
                     <fieldset>
                         <input id="opt_redondeo" type="radio" name="operacion" value="redondeo" />
                         <label for="opt_redondeo">Redondeo</label>
-                        <div class="container">
-                            
-                            
-                        </div>
                     </fieldset>
                 </li>
                 <li>
                     <fieldset>
                         <input id="opt_trigo" type="radio" name="operacion" value="trigonometria" />
                         <label for="opt_trigo">Trigonometr&iacute;a</label>
-                        <div class="container">
-                            
-                            
-                        </div>
                     </fieldset>
                 </li>
-                <li class="block">
-                    <label id="resultado"><!--mostrar resultado  --></label>
-                </li>
             </ul>
-            <button type="button" id="btn_ejecutar">Calcular</button>
+            <fieldset class="block">
+                <h1 id="resultado"><!--mostrar resultado  --></h1>
+            </fieldset>
+            <button type="button" class="btn btn-large" id="btn_ejecutar">Calcular</button>
         </div>
     </body>
 </html>

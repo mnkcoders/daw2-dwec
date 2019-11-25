@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Objectes Definits</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <script type="text/javascript">
+            
+            function ventana(){
+                
+                var _popup = window.open( '' , '', "width=600, height=400, scrollbars=no");
+                
+                _popup.document.body.innerHTML += '<h3>Ejemplo de Ventana Nueva</h3>';
+                
+                _popup.document.body.innerHTML += '<p>URL Completa: '+ _popup.location.url +'</p>';
+                _popup.document.body.innerHTML += '<p>URL Protocolo: '+ _popup.location.protocol +'</p>';
+                _popup.document.body.innerHTML += '<p>Navegador '+ _popup.navigator.appCodeName +'</p>';
+                
+                if( _popup.navigator.javaEnabled() ){
+
+                    _popup.document.body.innerHTML +=  '<p>Java SI disponible en esta ventana,</p>';
+                }
+                else{
+                    _popup.document.body.innerHTML +=  '<p>Java NO disponible en esta ventana</p>';
+                }
+                
+                //_popup.opener.capturarDatos( 'Hola' );
+                //return _popup;
+                
+                
+                _popup.document.body.innerHTML += '<iframe src="https://www.google.es" width="800" height="600"></iframe>';
+                
+                return _popup;
+            }
+            /**
+             * 
+             * @param {Window} ventana
+             * @returns {Boolean}
+             */
+            function solicitarDatos( ventana ){
+                
+                ventana.opener.document.body.innerHTML += '<h1>TAREA DWEC03</h1><hr/>';
+                
+                var nombre = ventana.prompt('Nombre y apellidos');
+                
+                var dia = ventana.prompt('Dia de nacimiento') || 1;
+                
+                var mes = ventana.prompt('mes de nacimiento');
+                
+                var ano = ventana.prompt('año de nacimiento');
+                
+                if( typeof ventana.opener.capturarDatos === 'function' ){
+                    ventana.opener.capturarDatos({
+                        'nombre':nombre,
+                        'dia':parseInt(dia),
+                        'mes':parseInt(mes),
+                        'ano':parseInt(ano)
+                    });
+                    return true;
+                }
+                return false;
+            }
+            
+            function capturarDatos( datos ){
+                
+                var semana = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
+                var numeros = [34,67,23,75,35,19];
+                
+                var vista = document.getElementById('resultado');
+                var fechaNac = new Date(datos.ano+'-'+datos.mes+'-'+datos.dia);
+                
+                var primeraA = datos.nombre.toLowerCase().indexOf('a');
+                var ultimaA = datos.nombre.toLowerCase().lastIndexOf('a');
+                var longitud = datos.nombre.length;
+                var edad = (new Date()).getUTCFullYear() -  fechaNac.getUTCFullYear();
+                
+                vista.innerHTML += '<p>Buenos dias ' + datos.nombre + '</p>';
+                vista.innerHTML += '<p>Tu nombre tiene ' + longitud + 'caracteres incluyendo espacios</p>';
+                vista.innerHTML += '<p>La primera A esta en '
+                        + primeraA + ' y la ultima en '
+                        + ultimaA + '</p>';
+                vista.innerHTML += '<p>Tu nombre menos las 3 primeras letras es '
+                        + datos.nombre.substr( 3 , datos.nombre.length - 4) +'</p>';
+                vista.innerHTML += '<p>Tu nombre todo en mayusculas es '
+                        + datos.nombre.toUpperCase() + '</p>';
+                
+                vista.innerHTML += '<p>Tu edad es ' + edad + '</p>'
+                vista.innerHTML += '<p>Naciste un feliz '
+                        + semana[ fechaNac.getUTCDay()%7]
+                        +' del año ' + fechaNac.getUTCFullYear() + '</p>'
+                
+                vista.innerHTML += '<p>El coseno de 180 es'+ Math.cos(180).toString()+'</p>';
+                
+                vista.innerHTML += '<p>El mayor valor de '
+                        + numeros.join(',') + ' es '
+                        + Math.max(numeros) + '</p>';
+                
+                vista.innerHTML += '<p>Random: ' +
+                        + Math.random() + '</p>'
+            }
+            
+            document.addEventListener('DOMContentLoaded',function(){
+                
+                var popup = ventana();
+                
+                window.setTimeout( function(){ solicitarDatos( popup ); },2000);
+                
+                
+                
+            });
+            
+        </script>
+        <div id="resultado">
+            
+            
+        </div>
+    </body>
+</html>

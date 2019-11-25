@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--
+        
+Crea un programa que pida al usuario el valor del radio de un circulo y muestre por pantalla:
+1. El valor del radio.
+2. El valor del diámetro.
+3. El valor del perímetro de la circunferencia.
+4. El valor del área del círculo.
+
+5. El valor del área de la esfera.
+6. El valor del volumen de la esfera.
+7. Hacer lo mismo pidiendo al usuario elegir entre 5 figuras aparte del circulo a vuestra elección.
+• El valor de Pi debes obtenerlo del objeto Math, no introducirlo manualmente.
+• Debes escribir al lado si son cm, o cm2, o cm3.
+• Como datos de muestra, si metes 5,
+        
+        -->
+    </head>
+    <body>
+        <script type="text/javascript">
+            
+            function esfera( radio ){
+                
+                var output = [];
+                
+                output.push( 'Radio: ' + radio );
+                output.push( 'Diametro: ' + (radio*2) );
+                output.push( 'Perimetro: ' + (2*radio*Math.PI) );
+                output.push( 'Area: ' + (Math.PI*Math.pow(radio,2)) );
+                output.push( 'Area Esfera: ' + (Math.PI*Math.pow(radio,2)) );
+                output.push( 'Volumen Esfera: ' + ((4/3)*Math.PI*Math.pow(radio,3)) );
+                
+                return output.join('<br/>');
+            }
+            
+            
+            document.addEventListener('DOMContentLoaded',function(e){
+                
+                var radio = parseInt( prompt('Mete un radio') );
+                
+                if( isNaN(radio)){
+                    document.getElementById('resultado').innerHTML = 'escribe un numero';
+                }
+                else{
+                    document.getElementById('resultado').innerHTML = esfera( radio );
+                }                
+            });
+            
+            
+        </script>
+        
+        <div id="resultado">
+            
+            <!-- -->
+            
+        </div>
+    </body>
+</html>

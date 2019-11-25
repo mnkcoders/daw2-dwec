@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+        <!--
+
+Crea un programa que pida al usuario su nombre y apellidos y muestre:
+1. El tamaño del nombre más los apellidos (sin contar espacios).
+2. La cadena en minúsculas y en mayúsculas.
+3. Que divida el nombre y los apellidos y los muestre en 3 líneas, donde ponga Nombre: / Apellido
+1: / Apellido 2:
+        
+        -->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <script type="text/javascript">
+            /**
+             * @param {String} nombre
+             * @returns {String}
+             */
+            function nombre_completo( nombre ){
+                
+                var res = [
+                    'Longitud (sin espacios): ' + nombre.replace(' ').length,
+                    'Minusculas: ' + nombre.toLowerCase(),
+                    'Mayusculas: ' + nombre.toUpperCase(),
+                ];
+               
+                var pal = nombre.split(' ');
+                
+                for( p = 0 ; p < pal.length ; p++ ){
+                    switch( p ){
+                        case 0:
+                            res.push('Nombre: '+ pal[p]);
+                            break;
+                        case 1:
+                            res.push('1º apellido: '+ pal[p]);
+                            break;
+                        case 2:
+                            res.push('2º apellido: '+ pal[p]);
+                            break;
+                        default:
+                            res[res.length-1] += ' ' + pal[p];
+                            break;
+                    }
+                }
+                
+                return res.join('<br/>');
+            }
+            
+            document.addEventListener('DOMContentLoaded',function(e){
+                
+                var nombre = prompt('Escribe tu nombre completo');
+                
+                document.getElementById('resultado').innerHTML = nombre_completo(nombre);
+                
+            });
+            
+        </script>
+        <div id="resultado">
+
+        <!-- RES -->
+        
+        </div>
+    </body>
+</html>
+
+
+
+

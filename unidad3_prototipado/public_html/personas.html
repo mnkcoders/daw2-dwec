@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <script type="text/javascript">
+            
+            function Persona( nombre , edad , genero ){
+               
+               this.nombre = nombre;
+               this.edad = edad;
+               this.genero = genero;
+               
+               this.obtenerDetalles = function(){
+                   return "Nombre: " + this.nombre
+                        + "\nEdad: " + this.edad
+                        + "\nGenero: " + this.genero;
+               };
+               
+               return this;
+            }
+            
+            /**
+             * @param {String} nombre
+             * @param {Number} edad
+             * @param {String} genero
+             * @returns {Estudiante}
+             */            
+            function Estudiante( nombre,edad,genero){
+               
+                Persona.call(this,nombre,edad,genero);
+             
+                this.registrar = function( curso , grupo ){
+                    
+                    this.curso = curso;
+                    
+                    this.grupo = grupo;
+                   
+                    return this;
+                };
+            }
+            
+            Estudiante.prototype = new Persona();
+            Estudiante.prototype.constructor = Persona;
+
+            
+            
+        </script>
+        <div>TODO write content</div>
+    </body>
+</html>
+
+<!--
+
+
+Objetos​​2
+Objeto Persona con las propiedades nombre, edad y género, y el método obtenerDetalles(),
+que muestra por pantalla las propiedades de la persona.
+Objeto Estudiante, que hereda de Persona, e incluye las propiedades curso y grupo y el
+método registrar() que le asigne a los cursos y grupos.
+Objeto Profesor, que hereda de Persona, e incluye las propiedades asignatura y nivel y el
+método asignar() que le asigne asignaturas.
+
+-->

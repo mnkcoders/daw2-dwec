@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>u3e3_objetos</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="respuesta">
+            
+            
+            
+        </div>
+        <script type="text/javascript" src="u3e3_objetos.js"></script>
+        
+        <script type="text/javascript">
+            
+            var D = new Disco({
+                'nombre':'Miracles',
+                'autor':'Cold Play',
+                'genero': Disco.Genero.Pop,
+                'año':'2017',
+                'localizacion': 5001,
+                'prestado': true
+            });
+
+            console.log(D.exportar());
+            console.log(D.toString());
+            
+        </script>
+    </body>
+</html>

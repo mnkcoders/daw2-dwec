@@ -4,6 +4,59 @@
         <title>u3e1_arrays</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="modal.js"></script>
+        <script type="text/javascript">
+            
+
+            function mostrar( info ){
+
+                document.getElementById('respuesta').innerHTML += '<p>' + info + '</p>';
+            }
+
+            var paises = [
+                'España',
+                'Francia',
+                'Alemania',
+                'Italia',
+                'Reino Unido',
+                'Polonia',
+                'Republica Checa',
+                'Dinamarca'
+            ];
+            
+            document.addEventListener('DOMContentLoaded',function(e){
+                
+                //llamar a la aplicación para mostrar un popup con las opciones
+                Modal.create( 'Opciones' )
+                        .bind('Mostrar numero de paises',function(e){
+                            console.log('Mostrar numero paises');
+                            mostrar( paises );
+                        })
+                        .bind('Mostrar listado de paises',function(e){
+                            console.log('Mostrar listado de paises');
+                        })
+                        .bind('Mostrar un intervalo de paises',function(e){
+                            console.log('Mostrar un intervalo de paises');
+                        })
+                        .bind('Añadir un pais',function(e){
+                            console.log('Añadir un pais');
+                        })
+                        .bind('Borrar un pais',function(e){
+                            console.log('Borrar un pais');
+                        })
+                        .bind('Consultar un pais',function(e){
+                            console.log('Consultar un pais');
+                        })
+                        .bind('Cerrar',function(e){
+                            //
+                        })
+                        .show();
+                
+            });
+            
+            
+            
+        </script>
     </head>
     <body>
         <div id="respuesta">
@@ -11,6 +64,27 @@
             
             
         </div>
-        <script type="text/javascript" src="u3e2_arrays.js"></script>
     </body>
 </html>
+<!--
+
+/**
+ * 
+ EJERCICIO: u3e2_arrays:
+Ten en cuenta que el array será una variable global y que se pasará por parámetro en todas las
+funciones.
+Cuando el usuario cargue la página, se cargará un prompt donde se mostrarán (en el prompt, no en
+la página) las opciones:
+■ Mostrar número de países.
+■ Mostrar listado de países (y le preguntará si quiere mostrarlos en el orden que se
+encuentran en el array, del revés u ordenados alfabéticamente).
+■ Mostrar un intervalo de países (y le pedirá que introduzca el intervalo en formato inicio-fin;
+luego deberás extraer el valor inicio y fin).
+■ Añadir un país (y le preguntará si quiere añadir al principio o al final).
+■ Borrar un país (y le preguntará si quiere borrar al principio o al final).
+■ Consultar un país (y le preguntará si quiere consultar por posición o por nombre).
+■ Todas las operaciones que se realicen se irán mostrando en la página con su título.
+ * 
+ */
+
+--->

@@ -8,20 +8,31 @@
     <body>
         <script type="text/javascript">
             
+            function Animal(){ /* prueba para instanceof */ };
+            
             function Persona( nombre , edad , genero ){
                
                this.nombre = nombre;
                this.edad = edad;
                this.genero = genero;
                
-               this.obtenerDetalles = function(){
-                   return "Nombre: " + this.nombre
-                        + "\nEdad: " + this.edad
-                        + "\nGenero: " + this.genero;
+               /**
+                * @returns {String}
+                */
+               this.toString = function(){
+                   return this.obtenerDetalles();
                };
                
                return this;
             }
+            /**
+             * @returns {String}
+             */
+            Persona.prototype.obtenerDetalles = function(){
+                   return "Nombre: " + this.nombre
+                        + "\nEdad: " + this.edad
+                        + "\nGenero: " + this.genero;
+            };
             
             /**
              * @param {String} nombre
@@ -30,9 +41,18 @@
              * @returns {Estudiante}
              */            
             function Estudiante( nombre,edad,genero){
-               
+                //esto parece funcionar aquii dentro también...
+                //PERO a herencia no se efectua correctamente y estudiante NO es persona
+                //this.prototype = new Persona();
+                //this.prototype.constructor = Persona;
+                
                 Persona.call(this,nombre,edad,genero);
-             
+
+                /**
+                 * @param {String} curso
+                 * @param {String} grupo
+                 * @returns {Estudiante}
+                 */
                 this.registrar = function( curso , grupo ){
                     
                     this.curso = curso;
@@ -41,15 +61,69 @@
                    
                     return this;
                 };
-            }
-            
+                /**
+                 * @returns {String}
+                 */
+                this.obtenerDetalles = function(){
+                    
+                    var detalles_persona = Persona.prototype.obtenerDetalles.call(this);
+                    //var detalles_persona = 'KK';
+                    return detalles_persona
+                         + "\nCurso: " + this.curso
+                         + "\nGrupo: " + this.grupo;
+                };
+            };
+            //Definir herencia explicitamente
             Estudiante.prototype = new Persona();
             Estudiante.prototype.constructor = Persona;
+            /**
+             * 
+             * @param {String} nombre
+             * @param {String} edad
+             * @param {String} genero
+             * @returns {Estudiante}
+             */
+            Estudiante.nuevo = function( nombre , edad , genero ){
 
+                return new Estudiante( nombre , edad , genero );
+            };
+
+            function mostrar( texto ){
+                
+                var output = document.getElementById('resultado');
+                
+                
+                output.innerHTML += '<p>' + texto + '</p>';
+            }
             
+            
+            document.addEventListener('DOMContentLoaded',function(){
+                
+                var estudiantes = [
+                    Estudiante.nuevo('Jaume Llopis','21','hombre').registrar(1,'B'),
+                    Estudiante.nuevo('Juanjo Pirirs','21','hombre').registrar(1,'B'),
+                    Estudiante.nuevo('Ana Sintes','21','hombre').registrar(1,'B'),
+                    Estudiante.nuevo('Tomas Pons','21','hombre').registrar(1,'B'),
+                ];
+        
+                //var jaume = (new Estudiante('Jaume','21','hombre')).registrar(1,'B');
+                
+                //console.log( jaume instanceof Estudiante ) ;
+                //console.log( jaume instanceof Persona ) ;
+                //console.log( jaume instanceof Animal ) ;
+                //mostrar( jaume.obtenerDetalles());
+                
+                estudiantes.forEach( function(e){
+                    mostrar( e.obtenerDetalles());
+                });
+                
+                
+            });
             
         </script>
-        <div>TODO write content</div>
+        <pre id="resultado">
+            
+        </pre>
     </body>
 </html>
 

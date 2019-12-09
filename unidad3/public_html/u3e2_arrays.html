@@ -1,71 +1,4 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>u3e1_arrays</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script type="text/javascript" src="modal.js"></script>
-        <script type="text/javascript">
-            
-
-            function mostrar( info ){
-
-                document.getElementById('respuesta').innerHTML += '<p>' + info + '</p>';
-            }
-
-            var paises = [
-                'España',
-                'Francia',
-                'Alemania',
-                'Italia',
-                'Reino Unido',
-                'Polonia',
-                'Republica Checa',
-                'Dinamarca'
-            ];
-            
-            document.addEventListener('DOMContentLoaded',function(e){
-                
-                //llamar a la aplicación para mostrar un popup con las opciones
-                Modal.create( 'Opciones' )
-                        .bind('Mostrar numero de paises',function(e){
-                            console.log('Mostrar numero paises');
-                            mostrar( paises );
-                        })
-                        .bind('Mostrar listado de paises',function(e){
-                            console.log('Mostrar listado de paises');
-                        })
-                        .bind('Mostrar un intervalo de paises',function(e){
-                            console.log('Mostrar un intervalo de paises');
-                        })
-                        .bind('Añadir un pais',function(e){
-                            console.log('Añadir un pais');
-                        })
-                        .bind('Borrar un pais',function(e){
-                            console.log('Borrar un pais');
-                        })
-                        .bind('Consultar un pais',function(e){
-                            console.log('Consultar un pais');
-                        })
-                        .bind('Cerrar',function(e){
-                            //
-                        })
-                        .show();
-                
-            });
-            
-            
-            
-        </script>
-    </head>
-    <body>
-        <div id="respuesta">
-            
-            
-            
-        </div>
-    </body>
-</html>
 <!--
 
 /**
@@ -75,7 +8,6 @@ Ten en cuenta que el array será una variable global y que se pasará por parám
 funciones.
 Cuando el usuario cargue la página, se cargará un prompt donde se mostrarán (en el prompt, no en
 la página) las opciones:
-■ Mostrar número de países.
 ■ Mostrar listado de países (y le preguntará si quiere mostrarlos en el orden que se
 encuentran en el array, del revés u ordenados alfabéticamente).
 ■ Mostrar un intervalo de países (y le pedirá que introduzca el intervalo en formato inicio-fin;
@@ -88,3 +20,155 @@ luego deberás extraer el valor inicio y fin).
  */
 
 --->
+<html>
+    <head>
+        <title>u3e1_arrays</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="modal.js"></script>
+        <script type="text/javascript">
+
+            var paises = [
+                'Belice',
+                'Benín',
+                'Bielorrusia',
+                'Birmania',
+                'Bolivia',
+                'Bosnia-Herzegovina',
+                'Botsuana',
+                'Brasil',
+                'Brunéi',
+                'Bulgaria',
+                'Burkina Faso',
+                'Burundi',
+                'Bután',
+                'Cabo Verde',
+                'Camboya',
+                'Camerún',
+                'Canadá',
+                'Catar',
+                'Chad',
+                'Chile',
+                'China',
+                'Chipre',
+                'Colombia',
+                'Comoras',
+                'Congo',
+                'Corea del Norte',
+                'Corea del Sur',
+                'Costa de Marfil',
+                'Costa Rica',
+                'Croacia',
+                'Cuba',
+                'Dinamarca'
+            ];
+            
+            function agregar_pais( pais ){
+                            if( !paises.includes( pais ) ){
+                                paises.push(pais);
+                                Modal.Instance.mostrar( 'Agregado en posici&oacute;n ' + paises.length ,'Agregando nuevo pais ' + pais );
+                            }
+                            else{
+                                Modal.Instance.mostrar( 'Este pais ya existe','Agregando nuevo pais ' + pais );
+                            }
+            }
+            /**
+             * 
+             * @param {String} pais
+             * @returns {undefined}
+             */
+            function borrar_pais( pais ){
+                console.log(paises.includes(pais));
+                if( paises.indexOf(pais) > -1){
+                    //paises.pop(pais);
+                    paises.splice(paises.indexOf(pais),1);
+                    console.log(paises);
+                    Modal.Instance.mostrar( 'Borrado!' , 'Borrando ' + pais );
+                }   
+                else{
+                    Modal.Instance.mostrar( 'Este pais no está en la lista' , 'Borrando ' + pais );
+                }
+            }
+            /**
+             * 
+             * @param {String} pais
+             * @returns {undefined}
+             */
+            function consultar_pais( pais ){
+ 
+                if( Number.isNaN( parseInt(pais) ) ){
+                    var pos = paises.indexOf(pais);
+                    if( paises.includes(pais)){
+                        Modal.Instance.mostrar( pais + ' est&aacute; en la posici&oacute;n ' + pos , 'Consultando ' + pais + ' por nombre' );
+                    }
+                    else{
+                        Modal.Instance.mostrar( pais + ' no está en la lista' , 'Consultando ' + pais + ' por nombre' );
+                    }
+                }
+                else {
+                    var pos = parseInt( pais );
+
+                    if( pos >= 0 && pos < paises.length ){
+                        Modal.Instance.mostrar( paises[pos] + ' est&aacute; en la posici&oacute;n ' + pos , 'Consultando ' + paises[pos] + ' por posici&oacute;n' );
+                    }
+                    else{
+                        Modal.Instance.mostrar( 'No se ha indicado una posici&oacute;n válida' , 'Consultando ' + pais + ' por posici&oacute;n' );
+                    }
+                }
+            }
+            
+            document.addEventListener('DOMContentLoaded',function(e){
+                
+                //llamar a la aplicación para mostrar un popup con las opciones                
+                Modal.Instance = Modal.create('Opciones','respuesta')
+                        .bind('Mostrar numero de paises',function(e){
+                            console.log('Mostrar numero paises');
+                            Modal.Instance.mostrar( 'Tenemos ' + paises.length + ' paises' , 'N&uacute;mero de paises' );
+                        })
+                        .bind('Mostrar listado de paises',function(e){
+                            console.log('Lista de paises: ' + paises.join('<br/>'));
+                            Modal.Instance.mostrar('Lista de paises: ' + paises.join('<br/>') , 'Listado de paises');
+                        })
+                        .bind('Mostrar un intervalo de paises',function(e){
+                            
+                            console.log('Mostrar un intervalo de paises');
+                            //console.log(Modal.Instance);
+                            var desde = parseInt( Modal.Instance.prompt('Desde') ) || 0;
+                            var hasta = parseInt( Modal.Instance.prompt('Hasta') ) || paises.length-1;
+                            
+                            Modal.Instance.mostrar( paises.slice( desde, hasta , 'Intervalo de Paises' ) );
+                        })
+                        .bind('Añadir un pais',function(e){
+                            console.log('Añadir un pais');
+
+                            agregar_pais( Modal.Instance.prompt( 'Escribe un pais' ) );
+                        })
+                        .bind('Borrar un pais',function(e){
+                            console.log('Borrar un pais');
+                    
+                            borrar_pais( Modal.Instance.prompt( 'Escribe el pais a borrar' ) );
+
+                        })
+                        .bind('Consultar un pais',function(e){
+                            console.log('Consultar un pais');
+                    
+                            consultar_pais(Modal.Instance.prompt( 'Escribe la posición o el nombre del país a consutlar' ));
+                        })
+                        .bind('Cerrar',function(e){
+                            //
+                            Modal.Instance.close();
+                        })
+                        //Inicializa el popup
+                        .show();
+            });
+            
+        </script>
+    </head>
+    <body>
+        <div id="respuesta">
+            
+            
+            
+        </div>
+    </body>
+</html>

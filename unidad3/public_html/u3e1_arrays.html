@@ -4,6 +4,98 @@
         <title>u3e1_arrays</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="modal.js"></script>
+        <script type="text/javascript">
+            
+                    /*
+                     EJERCICIO: u3e1_arrays
+                    Vamos a gestionar una lista de países haciendo uso de Arrays.
+                    Para ello necesitarás crear un archivo arrays.js que incluya las siguientes funciones:
+                    ■ Mostrar el número de elementos del array.
+                    ■ Mostrar todos los elementos del array.
+                    ■ Muestra los elementos del array en sentido inverso.
+                    ■ Muestra los elementos del array ordenados alfabéticamente (pero no los ordena).
+                    ■ Añadir un elemento al principio del array.
+                    ■ Añadir un elemento al final del array.
+                    ■ Borrar un elemento al principio del array (y decir cuál se ha borrado).
+                    ■ Borrar un elemento al final del array (y decir cuál se ha borrado).
+                    ■ Muestra el elemento que se encuentra en una posición que el usuario indica.
+                    ■ Muestra la posición en la que se encuentra un elemento que le indica el usuario.
+                    ■ Muestra los elementos que se encuentran en un intervalo que el usuario indica.
+                     */
+
+                var paises = [
+                    'España',
+                    'Francia',
+                    'Alemania',
+                    'Italia',
+                    'Reino Unido',
+                    'Polonia',
+                    'Republica Checa',
+                    'Dinamarca'
+                ];
+
+                Modal.Instance = Modal.create('Paises','respuesta')
+                        .bind( 'Numero de elementos' , function(e){
+                            
+                            Modal.Instance.mostrar('Hay ' + paises.length + ' paises','Paises' );
+                        }).bind('Lista de paises',function(e){
+                                    Modal.Instance.mostrar(paises.join('<br/>'),'Paises');
+                        }).bind('Invertir array',function(e){
+                            Modal.Instance.mostrar( paises.slice().reverse().join('<br/>'),'Lista invertida');
+                        }).bind('Ordenar alfabeticamente',function(e){
+                            Modal.Instance.mostrar( paises.slice().sort().join('<br/>'));
+                        }).bind('Agregar al principio',function(e){
+                            
+                            var pais = Modal.Instance.prompt('Nombrar pais');
+                            
+                            paises.unshift( pais );
+                            
+                            Modal.Instance.mostrar(paises.join('<br/>'),'Agregando ' + pais);
+                        }).bind('Agregar al final',function(e){
+                            
+                            var pais = Modal.Instance.prompt('Nombrar pais');
+                            
+                            paises.push( pais );
+                            
+                            Modal.Instance.mostrar(paises.join('<br/>'),'Agregando ' + pais);
+                        }).bind('Borrar del principio',function(e){
+                                                       
+                            var pais = paises.shift( );
+                            
+                            Modal.Instance.mostrar(paises.join('<br/>'),'Quitando ' + pais);
+                        }).bind('Borrar del final',function(e){
+                                                        
+                            var pais = paises.pop( pais );
+                            
+                            Modal.Instance.mostrar(paises.join('<br/>'),'Quitando ' + pais);
+                        }).bind('Mostrar segun posici&oacute;n',function(e){
+                                                        
+                            var pos = parseInt( Modal.Instance.prompt('Selecciona posici&oacute;n') );
+                            
+                            if( typeof pos === 'number' && pos > 0 && pos < paises.length ){
+                                Modal.Instance.mostrar(paises[ pos ] , 'Mostrando la posici&ioacute;n ' + pos );
+                            }
+                            else{
+                                Modal.Instance.mostrar('No es una posición valida')
+                            }
+                        }).bind('Mostrar desde hasta',function(e){
+                                                        
+                            var desde = parseInt( Modal.Instance.prompt('Desde') );
+                            var hasta = parseInt( Modal.Instance.prompt('Hasta') );
+                            
+                            if( typeof desde === 'number' && typeof hasta === 'number' ){
+                                Modal.Instance.mostrar( paises.slice( desde , hasta ) , 'Mostrando paises desde ' + desde + ' hasta ' + hasta );
+                            }
+                            else{
+                                Modal.Instance.mostrar('No es un rango valido')
+                            }
+                        })
+                        .show();
+                                       
+            
+            
+        </script>
     </head>
     <body>
         <div id="respuesta">
@@ -11,6 +103,5 @@
             
             
         </div>
-        <script type="text/javascript" src="u3e1_arrays.js"></script>
     </body>
 </html>

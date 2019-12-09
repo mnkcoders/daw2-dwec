@@ -4,6 +4,152 @@
         <title>u3e4_objetos</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <script type="text/javascript" src="modal.js"></script>
+        <script type="text/javascript" src="u3e3_objetos.js"></script>
+        <script type="text/javascript" src="u3e4_objetos.js"></script>
+        
+        <script type="text/javascript">
+            
+            var COLECCION = [
+                //cargar discos aqui
+            ];
+            /**
+             * @returns {String}
+             */
+            COLECCION.toString = function(){
+
+                return '<ol class="coleccion"><li>' + this.join( '</li><li>' ) + '</li></ol>';
+            };
+            /**
+             * 
+             * @returns {COLECCION}
+             */
+            COLECCION.importar = function(){
+                this.push('Cold Play');
+                this.push('Melendi');
+                this.push('David Getta');
+                this.push('Alicia Keys');
+                this.push('Beyoncee');
+                this.push('Bruce Springsteen');
+                this.push('Calamaro');
+                this.push('Daft Funk');
+                this.push('The Weeknd');
+                return this;
+            };
+            
+            Modal.Instance = Modal.create('Opciones','coleccion')
+                    .toggleOverride()
+                    .bind( 'Numero de discos' , function( e ){
+                        
+                        Modal.Instance.mostrar( COLECCION.length + ' discos en la discograf&iacute;a','Cuantos Discos');
+                    } )
+                    .bind( 'Listado' , function( e ){
+                        
+                        if( COLECCION.length > 0 ){
+                            var orden = parseInt( Modal.Instance.prompt("1 - Ordenado por defecto\n2 - Invertir\n3 - Alfabeticamente") );
+                            var lista = COLECCION.slice();
+                            switch( orden ){
+                                case 2: lista.reverse(); break;
+                                case 3: lista.sort(); break;
+                            }
+
+                            Modal.Instance.mostrar( COLECCION.toString(),'Listado');
+                        }
+                        else{
+                            Modal.Instance.mostrar( 'No hay discos que mostrar. Agrega un disco!','Listado');
+                        }
+                    } )
+                    .bind( 'Selecci&oacute;n de discos' , function( e ){
+                        
+                        var desde = parseInt( Modal.Instance.prompt('Desde',0) );
+                        var hasta = parseInt( Modal.Instance.prompt('Hasta',COLECCION.length-1) );
+
+                        if( typeof desde === 'number' && typeof hasta === 'number' ){
+                            Modal.Instance.mostrar( COLECCION.slice( desde , hasta ) , 'Mostrando discos desde ' + desde + ' hasta ' + hasta );
+                        }
+                        else{
+                            Modal.Instance.mostrar('No es un rango valido');
+                        }
+                    } )
+                    .bind( 'Agregar Disco' , function( e ){
+                        
+                        var disco = Modal.Instance.prompt( 'Nombre del disco?' );
+                        var pos = parseInt(Modal.Instance.prompt("Agregar a:\n1 - inicio\n2 - fin\n3 - cancelar"));
+                
+                        if( typeof pos === 'number' ){
+
+                            switch( pos ){
+                                case 1:
+                                    COLECCION.unshift(disco);
+                                    break;
+                                case 2:
+                                    COLECCION.push(disco);
+                                    break;
+                                case 3: return;
+                            }
+                                
+                            Modal.Instance.mostrar( disco + ' agregado!', 'Agregando ' + disco );
+
+                        }
+                        else{
+                            Modal.Instance.mostrar( 'Selecci&oacute;n inv&aacute;lida', 'Agregando ' + disco );
+                        }
+                    } )
+                    .bind( 'Borrar Disco' , function( e ){
+                        
+                        var pos = parseInt(Modal.Instance.prompt("Borrar desde:\n1 - inicio\n2 - fin\n3 - cancelar"));
+                
+                        if( typeof pos === 'number' ){
+
+                            switch( pos ){
+                                case 1:
+                                    COLECCION.shift();
+                                    break;
+                                case 2:
+                                    COLECCION.pop();
+                                    break;
+                                case 3: return;
+                            }
+                                
+                            Modal.Instance.mostrar( disco + ' agregado!', 'Borrando ' );
+
+                        }
+                        else{
+                            Modal.Instance.mostrar( 'Selecci&oacute;n inv&aacute;lida', 'Borrando disco' );
+                        }                    } )
+                    .bind( 'Consultar disco' , function( e ){
+                        
+                        var disco = Modal.Instance.prompt( 'Que disco quieres ver?' );
+                        
+                        if( Number.isNaN( parseInt( disco ) ) ){
+                            var pos = COLECCION.indexOf(disco);
+                           
+                            Modal.Instance.mostrar( pos >= 0 && pos < COLECCION.length ?
+                                    COLECCION[disco] + ' est&aacute; en la posici&oacute;n ' + pos :
+                                    disco + ' no est&aacute; en la colecci&oacute;n',
+                                    'Consultando ' + disco );
+                        }
+                        else{
+                            var pos = parseInt( disco );
+                            
+                            Modal.Instance.mostrar( pos >= 0 && pos < COLECCION.length ?
+                                    COLECCION[disco] + ' est&aacute; en la posici&oacute;n ' + pos :
+                                    'No se ha encontrado el disco',
+                                    'Consultando ' + COLECCION[disco] );
+                        }
+                    } )
+                    .bind( 'Importar' , function( e ){
+                        
+                        if( COLECCION.length === 0 ){
+                            COLECCION.importar();
+                        }
+                        
+                        Modal.Instance.mostrar( COLECCION.toString(), COLECCION.length + ' discos importados!!');
+                    } )
+                    .show();
+            
+        </script>
     </head>
     <body>
         <!-- 
@@ -28,6 +174,7 @@ luego deberás extraer el valor inicio y fin).
         
         -->
         <div class="discografia">
+            <h1>Mi discograf&iacute;a</h1>
             
             <div id="coleccion">
 
@@ -36,7 +183,6 @@ luego deberás extraer el valor inicio y fin).
             </div>
         </div>
 
-        <script type="text/javascript" src="u3e3_objetos.js"><!-- cargado desde ejercicio 3a --></script>
-        <script type="text/javascript" src="u3e4_objetos.js"></script>
+
     </body>
 </html>

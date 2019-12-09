@@ -16,9 +16,7 @@ luego deberás extraer el valor inicio y fin).
  * 
  */
 
-var COLECCION = [
-    //cargar discos aqui
-];
+
 /**
  * 
  * @param {String|Number} disco

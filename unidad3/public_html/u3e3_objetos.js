@@ -44,10 +44,22 @@ function Disco( disco ){
     this.localizacion = ()=>{ return _disco.localizacion; };
     this.prestado = ()=>{ return _disco.prestado; };
     /**
-     * @returns {Object}
+     * @returns {Object|Array}
      */
-    this.exportar = function(){
-        return _disco;
+    this.exportar = function( darFormato ){
+        
+        var display = darFormato || false;
+        
+        var output = [];
+
+        for( var i in _disco ){
+            if( _disco.hasOwnProperty( i ) ){
+                output.push( display ? 
+                    '<label>' + i + '</label>: <strong>' + _disco[ i ] + '</strong>':
+                    i + ': ' + _disco[ i ] );
+            }
+        }
+        return output;
     };
     /**
      * @returns {Disco}
@@ -63,7 +75,9 @@ Disco.Genero = {
     'Rock':'rock',
     'Pop':'pop',
     'Punk':'punk',
-    'Indie':'indie'
+    'Indie':'indie',
+    'Dance':'dance',
+    'Soul':'soul'
 };
 
 

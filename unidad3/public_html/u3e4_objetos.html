@@ -7,13 +7,59 @@
         
         <script type="text/javascript" src="modal.js"></script>
         <script type="text/javascript" src="u3e3_objetos.js"></script>
-        <script type="text/javascript" src="u3e4_objetos.js"></script>
         
         <script type="text/javascript">
             
             var COLECCION = [
                 //cargar discos aqui
             ];
+            /**
+             * Busca un disco on-the-fly
+             * @param {String|Number} disco
+             * @returns {Disco|Boolean}
+             */
+            COLECCION.buscar = function( disco ){
+                
+                if( Number.isNaN( parseInt( disco ) ) ){
+                    for( var i = 0; i < this.length ; i++ ){
+                        if( this[ i ].nombre() === disco ){
+                            return this[ i ];
+                        }
+                    }
+                }
+                else{
+                    disco = parseInt( disco ) -1;
+                    if( disco >= 0 && disco < this.length ){
+                        return this[ disco ];
+                    }
+                }
+
+                return false;
+            };
+            /**
+             * @param {Number} desde
+             * @param {Number} hasta
+             * @returns {Disco[]}
+             */
+            COLECCION.extraer = function( desde , hasta ){
+                
+                if( typeof hasta !== 'number' || hasta > COLECCION.length - 1 ){
+                    hasta = COLECCION.length;
+                }
+                
+                if( typeof desde !== 'number' || desde < 0 || desde >= hasta ){
+                    desde = 0;
+                }
+                
+                return this.slice( desde, hasta );
+            };
+            /**
+             * @returns {COLECCION}
+             */
+            COLECCION.clonar = function(){
+                
+                return Object.assign( this );
+            };
             /**
              * @returns {String}
              */
@@ -26,15 +72,54 @@
              * @returns {COLECCION}
              */
             COLECCION.importar = function(){
-                this.push('Cold Play');
-                this.push('Melendi');
-                this.push('David Getta');
-                this.push('Alicia Keys');
-                this.push('Beyoncee');
-                this.push('Bruce Springsteen');
-                this.push('Calamaro');
-                this.push('Daft Funk');
-                this.push('The Weeknd');
+                this.push(new Disco({
+                    'nombre': 'Miracles',
+                    'autor': 'ColdPlay',
+                    'genero': Disco.Genero.Pop,
+                    'año': '2016',
+                    'localizacion': 100,
+                    'prestado': false
+                }));
+                this.push(new Disco({
+                    'nombre': 'Listen',
+                    'autor': 'David Getta',
+                    'genero': Disco.Genero.Dance,
+                    'año': '2014',
+                    'localizacion': 101,
+                    'prestado': false
+                }));
+                this.push(new Disco({
+                    'nombre': 'Songs in a Minor',
+                    'autor': 'Alicia Keys',
+                    'genero': Disco.Genero.Soul,
+                    'año': '2001',
+                    'localizacion': 103,
+                    'prestado': false
+                }));
+                this.push(new Disco({
+                    'nombre': 'The Rising',
+                    'autor': 'Bruce Springsteen',
+                    'genero': Disco.Genero.Pop,
+                    'año': '2002',
+                    'localizacion': 104,
+                    'prestado': false
+                }));
+                this.push(new Disco({
+                    'nombre': 'Alive 2007',
+                    'autor': 'Daft Funk',
+                    'genero': Disco.Genero.Dance,
+                    'año': '2007',
+                    'localizacion': 106,
+                    'prestado': false
+                }));
+                this.push(new Disco({
+                    'nombre': 'Starboy',
+                    'autor': 'The Weeknd',
+                    'genero': Disco.Genero.Pop,
+                    'año': '2016',
+                    'localizacion': 108,
+                    'prestado': false
+                }));
                 return this;
             };
             
@@ -48,13 +133,17 @@
                         
                         if( COLECCION.length > 0 ){
                             var orden = parseInt( Modal.Instance.prompt("1 - Ordenado por defecto\n2 - Invertir\n3 - Alfabeticamente") );
-                            var lista = COLECCION.slice();
+                            //se podría utilizar slice para ordenar, pero perdería las funciones implícitas en la colección.
+                            //clonar facilitará copiar toda la colección y métodos en su estado actual para facilitar el trabajo.
+                            // ... y funciona ...
+                            var lista = COLECCION.clonar();
+                            //console.log(lista);
                             switch( orden ){
                                 case 2: lista.reverse(); break;
                                 case 3: lista.sort(); break;
                             }
 
-                            Modal.Instance.mostrar( COLECCION.toString(),'Listado');
+                            Modal.Instance.mostrar( lista.toString(),'Listado');
                         }
                         else{
                             Modal.Instance.mostrar( 'No hay discos que mostrar. Agrega un disco!','Listado');
@@ -66,7 +155,7 @@
                         var hasta = parseInt( Modal.Instance.prompt('Hasta',COLECCION.length-1) );
 
                         if( typeof desde === 'number' && typeof hasta === 'number' ){
-                            Modal.Instance.mostrar( COLECCION.slice( desde , hasta ) , 'Mostrando discos desde ' + desde + ' hasta ' + hasta );
+                            Modal.Instance.mostrar( COLECCION.extraer( desde , hasta ) , 'Mostrando discos desde ' + desde + ' hasta ' + hasta );
                         }
                         else{
                             Modal.Instance.mostrar('No es un rango valido');
@@ -74,7 +163,15 @@
                     } )
                     .bind( 'Agregar Disco' , function( e ){
                         
-                        var disco = Modal.Instance.prompt( 'Nombre del disco?' );
+                        var disco = new Disco({
+                            'nombre':Modal.Instance.prompt( 'Nombre del disco?' ),
+                            'autor':Modal.Instance.prompt( 'Autor' ),
+                            'genero':Modal.Instance.prompt( 'Género' ),
+                            'año':Modal.Instance.prompt( 'Año' ),
+                            'localizacion': parseInt( Math.random() * 1000 ) + 1000,
+                            'prestado': false
+                        }); ;
+
                         var pos = parseInt(Modal.Instance.prompt("Agregar a:\n1 - inicio\n2 - fin\n3 - cancelar"));
                 
                         if( typeof pos === 'number' ){
@@ -86,62 +183,52 @@
                                 case 2:
                                     COLECCION.push(disco);
                                     break;
-                                case 3: return;
+                                case 3:
+                                    Modal.Instance.mostrar('Opci&oacute;n inv&aacute;lida','Agregando disco');
+                                    return;
                             }
                                 
-                            Modal.Instance.mostrar( disco + ' agregado!', 'Agregando ' + disco );
+                            Modal.Instance.mostrar( disco.toString() + ' agregado!', 'Agregando disco' );
 
                         }
                         else{
-                            Modal.Instance.mostrar( 'Selecci&oacute;n inv&aacute;lida', 'Agregando ' + disco );
+                            Modal.Instance.mostrar( 'Selecci&oacute;n inv&aacute;lida', 'Agregando disco' );
                         }
-                    } )
-                    .bind( 'Borrar Disco' , function( e ){
+                    } ).bind( 'Borrar Disco' , function( e ){
                         
-                        var pos = parseInt(Modal.Instance.prompt("Borrar desde:\n1 - inicio\n2 - fin\n3 - cancelar"));
-                
-                        if( typeof pos === 'number' ){
+                        if( COLECCION.length ){
+                            var pos = parseInt(Modal.Instance.prompt("Borrar desde:\n1 - inicio\n2 - fin\n3 - cancelar"));
 
-                            switch( pos ){
-                                case 1:
-                                    COLECCION.shift();
-                                    break;
-                                case 2:
-                                    COLECCION.pop();
-                                    break;
-                                case 3: return;
+                            if( typeof pos === 'number' ){
+
+                                switch( pos ){
+                                    case 1:
+                                        Modal.Instance.mostrar( COLECCION.shift().toString() + ' borrado!', 'Borrando disco' );
+                                        break;
+                                    case 2:
+                                        Modal.Instance.mostrar( COLECCION.pop().toString() + ' borrado!', 'Borrando disco' );
+                                        break;
+                                    case 3:
+                                        Modal.Instance.mostrar('Opci&oacute;n inv&aacute;lida','Agregando disco');
+                                        return;
+                                }
                             }
-                                
-                            Modal.Instance.mostrar( disco + ' agregado!', 'Borrando ' );
-
+                            else{
+                                Modal.Instance.mostrar( 'No hay discos en la lista', 'Borrando disco' );
+                            }
                         }
-                        else{
-                            Modal.Instance.mostrar( 'Selecci&oacute;n inv&aacute;lida', 'Borrando disco' );
-                        }                    } )
-                    .bind( 'Consultar disco' , function( e ){
+                    } ).bind( 'Consultar disco' , function( e ){
                         
-                        var disco = Modal.Instance.prompt( 'Que disco quieres ver?' );
+                        var disco = COLECCION.buscar( Modal.Instance.prompt( 'Que disco quieres ver?' ) );
                         
-                        if( Number.isNaN( parseInt( disco ) ) ){
-                            var pos = COLECCION.indexOf(disco);
-                           
-                            Modal.Instance.mostrar( pos >= 0 && pos < COLECCION.length ?
-                                    COLECCION[disco] + ' est&aacute; en la posici&oacute;n ' + pos :
-                                    disco + ' no est&aacute; en la colecci&oacute;n',
-                                    'Consultando ' + disco );
-                        }
-                        else{
-                            var pos = parseInt( disco );
-                            
-                            Modal.Instance.mostrar( pos >= 0 && pos < COLECCION.length ?
-                                    COLECCION[disco] + ' est&aacute; en la posici&oacute;n ' + pos :
-                                    'No se ha encontrado el disco',
-                                    'Consultando ' + COLECCION[disco] );
-                        }
+                        Modal.Instance.mostrar(
+                                disco !== false ? disco.exportar(true).join('<br/>') : 'Posici&oacute;n inv&aacute;lida',
+                                'Consultando Disco');
                     } )
                     .bind( 'Importar' , function( e ){
                         
                         if( COLECCION.length === 0 ){
+
                             COLECCION.importar();
                         }
                         

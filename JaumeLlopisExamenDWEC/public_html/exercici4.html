@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jaume LLopis - Exercici 1</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            
+            
+            
+            document.addEventListener('DOMContentLoaded',function(){
+                
+                var reloj = document.getElementById('reloj');
+                
+                window.setInterval( function(){
+                    
+                    var hora = new Date();
+                    console.log(hora);
+                    reloj.innerHTML = hora.getUTCHours() + ':'
+                        + hora.getUTCMinutes() + ':'
+                        + hora.getUTCSeconds(); 
+                    
+                }, 1000 );
+                
+                
+            });
+            
+        </script>
+    </head>
+    <body>
+        <h1>
+            Hora
+            <span id="reloj"></span>
+        </h1>
+    </body>
+</html>

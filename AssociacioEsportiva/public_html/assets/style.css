@@ -221,3 +221,5 @@ hr.separator{ margin: 20px auto; border: 2px solid rgba(64,0,0,0.25); }
     width: 100%;
     height: 100vh;
 }
+
+.right{ float: right; }

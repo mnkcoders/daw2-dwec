@@ -52,28 +52,33 @@
             <input class="inline" type="search" id="busqueda" placeholder="NºSocio o DNI" />
             <input class="inline" type="text" id="localizacion" placeholder="Localidad" />
             <select class="inline" name="categoria" id="categoria">
-                <option value="todos">- Seleccionar -</option>
-                <option value="Benjamin">Benjamin</option>
-                <option value="Alev&iacute;n">Alev&iacute;n</option>
-                <option value="Infantil">Infantil</option>
-                <option value="Cadete">Cadete</option>
-                <option value="Juvenil">Juvenil</option>
-                <option value="Aficionado">Aficionado</option>
+                <option value="">- Seleccionar -</option>
+                <option value="benjamin">Benjamin</option>
+                <option value="alevin">Alev&iacute;n</option>
+                <option value="infantil">Infantil</option>
+                <option value="cadete">Cadete</option>
+                <option value="juvenil">Juvenil</option>
+                <option value="aficionado">Aficionado</option>
             </select>
             <button class="inline btn btn-large" type="button" id="buscar">Buscar</button>
         </div>
-        <ul class="container white pad-md spa-bt-sm" id="listado">
+        <table class="container white pad-md spa-bt-sm" id="listado">
 
-        </ul>
+        </table>
         <div class="container white hidden pad-md spa-bt-sm" id="socio">
-            <h4>Nº: <span id="id"></span></h4>
-            <input type="text" id="nombre" placeholder="Nombre" />
-            <input type="text" id="apellidos" placeholder="Apellidos" />
-            <input type="text" id="dni" placeholder="DNI" />
-            <input type="text" id="localidad" placeholder="Localidad" />
-            <input type="text" id="fecha" placeholder="Fecha de nacimiento" />
+            <fieldset>
+                <label>Nº: <span id="full_id"></span> <span id="detalle" class="right"></span></label>
+                <input type="hidden" id="id" value="" />
+                <input type="text" id="nombre" placeholder="Nombre" />
+                <input type="text" id="apellidos" placeholder="Apellidos" />
+                <input type="text" id="dni" placeholder="DNI" />
+                <input type="text" id="localidad" placeholder="Localidad" />
+                <input type="date" id="fecha" placeholder="Fecha de nacimiento" />
+            </fieldset>
+            <button class="btn btn-large" type="button" id="guardar">Guardar</button>
         </div>
-                <div class="spacer medium"></div>
+
+        <div class="spacer medium"></div>
 
         <script type="text/javascript">
             
@@ -88,20 +93,72 @@
                 //buscar aqui
                 listar( texto,categoria,localidad );
             });
+
+            document.getElementById('guardar').addEventListener('click',function(e){
+                //evaluar si hay un id para definir el comportamiento
+                var id = document.getElementById('id').value;
+                
+                console.log( id );
+        
+                if( id.length > 0 && !Number.isNaN(id)){
+                    console.log('Guardando');
+                    //guardar
+                    Asociacion.actualizar( parseInt( id ), {
+                            'dni':document.getElementById('dni').value,
+                            'nombre':document.getElementById('nombre').value,
+                            'apellidos':document.getElementById('apellidos').value,
+                            'localidad':document.getElementById('localidad').value,
+                            'fecha':document.getElementById('fecha').value
+                    });
+                }
+                else{
+                    console.log('Creando');
+                    //crear
+                    Asociacion.crear(
+                            document.getElementById('dni').value,
+                            document.getElementById('nombre').value,
+                            document.getElementById('apellidos').value,
+                            document.getElementById('localidad').value,
+                            document.getElementById('fecha').value
+                            );
+                }
+            });
+
+            
+            function crear_socio( ){
+
+                document.getElementById('socio').classList.remove('hidden');
+                document.getElementById('listado').classList.add('hidden');
+
+                document.getElementById('full_id').innerHTML = 'Nuevo socio';
+                document.getElementById('detalle').innerHTML = '';
+
+                document.getElementById('id').value = '';
+                document.getElementById('nombre').value = '';
+                document.getElementById('apellidos').value = '';
+                document.getElementById('dni').value = '';
+                document.getElementById('localidad').value = '';
+                document.getElementById('fecha').value = '';
+                
+                document.getElementById('guardar').innerHTML = 'Crear';
+            }
             
             function ficha_socio( socio ) {
 
                 document.getElementById('socio').classList.remove('hidden');
-                
                 document.getElementById('listado').classList.add('hidden');
-                console.log(JSON.stringify(socio));
-                document.getElementById('id').innerHTML = socio.id;
+
+                document.getElementById('full_id').innerHTML = socio.displayId();
+                document.getElementById('detalle').innerHTML = socio.display(true);
+
+                document.getElementById('id').value = socio.id;
                 document.getElementById('nombre').value = socio.nombre;
                 document.getElementById('apellidos').value = socio.apellidos;
                 document.getElementById('dni').value = socio.dni;
                 document.getElementById('localidad').value = socio.localidad;
                 document.getElementById('fecha').value = socio.fecha;
                 
+                document.getElementById('guardar').innerHTML = 'Guardar';
             }
             
             function listar( busqueda , categoria , localidad ){
@@ -119,20 +176,30 @@
                     'categoria': categoria,
                     'localidad': localidad
                 } );
-                console.log( socios );
                 
                 socios.forEach( function( socio ){
+                    var num = document.createElement('strong');
+                    num.innerHTML = 'Nº. ' + socio.displayId();
+                    num.classList.add('id-socio');
+                    
+                    var cat = document.createElement('span');
+                    cat.innerHTML = socio.categoria();
+                    cat.classList.add('categoria');
+                    
                     var link = document.createElement('span');
                     //link.innerHTML = socio.nombre+ ' ' + socio.apellidos;
-                    link.innerHTML = socio.display();
+                    link.innerHTML = socio.display( );
                     link.classList.add('clickable');
                     link.addEventListener( 'click' , function(e){
                         //cargar vista del socio
                         ficha_socio( socio );
                     });
-                    var item = document.createElement('li');
-                    item.appendChild( link );
-                    listado.appendChild( item );
+                    
+                    var row = document.createElement('tr');
+                    row.appendChild( document.createElement('td') ).appendChild(num);
+                    row.appendChild( document.createElement('td') ).appendChild(link);
+                    row.appendChild( document.createElement('td') ).appendChild(cat);
+                    listado.appendChild( row );
                 });
                 
             }

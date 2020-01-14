@@ -1,38 +1,33 @@
 var Asociacion = [];
 /**
- * 
+ * Agrega un socio a la lista, no lo crea
  * @param {String} dni
  * @param {String} nombre
  * @param {String} apellidos
  * @param {String} localidad
  * @param {Date|String} fnc
+ * @param {Int} id
  * @returns {Asociacion}
  */
-Asociacion.crear = ( dni , nombre , apellidos , localidad , fnc , id ) => {
+Asociacion.agregar = function( dni , nombre , apellidos , localidad , fnc , id ){
 
-    if( typeof id === 'undefined' ){
-        id = Asociacion.length + 1 ;
-    }
-    else if( typeof id === 'string' ){
-        id = parseInt( id );
-    }
-    
-    var nacimiento = fnc instanceof Date ? fnc.toISOString() : fnc;
+    var nacimiento = fnc instanceof Date ? fnc.toISOString( ) : fnc;
     
     var socio = {
-        'id':id,
-        'nombre':nombre,
-        'apellidos':apellidos,
-        'dni':dni,
-        'localidad':localidad,
-        'fecha': nacimiento
-    };
-    
-    socio.categoria = ( ) => {
-            
-            var nac = new Date( socio.fecha );
-            
-            var year = (new Date()).getUTCFullYear() - nac.getUTCFullYear();
+        'id': id,
+        'nombre': nombre,
+        'apellidos': apellidos,
+        'dni': dni,
+        'localidad': localidad,
+        'fecha': nacimiento,
+        /**
+         * @returns {String}
+         */
+        'categoria' : function(){
+
+            var nac = new Date( this.fecha );
+
+            var year = ( new Date( ) ).getUTCFullYear( ) - nac.getUTCFullYear( );
 
             switch( true ){
                 case year < 10: return Asociacion.Categorizacion.BENJAMIN;
@@ -42,46 +37,134 @@ Asociacion.crear = ( dni , nombre , apellidos , localidad , fnc , id ) => {
                 case year < 18: return Asociacion.Categorizacion.JUVENIL;
                 case year >= 18: return Asociacion.Categorizacion.AFICIONADO;
             }
+            
             return 'Indefinido';
-        };
+        },
+        /**
+         * @returns {String}
+         */
+        'display': function( full ) {
+            return typeof full === 'boolean' && full ?
+                    this.nombre + ' ' + this.apellidos + ' (' + this.categoria() + ')' :
+                    this.nombre + ' ' + this.apellidos;
+        },
+        /**
+         * Muestra el número de socio en formato legible
+         * @returns {String}
+         */
+        'displayId': function(){
+            
+            var out = this.id.toString();
+            
+            while( out.length < 4) out = '0' + out;
+            
+            return out;
+        }
+    };
+
+    this.push( socio );
+    
+    return this;
+};
+/**
+ * Crea y agrega un socio en la lista, lo guarda en memoria
+ * @param {String} dni
+ * @param {String} nombre
+ * @param {String} apellidos
+ * @param {String} localidad
+ * @param {Date|String} fnc
+ * @returns {Asociacion}
+ */
+Asociacion.crear = function( dni , nombre , apellidos , localidad , fnc ){
+
+    return this.agregar(
+            dni , 
+            nombre ,
+            apellidos , 
+            localidad ,
+            fnc ,
+            this.length + 1 ).exportar();
+};
+/**
+ * @param {String|Int} ID
+ * @param {Object} datos
+ * @returns {Asociacion}
+ */
+Asociacion.actualizar = function( ID , datos ){
+    
+    if( typeof datos === 'object' ){
+
+        var socio = this[ID-1];
+
+        var actualizado = false;
         
-    socio.display = () => socio.nombre + ' ' + socio.apellidos + ' (' + socio.categoria() + ')';
+        if( datos.nombre && datos.nombre !== socio.nombre ){
+            socio.nombre = datos.nombre;
+            actualizado = true;
+        }
+        if( datos.apellidos && datos.apellidos !== socio.apellidos ){
+            socio.apellidos = datos.apellidos;
+            actualizado = true;
+        }
+        if( datos.dni && datos.dni !== socio.dni ){
+            socio.dni = datos.dni;
+            actualizado = true;
+        }
+        if( datos.fecha && datos.fecha !== socio.fecha ){
+            socio.fecha = datos.fecha;
+            actualizado = true;
+        }
+        if( datos.localidad && datos.localidad !== socio.localidad ){
+            socio.localidad = datos.localidad;
+            actualizado = true;
+        }
+        
+        if( actualizado ){
+            this[ ID ] = socio;
+            console.log(socio);
+        }
+    }
     
-    Asociacion.push( socio );
-    
-    return Asociacion;
+    return this.exportar();
 };
 /**
  * @param {String|Object} filtro
+ * @param {String} orden
  * @returns {Array}
  */
-Asociacion.listar = ( filtro ) =>{
+Asociacion.listar = function( filtro , orden ){
     
-    var out = [];
-
+    var out = [  ];
+    
     if( typeof filtro === 'object' ){
-        var buscar = typeof filtro.buscar !== 'undefined' ? filtro.buscar : '';
-        var localidad = typeof filtro.localidad !== 'undefined' ? filtro.localidad : '';
-        var categoria = typeof filtro.categoria !== 'undefined' ? filtro.categoria : '';
-        console.log( buscar );
-        console.log( localidad );
-        console.log( categoria );
-        Asociacion.forEach( function( socio ){
+        filtro.buscar = filtro.buscar || '';
+        filtro.localidad = filtro.localidad || '';
+        filtro.categoria = filtro.categoria || '';
+        
+        console.log( filtro );
+        
+        var db = this.slice();
 
-            if( buscar.length === 0 || socio.nombre === buscar || socio.dni === buscar || socio.id == buscar ){
-                if( localidad.length === 0 || ( socio.localidad === localidad ) ){
-                    if( categoria.length === 0 || ( socio.categoria && socio.categoria() === categoria ) ){
-                        out.push( socio );
-                    }
-                }
-            }
-
-        } );
+        for( var s = 0 ; s < db.length ; s++ ){
+            //saltar en función del valor de los filtros, o omitir si no hay filtro
+            if( filtro.buscar.length > 0 && db[s].nombre !== filtro.buscar ) continue;
+            if( filtro.localidad.length > 0 && db[s].localidad !== filtro.localidad ) continue;
+            if( filtro.categoria.length > 0 && db[s].categoria() !== filtro.categoria ) continue;
+            
+            out.push(db[s]);
+        }
     }
     else{
-        out = Asociacion.slice();
+        //pillartodo al vuelo
+        out = this.slice();
     }
-    console.log(out);
+    
+    switch( orden || Asociacion.Orden.General ){
+        case Asociacion.Orden.Alfabetico:
+            return out.sort();
+        case Asociacion.Orden.Inverso:
+            return out.reverse();
+    }
     
     return out;
 };
@@ -89,7 +172,7 @@ Asociacion.listar = ( filtro ) =>{
  * @param {String} buscar
  * @returns {Asociacion}
  */
-Asociacion.borrar = ( buscar ) =>{
+Asociacion.borrar = function( buscar ){
     
     if( Number.isNaN( buscar ) ){
         //dni
@@ -104,87 +187,104 @@ Asociacion.borrar = ( buscar ) =>{
 /**
  * @returns {Asociacion}
  */
-Asociacion.importar = () => {
+Asociacion.importar = function(){
     
     var db = localStorage.getItem('socios');
     
     if( db !== null ){
+
         var socios = JSON.parse( atob( db));
+        
         if( Array.isArray(socios)){
+        
+            //console.log( socios );
+        
             socios.forEach( function( socio ){
-                Asociacion.crear(
+            
+                Asociacion.agregar(
                         socio.dni,
                         socio.nombre,
                         socio.apellidos,
                         socio.localidad,
                         socio.fecha,
-                        socio.id
-                        );
+                        socio.id );
             });
         }
     }
     else{
-        Asociacion.Demo().exportar();
+        this.Demo();
     }
     
-    return Asociacion;
-};
-Asociacion.exportar = () =>{
-    
-    localStorage.setItem( btoa( JSON.stringify( Asociacion.listar())) );
-    
-    return Asociacion;
+    return this;
 };
 /**
  * @returns {Asociacion}
  */
-Asociacion.Demo = () => {
-    Asociacion.crear(
+Asociacion.exportar = function(){
+    
+    localStorage.setItem( 'socios',btoa( JSON.stringify( this.listar())) );
+    
+    return this;
+};
+/**
+ * Crea varios socios de demo
+ * @returns {Asociacion}
+ */
+Asociacion.Demo = function(){
+    return this.agregar(
             '12312424D',
             'Pablo',
             'Garcia',
             'Mahon',
-            '1994-05-02'
-    ).crear(
+            '1994-05-02',
+            1
+    ).agregar(
             '9876543R',
             'Tomas',
             'Garriga',
             'Ciutadella',
-            '1992-08-11'
-    ).crear(
+            '1992-08-11',
+            2
+    ).agregar(
             '67908033D',
             'Francisco',
             'Sintes',
             'Alaior',
-            '1994-03-25'
-    ).crear(
+            '1994-03-25',
+            3
+    ).agregar(
             '43123546T',
             'Jose',
             'Pons',
             'Mahon',
-            '1993-02-01'
-    ).crear(
+            '1993-02-01',
+            4
+    ).agregar(
             '673555Y',
             'Alex',
             'Pons',
             'Sant Climent',
-            '1995-12-17'
-    );
-    
-    return Asociacion;
+            '1995-12-17',
+            5
+    ).exportar();
 };
-
-
 /**
- * 
- * @type Categoria.Categorizacion
+ * @type Asociacion.Categorizacion
  */
 Asociacion.Categorizacion = {
-    BENJAMIN:'Benjamin',
-    ALEVIN:'Alev&iacute;n',
-    INFANTIL:'Infantil',
-    CADETE:'Cadete',
-    JUVENIL:'Juvenil',
-    AFICIONADO:'Aficionado'
+    BENJAMIN:'benjamin',
+    ALEVIN:'alevin',
+    INFANTIL:'infantil',
+    CADETE:'cadete',
+    JUVENIL:'juvenil',
+    AFICIONADO:'aficionado'
+};
+/**
+ * @type Asociacion.Orden
+ */
+Asociacion.Orden = {
+    'General': 'default',
+    'Alfabetico': 'alpha',
+    'Inverso': 'reverse',
 };
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jaume LLopis - Exercici 1</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            
+            function dados(){
+                
+                return parseInt( Math.random() * 6 ) + 1;
+            }
+            
+            var estadistica = [
+                0, //1
+                0, //2
+                0, //3
+                0, //4 
+                0, //5
+                0, //6
+                0, //7
+                0, //8
+                0, //9
+                0, //10
+                0, //11
+                0 //12
+            ];
+            
+            var total = 0;
+            var vueltas = 100;
+            
+            for( i = 0 ; i < vueltas ; i++ ){
+                
+                var res = dados() + dados();
+                
+                console.log(res);
+                
+                estadistica[res-1]++;
+                
+                total += res;
+            }
+            
+            document.addEventListener('DOMContentLoaded',function(e){
+                
+                
+                var out = document.getElementById('resultado');
+                
+                out.innerHTML = '<p>Dados lanzados ' + vueltas + ' veces...</p>';
+                
+                for( var r = 0 ; r < estadistica.length ; r++ ){
+                    
+                    out.innerHTML += '<p>Numero ' + (r+1) + ':' + estadistica[r] + '</p>';
+                }
+                
+                out.innerHTML += '<p>Total ' + total + '</p>';
+            });
+            
+            
+        </script>
+    </head>
+    <body>
+        <div id="resultado">
+        
+        </div>
+    </body>
+</html>
+
+
+
+

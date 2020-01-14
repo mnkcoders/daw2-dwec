@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jaume LLopis - Exercici 1</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            
+            var nombre = window.prompt('Tu nombre y apellidos');
+            
+            document.addEventListener('DOMContentLoaded',function(){
+                
+                if( nombre.length ){
+                    
+                    var pal = nombre.split( ' ' ) ;
+                    
+                    var resultado = [
+                        
+                        'Tamaño sin espacios '+ nombre.replace( ' ' ).length,
+                        'minusculas: ' + nombre.toLowerCase(),
+                        'mayusculas: ' + nombre.toUpperCase(),
+                        'Nombre: ' + pal[ 0 ],
+                        'Primer apellido: ' + (pal.length > 1 ? pal[ 1 ] : 'No se ha definido'),
+                        'Segundo apellido: ' + (pal.length > 2 ? pal[ 2 ] : 'No se ha definido')
+                        
+                    ];
+                
+                    document.getElementById('resultado').innerHTML = resultado.join('<br/>');
+
+                }
+                else{
+                document.getElementById('resultado').innerHTML = 'Escribe algo';
+                }
+                
+                
+            });
+            
+        </script>
+    </head>
+    <body>
+        <div id="resultado">
+        
+        </div>
+    </body>
+</html>

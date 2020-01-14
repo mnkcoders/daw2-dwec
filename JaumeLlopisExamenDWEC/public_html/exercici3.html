@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jaume LLopis - Exercici 1</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            
+            div > div{
+                border: 1px solid #dadada;
+                margin: 20px auto;
+                padding: 20px;
+            }
+            
+        </style>
+        <script type="text/javascript">
+            /**
+             * 
+             * @returns {Deportista}
+             */
+            function Deportista( nombre , edad , genero ){
+                
+                    this.nombre = nombre || 'Sin nombre';
+                    this.edad = edad || 0;
+                    this.genero = genero || 'Sin Genero';
+                /**
+                 * @returns {String}
+                 */
+                this.toString = function(){
+                    
+                    return '<p>' + this.obtenerDetalles().join('</p><p>') + '</p>';
+                };
+
+                /**
+                 * 
+                 * @returns {Array}
+                 */
+                this.obtenerDetalles = function(){
+                    
+                    return [
+                        'Nombre: ' + this.nombre,
+                        'Edad: ' + this.edad,
+                        'Genero: ' + this.genero,
+                    ];
+                };
+            }
+            /**
+             * 
+             * @returns {Futbolista}
+             */
+            function Futbolista( nombre , edad , genero , dorsal, posicion ){
+                
+                    Deportista.call(this , nombre , edad, genero );
+                    
+
+                    
+                /**
+                 * 
+                 * @returns {Tenista}
+                 */
+                this.fichar = function( dorsal , posicion){
+                    this.dorsal = dorsal || 'sin especificar';
+                    this.posicion = posicion || 'sin especificar';
+                    return this;
+                };
+                /**
+                 * 
+                 * @returns {Array}
+                 */
+                this.obtenerDetalles = function(){
+                    
+                    return [
+                        'Nombre: ' + this.nombre,
+                        'Edad: ' + this.edad,
+                        'Genero: ' + this.genero,
+                        'Tipo: Futbolista',
+                        'Dorsal: ' + this.dorsal,
+                        'Posicion: ' + this.posicion,
+                    ];
+                };
+                
+                    this.fichar(dorsal,posicion);
+            }
+            /**
+             * 
+             * @returns {Tenista}
+             */
+            function Tenista( nombre , edad , genero , mano , pista ){
+                
+                    Deportista.call( this , nombre,  edad , genero );
+
+
+                    
+                /**
+                 * @returns {Tenista}
+                 */
+                this.ranking = function( mano , pista ){
+                    
+                    this.mano = mano ||'Derecha';
+
+                    this.pista = pista || 'Sin pista';
+                    
+                    return this;
+                };
+                /**
+                 * 
+                 * @returns {Array}
+                 */
+                this.obtenerDetalles = function(){
+                              
+                    
+                    return [
+                        'Nombre: ' + this.nombre,
+                        'Edad: ' + this.edad,
+                        'Genero: ' + this.genero,
+                        'Tipo: Tenista',
+                        'Mano principal: ' + this.mano,
+                        'Pista Favorita: ' + this.pista,
+                    ];
+                };
+                
+                    
+                    this.ranking( mano , pista );
+            }
+            
+            Futbolista.prototype = new Deportista();
+            Futbolista.prototype.constructor = Deportista;
+            Tenista.prototype = new Deportista();
+            Tenista.prototype.constructor = Deportista;
+            
+            var DEPORTISTAS = [
+                new Futbolista('Paco Gomez',19 ,'Home',5,'Lateral'),
+                new Futbolista('Julian Sintes',20 ,'Home',3,'Central'),
+                new Futbolista('Joan Pons',21 ,'Home',8,'Delantero'),
+                
+                new Tenista('Jose Alvarez',22 ,'Home','derecha',4),
+                new Tenista('Ana García',21 ,'Dona','izquierda',8),
+                new Tenista('Javier Ramirez',18 ,'Home','derecha', 4)
+            ];
+            
+            document.addEventListener('DOMContentLoaded',function(){
+                
+                var out = document.getElementById('resultado');
+                
+                for( var i = 0 ; i < DEPORTISTAS.length ; i++ ){
+                    
+                    //console.log(DEPORTISTAS[i]);
+                    
+                    out.innerHTML += '<div>' + DEPORTISTAS[ i ].toString() + '</div>';
+                }
+            });
+
+            
+        </script>
+    </head>
+    <body>
+        <div id="resultado">
+        
+        </div>
+    </body>
+</html>
+
+
+
+
+

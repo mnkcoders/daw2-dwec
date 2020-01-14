@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jaume LLopis - Exercici 1</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            /**
+             * 
+             * @returns {Banco}
+             */
+            function Banco(){
+                /**
+                 * 
+                 * @type CuentaBancaria[]
+                 */
+                var _clientes = [
+                    
+                ];
+                /**
+                 * @param {String} filtro
+                 * @returns {CuentaBancaria[]}
+                 */
+                this.listar = function( filtro ){
+                    
+                    if( typeof filtro !== 'undefined' ){
+                        
+                        var out = [];
+                        
+                        for( var i = 0 ; i < _clientes.length ; i++ ){
+
+                            switch( true ){
+                                case _clientes[ i ].provincia === filtro:
+                                case _clientes[ i ].telefono === filtro:
+                                case _clientes[ i ].nombre.indexOf(filtro) > -1:
+                                case _clientes[ i ].DNI = filtro:
+                                    out.push( _clientes[ i ] );
+                                    break;
+                            }
+                        }    
+                        return out;
+                    }
+
+                    
+                    return _clientes;
+                    
+                };
+                /**
+                 * 
+                 * @param {type} nombre
+                 * @param {type} apellidos
+                 * @param {type} NIF
+                 * @param {type} provincia
+                 * @param {type} telefono
+                 * @param {type} saldo
+                 * @returns {CuentaBancaria}
+                 */
+                this.abrir = function( nombre , apellidos , NIF , provincia , telefono , saldo ){
+                    
+                    var cuenta = new CuentaBancaria( nombre , apellidos, NIF , provincia , telefono , saldo );
+                    
+                    _clientes.push( cuenta );
+                    
+                    return cuenta;
+                };
+                /**
+                 * 
+                 * @param {Number} ID
+                 * @param {CuentaBancaria} cuenta
+                 * @returns {Boolean}
+                 */
+                this.actualizar = function( ID , cuenta ){
+                    
+                    if( cuenta instanceof CuentaBancaria ){
+                        
+                        if( ID >= 0 && ID < _clientes.length ){
+                            
+                            return _clientes[ ID ].importar( cuenta );
+                        }
+                    }
+                    
+                    return false;
+                    
+                };
+                /**
+                 * 
+                 * @param {Number} ID
+                 * @returns {String}
+                 */
+                this.consultar = function( ID ){
+                   
+                    if( _clientes.length > ID && ID >= 0 ){
+                        
+                        return _clientes[ ID ].toString();
+                    }
+                    return 'invalido';
+                };
+                /**
+                 * 
+                 * @param {Number} ID
+                 * @returns {Boolean}
+                 */
+                this.borrar = function( ID ){
+                    
+                    if( _clientes.length > ID && ID >= 0 ){
+                        _clientes.splice( ID , 1 );
+                        return true;
+                    }
+                    return false;
+                };
+            }
+            /**
+             * 
+             * @param {String} nombre
+             * @param {String} apellidos
+             * @param {String} NIF
+             * @param {String} provincia
+             * @param {String} telefono
+             * @param {Number} saldo
+             * @returns {CuentaBancaria}
+             */
+            function CuentaBancaria ( nombre , apellidos , NIF , provincia , telefono, saldo ){
+                
+                this.nombre = nombre;
+                this.apellidos = apellidos;
+                this.nif = NIF;
+                this.provincia = provincia;
+                this.telefono = telefono;
+                this.saldo = saldo;
+                /**
+                 * 
+                 * @param {CuentaBancaria} cuenta
+                 * @returns {Boolean}
+                 */
+                this.importar = function( cuenta ){
+                   
+                    if( cuenta instanceof CuentaBancaria ){
+                        
+                        this.nombre = cuenta.nombre;
+                        this.apellidos = cuenta.apellidos;
+                        this.DNI = cuenta.DNI;
+                        this.provincia = cuenta.provincia;
+                        this.telefono = cuenta.telefono;
+                        this.saldo = cuenta.saldo;
+                        
+                        return true;
+                    }
+                    return false;
+                };
+
+                this.datos = function(){
+                    
+                    return [
+                        'Titular: ' + this.nombre + ' ' + this.apellidos,
+                        'NIF: ' + this.nif,
+                        'Provincia: ' + this.provincia,
+                        'Telefono: ' + this.telefono,
+                        'Saldo: ' + this.saldo
+                    ];
+                };
+        
+                this.toString = function(){
+                    
+                    return this.datos().join('<br/>');
+                    
+                };
+                
+            };
+            /**
+             * 
+             * @param {type} contenido
+             * @returns {undefined}
+             */
+            function mostrar( contenido ){
+                
+                var out = '';
+                
+                switch( true ){
+                    case Array.isArray(contenido):
+                        out = '<ol>';
+                        contenido.forEach( function(item){
+                            out += '<li>' + item.toString() + '</li>';
+                        });
+                        out += '</ol>';
+                        break;
+                    case typeof contenido === 'object':
+                        out = contenido.toString();
+                        break;
+                    default:
+                        out = contenido;
+                        break;
+                }
+                
+                
+                document.getElementById('resultado').innerHTML = '';
+            }
+            
+            var BANCO = new Banco();
+            
+            document.addEventListener('DOMContentLoaded',function(){
+                
+                
+                
+                
+                document.getElementById('buscar').addEventListener('click',function(e){
+                    
+                    var filtro = document.getElementById('buscador').value;
+                    
+                    mostrar( BANCO.listar( filtro ) );
+                });
+                
+                
+            });
+            
+        </script>
+    </head>
+    <body>
+        <div>
+            <fieldset>
+                <label>Buscar</label>
+                <input type="search" id="buscador" placeholder="Buscar" />
+                <button id="buscar">Buscar</button>
+            </fieldset>
+            <fieldset>
+                <label>Cuenta</label>
+                <input type="text" readonly id="ID" placeholder="Nueva" />
+                <input type="text" id="nombre" placeholder="Nombre" />
+                <input type="text" id="apellidos" placeholder="Apellidos" />
+                <input type="text" id="DNI" placeholder="DNI" />
+                <input type="text" id="provincia" placeholder="Provincia" />
+                <input type="text" id="telefono" placeholder="Telefono" />
+                <input type="number" id="saldo" placeholder="Saldo" />
+                
+                <button type="button" id="guardar">Guardar</button>
+                <button type="button" id="crear">Crear</button>
+                <button type="button" id="borrar">Borrar</button>
+            </fieldset>
+            
+            <div id="reslutado">
+                
+                
+            </div>
+        </div>
+    </body>
+</html>

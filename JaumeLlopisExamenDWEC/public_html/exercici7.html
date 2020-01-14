@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jaume LLopis - Exercici 1</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            
+            var angulo = parseFloat(window.prompt('Indica un angulo'));
+            
+            document.addEventListener('DOMContentLoaded',function(){
+                
+                var res = document.getElementById('resultado');
+                
+                if( !Number.isNaN( angulo)){
+                    
+                    res.innerHTML += '<p>Seno de '+ angulo+'º: '+Math.sin(angulo)+'</p>';
+                    res.innerHTML += '<p>Coseno de '+ angulo+'º: '+Math.cos(angulo)+'</p>';
+                    res.innerHTML += '<p>Tangente de '+ angulo+'º: '+Math.tan(angulo)+'</p>';
+                }
+                else{
+                    res.innerHTML = '<h1>Escribe un numero</h1>';
+                }
+                
+            });
+            
+        </script>
+    </head>
+    <body>
+        <div id="resultado">
+        
+        </div>
+    </body>
+</html>

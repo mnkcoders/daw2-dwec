@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Asociaci&oacute;n Deportiva - Intranet</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/icon" href="img/favicon.ico">
+        
+        <!--link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" rel="stylesheet"-->
+        <link href="https://fonts.googleapis.com/css?family=Exo:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" type="text/css" rel="stylesheet" />
+        <link href="assets/style.css" rel="stylesheet" type="text/css" />
+        
+        <!--script type="text/javascript" src="assets/socios.js"></script-->
+        <script type="text/javascript" src="assets/asociacion.js"></script>
+    </head>
+    <body class="intranet">
+        
+        <nav class="header grey lighten-5 fixed-top">
+            <div class="nav-wrapper container">
+                <a href="index.html" target="_self" class="site-title">Asociaci&oacute;n Deportiva</a>
+                <a class="brand-logo center" href="index.html" target="_self">
+                    <img class="media" src="img/site-logo.png"
+                         title="Asociaci&oacute;n Deportiva Mi Pueblo"
+                         alt="Asociaci&oacute;n Deportiva Mi Pueblo" />
+                </a>
+                <div class="nav-wrapper right">
+                    <ul id="main-menu" class="menu right">
+                        <li><a href="index.html">Inici</a></li>
+                        <li><a href="utilitats.html">Utilitats</a></li>
+                        <li><a href="socios.html">Socios</a></li>
+                        <li><a href="contactar.html">Contactar</a></li>
+                        <li class="box small" id="calendario">
+                            <span class="year">2000</span>
+                            <span class="day">1</span>
+                            <span class="month">Enero</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="layer overlay">
+            <!-- capa de oscurecido -->
+        </div>
+        
+        <div class="spacer medium"></div>
+
+        <div class="toolbar container white pad-md">
+            <input class="inline" type="search" id="busqueda" placeholder="NºSocio o DNI" />
+            <input class="inline" type="text" id="localizacion" placeholder="Localidad" />
+            <select class="inline" name="categoria" id="categoria">
+                <option value="todos">- Seleccionar -</option>
+                <option value="Benjamin">Benjamin</option>
+                <option value="Alev&iacute;n">Alev&iacute;n</option>
+                <option value="Infantil">Infantil</option>
+                <option value="Cadete">Cadete</option>
+                <option value="Juvenil">Juvenil</option>
+                <option value="Aficionado">Aficionado</option>
+            </select>
+            <button class="inline btn btn-large" type="button" id="buscar">Buscar</button>
+        </div>
+        <ul class="container white pad-md spa-bt-sm" id="listado">
+
+        </ul>
+        <div class="container white hidden pad-md spa-bt-sm" id="socio">
+            <h4>Nº: <span id="id"></span></h4>
+            <input type="text" id="nombre" placeholder="Nombre" />
+            <input type="text" id="apellidos" placeholder="Apellidos" />
+            <input type="text" id="dni" placeholder="DNI" />
+            <input type="text" id="localidad" placeholder="Localidad" />
+            <input type="text" id="fecha" placeholder="Fecha de nacimiento" />
+        </div>
+                <div class="spacer medium"></div>
+
+        <script type="text/javascript">
+            
+            Asociacion.importar();
+            listar();
+            
+            document.getElementById('buscar').addEventListener( 'click' , function(e){
+                var texto = document.getElementById('busqueda').value;
+                var categoria = document.getElementById('categoria').value;
+                var localidad = document.getElementById('localizacion').value;
+                
+                //buscar aqui
+                listar( texto,categoria,localidad );
+            });
+            
+            function ficha_socio( socio ) {
+
+                document.getElementById('socio').classList.remove('hidden');
+                
+                document.getElementById('listado').classList.add('hidden');
+                console.log(JSON.stringify(socio));
+                document.getElementById('id').innerHTML = socio.id;
+                document.getElementById('nombre').value = socio.nombre;
+                document.getElementById('apellidos').value = socio.apellidos;
+                document.getElementById('dni').value = socio.dni;
+                document.getElementById('localidad').value = socio.localidad;
+                document.getElementById('fecha').value = socio.fecha;
+                
+            }
+            
+            function listar( busqueda , categoria , localidad ){
+                
+                document.getElementById('socio').classList.add('hidden');
+                var listado = document.getElementById('listado');
+                listado.classList.remove('hidden');
+                
+                while (listado.firstChild) {
+                  listado.removeChild(listado.firstChild);
+                }
+                
+                var socios = Asociacion.listar( {
+                    'buscar': busqueda,
+                    'categoria': categoria,
+                    'localidad': localidad
+                } );
+                console.log( socios );
+                
+                socios.forEach( function( socio ){
+                    var link = document.createElement('span');
+                    //link.innerHTML = socio.nombre+ ' ' + socio.apellidos;
+                    link.innerHTML = socio.display();
+                    link.classList.add('clickable');
+                    link.addEventListener( 'click' , function(e){
+                        //cargar vista del socio
+                        ficha_socio( socio );
+                    });
+                    var item = document.createElement('li');
+                    item.appendChild( link );
+                    listado.appendChild( item );
+                });
+                
+            }
+            
+            
+        </script>
+        <footer class="page-footer">
+          <!--div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Footer Content</h5>
+                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                </ul>
+              </div>
+            </div>
+          </div-->
+          <div class="footer-copyright">
+            <div class="container">
+            &copy; 2019 - MNK Coders
+            <a class="grey-text text-lighten-4 right" href="#!">Condiciones de uso</a>
+            </div>
+          </div>
+        </footer>
+    </body>
+</html>

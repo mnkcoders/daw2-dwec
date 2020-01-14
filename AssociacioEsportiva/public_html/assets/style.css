@@ -53,6 +53,11 @@ nav.header ul.menu > li > a{
     text-transform: uppercase;
 }
 
+.inline{
+    display: inline-block;
+    width: auto;
+}
+
 .brand-logo{
     height: 100%;
     display: inline-block;
@@ -126,9 +131,13 @@ ul li strong,ol li strong{
 .remark.clear{ color: white; background-color: rgba(0,0,0,0.25); padding: 5px;}
 .collection-item:not(.remark){ background-color: rgba(255,255,255,0.5); }
 
+.container.hidden{ display: none; }
+.clickable{
+    cursor: pointer;
+}
 
 .full-width{ width: 100%;}
-
+.container.spa-bt-sm{ margin-bottom: 10px; }
 .container.pad-md{ padding: 20px;}
 .shaded{
     background-color: rgba(0,0,0,0.25);

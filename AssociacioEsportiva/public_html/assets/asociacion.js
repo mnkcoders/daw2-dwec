@@ -67,65 +67,113 @@ Asociacion.agregar = function( dni , nombre , apellidos , localidad , fnc , id )
     return this;
 };
 /**
+ * @returns {Array}
+ */
+Asociacion.localidades = function(){
+    
+    var out = [];
+    
+    this.forEach( ( socio ) => {
+        if( !out.includes( socio.localidad ) ){
+            out.push( socio.localidad )
+        }
+    } );
+    
+    return out;
+};
+/**
  * Crea y agrega un socio en la lista, lo guarda en memoria
  * @param {String} dni
  * @param {String} nombre
  * @param {String} apellidos
  * @param {String} localidad
- * @param {Date|String} fnc
+ * @param {Date|String} fecha
+ * @param {Function} callback
  * @returns {Asociacion}
  */
-Asociacion.crear = function( dni , nombre , apellidos , localidad , fnc ){
+Asociacion.crear = function( dni , nombre , apellidos , localidad , fecha , callback ){
+    
+    this.agregar(
+            dni ,  nombre ,
+            apellidos ,  localidad ,
+            fecha , this.length + 1 );
 
-    return this.agregar(
-            dni , 
-            nombre ,
-            apellidos , 
-            localidad ,
-            fnc ,
-            this.length + 1 ).exportar();
+    if( typeof callback === 'function' ){
+        callback( this.ultimo() );
+    }
+
+    return this.exportar();
+};
+/**
+ * @returns {Boolean|Object}
+ */
+Asociacion.ultimo = function(){
+    return this.length > 0 ? this[ this.length - 1 ] : false;
 };
 /**
  * @param {String|Int} ID
- * @param {Object} datos
- * @returns {Asociacion}
+ * @returns {Int|Boolean}
  */
-Asociacion.actualizar = function( ID , datos ){
+Asociacion.getIdx = function( ID ){
     
-    if( typeof datos === 'object' ){
-
-        var socio = this[ID-1];
-
-        var actualizado = false;
-        
-        if( datos.nombre && datos.nombre !== socio.nombre ){
-            socio.nombre = datos.nombre;
-            actualizado = true;
-        }
-        if( datos.apellidos && datos.apellidos !== socio.apellidos ){
-            socio.apellidos = datos.apellidos;
-            actualizado = true;
-        }
-        if( datos.dni && datos.dni !== socio.dni ){
-            socio.dni = datos.dni;
-            actualizado = true;
-        }
-        if( datos.fecha && datos.fecha !== socio.fecha ){
-            socio.fecha = datos.fecha;
-            actualizado = true;
-        }
-        if( datos.localidad && datos.localidad !== socio.localidad ){
-            socio.localidad = datos.localidad;
-            actualizado = true;
-        }
-        
-        if( actualizado ){
-            this[ ID ] = socio;
-            console.log(socio);
+    for( var s = 0 ; s < this.length ; s++ ){
+        if( this[ s ].id == ID ){
+            return s;
         }
     }
     
-    return this.exportar();
+    return false;
+};
+/** 
+ * @param {String|Int} ID
+ * @param {Object} datos
+ * @param {Function} callback
+ * @returns {Asociacion}
+ */
+Asociacion.actualizar = function( ID , datos , callback ){
+    
+    if( typeof datos === 'object' ){
+        
+        var idx = this.getIdx( ID );
+        
+        if( idx !== false ){
+
+            var socio = this[ idx ];
+
+            var actualizado = false;
+
+            if( datos.nombre && datos.nombre !== socio.nombre ){
+                socio.nombre = datos.nombre;
+                actualizado = true;
+            }
+            if( datos.apellidos && datos.apellidos !== socio.apellidos ){
+                socio.apellidos = datos.apellidos;
+                actualizado = true;
+            }
+            if( datos.dni && datos.dni !== socio.dni ){
+                socio.dni = datos.dni;
+                actualizado = true;
+            }
+            if( datos.fecha && datos.fecha !== socio.fecha ){
+                socio.fecha = datos.fecha;
+                actualizado = true;
+            }
+            if( datos.localidad && datos.localidad !== socio.localidad ){
+                socio.localidad = datos.localidad;
+                actualizado = true;
+            }
+            if( actualizado ){
+                this[ idx ] = socio;
+                //console.log(socio);
+                if( typeof callback === 'function' ){
+                    callback( socio );
+                }
+                return this.exportar();
+            }
+        }
+    }
+    
+    return this;
 };
 /**
  * @param {String|Object} filtro
@@ -141,13 +189,13 @@ Asociacion.listar = function( filtro , orden ){
         filtro.localidad = filtro.localidad || '';
         filtro.categoria = filtro.categoria || '';
         
-        console.log( filtro );
+        //console.log( filtro );
         
         var db = this.slice();
 
         for( var s = 0 ; s < db.length ; s++ ){
             //saltar en función del valor de los filtros, o omitir si no hay filtro
-            if( filtro.buscar.length > 0 && db[s].nombre !== filtro.buscar ) continue;
+            if( filtro.buscar.length > 0 && db[s].nombre !== filtro.buscar && db[s].dni !== filtro.buscar ) continue;
             if( filtro.localidad.length > 0 && db[s].localidad !== filtro.localidad ) continue;
             if( filtro.categoria.length > 0 && db[s].categoria() !== filtro.categoria ) continue;
             

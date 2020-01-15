@@ -49,18 +49,32 @@
         <div class="spacer medium"></div>
 
         <div class="toolbar container white pad-md">
-            <input class="inline" type="search" id="busqueda" placeholder="NºSocio o DNI" />
-            <input class="inline" type="text" id="localizacion" placeholder="Localidad" />
-            <select class="inline" name="categoria" id="categoria">
-                <option value="">- Seleccionar -</option>
-                <option value="benjamin">Benjamin</option>
-                <option value="alevin">Alev&iacute;n</option>
-                <option value="infantil">Infantil</option>
-                <option value="cadete">Cadete</option>
-                <option value="juvenil">Juvenil</option>
-                <option value="aficionado">Aficionado</option>
-            </select>
-            <button class="inline btn btn-large" type="button" id="buscar">Buscar</button>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input type="search" id="busqueda" placeholder="NºSocio o DNI" />
+                </div>
+                <div class="input-field col s4">
+                    <select id="localizacion">
+                        <option value="">- Localidad -</option>
+                    </select>
+                </div>
+                <div class="input-field col s4">
+                    <select name="categoria" id="categoria">
+                        <option value="">- Categor&iacute;a -</option>
+                        <option value="benjamin">Benjamin</option>
+                        <option value="alevin">Alev&iacute;n</option>
+                        <option value="infantil">Infantil</option>
+                        <option value="cadete">Cadete</option>
+                        <option value="juvenil">Juvenil</option>
+                        <option value="aficionado">Aficionado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <button class="inline btn btn-small" type="button" id="buscar">Buscar</button>
+                <button class="inline btn btn-small blue right" type="button" id="crear">Nuevo</button>
+            </div>
+            
         </div>
         <table class="container white pad-md spa-bt-sm" id="listado">
 
@@ -82,8 +96,46 @@
 
         <script type="text/javascript">
             
+            function notificar( mensaje , tipo ){
+                
+                var cls = tipo || notificar.tipo.notify;
+                
+                var notifier = document.getElementById('notify-box');
+                
+                if( notifier === null ){
+                    
+                    notifier = document.createElement('span');
+                    notifier.id = 'notify-box';
+                    notifier.innerHTML = mensaje;
+                    notifier.classList.add('messagebox','show',cls);
+                    document.body.appendChild( notifier );
+                }
+                else{
+                    notifier.innerHTML = mensaje;
+                    notifier.classList.add('show',cls);
+                }
+
+                window.setTimeout( function() {
+                    notifier.classList.remove('show',cls);
+                    notifier.innerHTML = '';
+                } , 2000 );
+            }
+            /**
+             * 
+             * @param {type} busqueda
+             * @param {type} categoria
+             * @param {type} localidad
+             * @returns {undefined}
+             */
+            notificar.tipo = {
+                'error':'error',
+                'alert':'alert',
+                'notify':'notify',
+                'success':'success'
+            };
+            
             Asociacion.importar();
-            listar();
+            listar_socios();
             
             document.getElementById('buscar').addEventListener( 'click' , function(e){
                 var texto = document.getElementById('busqueda').value;
@@ -91,17 +143,19 @@
                 var localidad = document.getElementById('localizacion').value;
                 
                 //buscar aqui
-                listar( texto,categoria,localidad );
+                listar_socios( texto,categoria,localidad );
+            });
+            
+            document.getElementById('crear').addEventListener( 'click', function(e){
+                
+                crear_socio();
             });
 
             document.getElementById('guardar').addEventListener('click',function(e){
                 //evaluar si hay un id para definir el comportamiento
                 var id = document.getElementById('id').value;
                 
-                console.log( id );
-        
                 if( id.length > 0 && !Number.isNaN(id)){
-                    console.log('Guardando');
                     //guardar
                     Asociacion.actualizar( parseInt( id ), {
                             'dni':document.getElementById('dni').value,
@@ -109,17 +163,30 @@
                             'apellidos':document.getElementById('apellidos').value,
                             'localidad':document.getElementById('localidad').value,
                             'fecha':document.getElementById('fecha').value
+                    }, ( socio ) => {
+                        if( socio !== false ){
+                            notificar( socio.display() + ' guardado' , notificar.tipo.success );
+                        }
+                        else{
+                            notificar( 'error al guardar' , notificar.tipo.alert );
+                        }
                     });
                 }
                 else{
-                    console.log('Creando');
                     //crear
                     Asociacion.crear(
                             document.getElementById('dni').value,
                             document.getElementById('nombre').value,
                             document.getElementById('apellidos').value,
                             document.getElementById('localidad').value,
-                            document.getElementById('fecha').value
+                            document.getElementById('fecha').value, ( socio ) => {
+                                    if( socio !== false ){
+                                        notificar( socio.display() + ' creado!' , notificar.tipo.success );
+                                    }
+                                    else{
+                                        notificar( 'error al guardar' , notificar.tipo.alert );
+                                    }
+                                }
                             );
                 }
             });
@@ -161,7 +228,7 @@
                 document.getElementById('guardar').innerHTML = 'Guardar';
             }
             
-            function listar( busqueda , categoria , localidad ){
+            function listar_socios( busqueda , categoria , localidad ){
                 
                 document.getElementById('socio').classList.add('hidden');
                 var listado = document.getElementById('listado');
@@ -180,7 +247,13 @@
                 socios.forEach( function( socio ){
                     var num = document.createElement('strong');
                     num.innerHTML = 'Nº. ' + socio.displayId();
-                    num.classList.add('id-socio');
+                    num.classList.add('id-socio','clickable');
+                    num.addEventListener( 'click' , function(e){
+                        e.preventDefault();
+                        //cargar vista del socio
+                        ficha_socio( socio );
+                        return false;
+                    });
                     
                     var cat = document.createElement('span');
                     cat.innerHTML = socio.categoria();
@@ -191,8 +264,10 @@
                     link.innerHTML = socio.display( );
                     link.classList.add('clickable');
                     link.addEventListener( 'click' , function(e){
+                        e.preventDefault();
                         //cargar vista del socio
                         ficha_socio( socio );
+                        return false;
                     });
                     
                     var row = document.createElement('tr');
@@ -202,6 +277,31 @@
                     listado.appendChild( row );
                 });
                 
+                listar_localidades( localidad );
+            }
+            
+            function listar_localidades( current ){
+                
+                if( typeof current !== 'string' ){
+                    current = '';
+                }
+                
+                var list = document.getElementById('localizacion');
+                
+                list.innerHTML = '<option value="">- Localidad -</option>';
+
+                Asociacion.localidades().forEach( loc => {
+
+                    var option = document.createElement('option');
+
+                    option.innerHTML = loc;
+                    
+                    if( current.length && current === loc ){
+                        option.selected = 'selected';
+                    }
+
+                    list.appendChild( option );
+                } );
             }
             
             

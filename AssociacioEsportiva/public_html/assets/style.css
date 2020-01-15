@@ -11,7 +11,7 @@ body.popup{
     background-image: url('../img/gym-01.jpg');
     background-size: cover;
 }
-.page-footer{ position: fixed; left: 0; bottom: 0; right: 0; }
+.page-footer{ position: fixed; left: 0; bottom: 0; right: 0; z-index: 10; }
 .layer.overlay{
     position: fixed;
     top: 0;left: 0; right: 0; bottom: 0;
@@ -81,7 +81,7 @@ nav.header ul.menu > li > a{
     opacity: 0;
     vertical-align: top;
     border-radius: 2px;
-    box-shadow: 0 0 0 8px rgba(0,0,0,0.25);
+    box-shadow: 0 0 8px rgba(0,0,0,0.25);
     pointer-events: none;
     box-sizing: border-box;
 }
@@ -134,11 +134,14 @@ ul li strong,ol li strong{
 .container.hidden{ display: none; }
 .clickable{
     cursor: pointer;
+    transition: ease-in 250ms;
 }
+.clickable:hover{ color: #2196F3; }
 
 .full-width{ width: 100%;}
 .container.spa-bt-sm{ margin-bottom: 10px; }
 .container.pad-md{ padding: 20px;}
+.container.pad-top-xl{ padding-top: 80px;}
 .shaded{
     background-color: rgba(0,0,0,0.25);
 }
@@ -223,3 +226,53 @@ hr.separator{ margin: 20px auto; border: 2px solid rgba(64,0,0,0.25); }
 }
 
 .right{ float: right; }
+
+.categoria{
+    display: inline-block;
+    min-width: 120px;
+    text-align: center;
+    text-transform: capitalize;
+    padding: 4px 8px;
+    border-radius: 2px;
+    border: 1px solid #9a9ada;
+    background-color: #fafaff;
+    color: #9a9ada;
+    cursor: default;
+}
+
+table tr{
+    transition: ease-in 540ms;
+}
+table tr:hover{
+    background-color: #f5f5f5;
+    box-shadow: 0 0 4px rgba(0,0,0,0.25);
+}
+
+.messagebox{
+    opacity: 0;
+    pointer-events: none;
+    display: block;
+    width: 100%;
+    
+    transition: ease-in-out 250ms;
+    
+    padding: 10px 20px;
+    margin: 0 auto 0;
+    color: #ffffff;
+    background-color: #dadada;
+}
+.messagebox.success{
+    background-color: #429658;
+}
+.messagebox.alert{
+    background-color: #dad553;
+}
+.messagebox.error{
+    background-color: #cf713e;
+}
+.messagebox.show{
+    opacity: 1;
+    pointer-events: initial;
+}
+#notify-box{ position: fixed; bottom: 0; left: 0; }
+#notify-box.show{ bottom: 70px; }

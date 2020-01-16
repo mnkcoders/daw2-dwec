@@ -194,9 +194,15 @@ Asociacion.listar = function( filtro , orden ){
         var db = this.slice();
 
         for( var s = 0 ; s < db.length ; s++ ){
+            
             //saltar en función del valor de los filtros, o omitir si no hay filtro
-            if( filtro.buscar.length > 0 && db[s].nombre !== filtro.buscar && db[s].dni !== filtro.buscar ) continue;
+            if( filtro.buscar.length > 0
+                    && db[s].nombre.toLowerCase() !== filtro.buscar.toLowerCase()
+                    && db[s].apellidos.toLowerCase() !== filtro.buscar.toLowerCase()
+                    && db[s].dni.toLowerCase() !== filtro.buscar.toLowerCase() ) continue;
+            
             if( filtro.localidad.length > 0 && db[s].localidad !== filtro.localidad ) continue;
+            
             if( filtro.categoria.length > 0 && db[s].categoria() !== filtro.categoria ) continue;
             
             out.push(db[s]);
@@ -220,17 +226,19 @@ Asociacion.listar = function( filtro , orden ){
  * @param {String} buscar
  * @returns {Asociacion}
  */
-Asociacion.borrar = function( buscar ){
+Asociacion.borrar = function( buscar , callback ){
     
-    if( Number.isNaN( buscar ) ){
-        //dni
-
-    }
-    else{
-        //num socio
+    for( var s = 0 ; s < this.length ; s++ ){
+        if( this[s].dni === buscar || this[s].id == buscar ){
+            var borrado = this.splice( s , 1 );
+            if( borrado.length && typeof callback === 'function' ){
+                callback( borrado[0] );
+                return this.exportar();
+            }
+        }
     }
     
-    return Asociacion.exportar();
+    return this;
 };
 /**
  * @returns {Asociacion}
@@ -284,35 +292,35 @@ Asociacion.Demo = function(){
             'Pablo',
             'Garcia',
             'Mahon',
-            '1994-05-02',
+            '2004-05-02',
             1
     ).agregar(
             '9876543R',
             'Tomas',
             'Garriga',
             'Ciutadella',
-            '1992-08-11',
+            '2002-08-11',
             2
     ).agregar(
             '67908033D',
             'Francisco',
             'Sintes',
             'Alaior',
-            '1994-03-25',
+            '2000-03-25',
             3
     ).agregar(
             '43123546T',
             'Jose',
             'Pons',
             'Mahon',
-            '1993-02-01',
+            '2005-02-01',
             4
     ).agregar(
             '673555Y',
             'Alex',
             'Pons',
             'Sant Climent',
-            '1995-12-17',
+            '1996-12-17',
             5
     ).exportar();
 };

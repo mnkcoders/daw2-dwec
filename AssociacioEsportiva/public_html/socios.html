@@ -89,7 +89,8 @@
                 <input type="text" id="localidad" placeholder="Localidad" />
                 <input type="date" id="fecha" placeholder="Fecha de nacimiento" />
             </fieldset>
-            <button class="btn btn-large" type="button" id="guardar">Guardar</button>
+            <button class="btn btn-small red" type="button" id="borrar">Borrar</button>
+            <button class="btn btn-small right" type="button" id="guardar">Guardar</button>
         </div>
 
         <div class="spacer medium"></div>
@@ -150,6 +151,18 @@
                 
                 crear_socio();
             });
+            
+            document.getElementById('borrar').addEventListener('click',function(e){
+                
+                if( this.value.length ){
+                    
+                    Asociacion.borrar( this.value , socio => {
+                        notificar( socio.display() + ' ha sido borrado' , notificar.tipo.alert );
+                    } );
+                    
+                    listar_socios();
+                }
+            });
 
             document.getElementById('guardar').addEventListener('click',function(e){
                 //evaluar si hay un id para definir el comportamiento
@@ -208,6 +221,8 @@
                 document.getElementById('fecha').value = '';
                 
                 document.getElementById('guardar').innerHTML = 'Crear';
+                document.getElementById('borrar').value = '';
+                document.getElementById('borrar').classList.add('hide');
             }
             
             function ficha_socio( socio ) {
@@ -226,6 +241,8 @@
                 document.getElementById('fecha').value = socio.fecha;
                 
                 document.getElementById('guardar').innerHTML = 'Guardar';
+                document.getElementById('borrar').value = socio.id;
+                document.getElementById('borrar').classList.remove('hide');
             }
             
             function listar_socios( busqueda , categoria , localidad ){

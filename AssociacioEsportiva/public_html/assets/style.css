@@ -52,7 +52,7 @@ nav.header ul.menu > li > a{
     text-align: center;
     text-transform: uppercase;
 }
-
+.hide{ display:  none; }
 .inline{
     display: inline-block;
     width: auto;

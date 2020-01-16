@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Eleccions</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link href="https://fonts.googleapis.com/css?family=Exo:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" type="text/css" rel="stylesheet" />
+          
+        <style type="text/css">
+            
+            body{
+                font-family: 'Exo';
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div id="elecciones" class="container">
+            <nav id="menu">
+                <ul>
+                    <li>
+                        <button type="button" id="btn_resultados" class="btn btn-small">Resultados</button>
+                    </li>
+                    <li>
+                        <button type="button" id="btn_modificar" class="btn btn-small">Modificar</button>
+                    </li>
+                    <li>
+                        <button type="button" id="btn_entrada" class="btn btn-small">Entrada</button>
+                    </li>
+                </ul>
+            </nav>
+            <table id="view_resultados" class="container">
+                <!-- generar la tabla de inputs -->
+            </table>
+            <table id="view_entrada" class="container">
+                <!-- mostrar todo el recuento ordenado -->
+                <button class="btn btn-small" id="importar_resutlados">Guardar</button>
+            </table>
+            <div id="view_modificar">
+                <!-- modificar por voto y por partido -->
+                <button class="btn btn-small" id="actualizar_recuento">Guardar</button>
+            </div>
+        </div>
+        
+        <script type="text/javascript" src="eleccions.js"></script>
+        
+        <script type="text/javascript">
+            
+            function Elecciones(){
+                
+                var _EL = {
+                    'recuento':[ /**/ ]
+                };
+                
+                /**
+                 * @returns {Array}
+                 */
+                this.listar = () => _EL.recuento;
+                
+                this.importar = function( tabla ){
+                    
+                    if( typeof tabla === 'object' ){
+                        for( var c in tabla){
+                            if( _EL.recuento.hasOwnProperty(c) && Array.isArray(tabla[c])){
+                                for( var p in tabla[c]){
+                                    if( _EL.recuento[c].hasOwnProperty(p) && tabla[c].hasOwnProperty(p) ){
+                                      
+                                        _EL.recuento[c][p] = tabla[c][p];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    return this;
+                };
+                /**
+                 * Recuento de votos por colegio
+                 * @param {String} colegio
+                 * @returns {Array}
+                 */
+                this.resultadoPorColegio = function( colegio ){
+                    
+                    var out = [];
+                    
+                    
+                    return out;
+                };
+                /**
+                 * Recuento de votos por partido
+                 * @param {String} partido
+                 * @returns {Array}
+                 */
+                this.resultadoPorPartido = function( partido ){
+                    
+                    var out = [];
+                    
+                    return out;
+                };
+                
+                this.iniciar = function(){
+                    
+                    for( var c in Elecciones.Colegios ){
+
+                        _EL.recuento[ c ] = [];
+
+                        for( var p in Elecciones.Partidos ){
+                            _EL.recuento[ c ][ p ] = 0;
+                        }
+                    }
+                    
+                };
+                
+                return this.iniciar();
+            };
+            
+            Elecciones.Colegios = {
+                'claustre':'Claustre',
+                'verge-del-carme':'Verge del Carme',
+                'verge-de-gracua':'Verge de Gracia',
+                'sa-graduada':'Sa Graduada'
+            };
+            
+            Elecciones.Partidos = {
+                'psoe': 'PSOE',
+                'pp': 'PP',
+                'ciudadanos': 'Ciudadanos',
+                'podemos': 'Podemos',
+                'mes': 'Mes'
+            };
+            
+            /**
+             * @returns {Pantalla}
+             */
+            function Pantalla(){
+               
+                var _componentes = {
+                    'vistas':['view_resultados','view_modificar','view_entrada'],
+                    'botones':['btn_resutados','btn_modificar','btn_entrada']
+                };
+                
+                
+        
+                this.iniciar = function(){
+                    
+                    
+                    return this;
+                };
+        
+                return this.iniciar();
+            }
+            
+        </script>
+    </body>
+</html>
+<!--
+Se quieren almacenar los resultados obtenidos en las elecciones a alcalde de Maó, y ha habido 4
+colegios electorales donde se ha podido votar (Claustre, Verge del Carme, Verge de Gràcia, y Sa
+Graduada) y 6 partidos candidatos a las elecciones (PSOE, PP, IU, Ciudadanos, Podemos y Més).
+Deberás realizar una página web que tendrá varias opciones (puedes implementarlas en botones y
+prompts).
+■ Solicitar al usuario todos los votos por colegio electoral y partido, y almacenarlos (el
+programa indicará el nombre del colegio y del partido, no solo la posición).
+■ Permitir que el usuario indique un colegio y un partido y pueda modificar el dato
+almacenado.
+■ Permitir que el usuario indique un colegio y le muestre el total de votos recibidos.
+■ Permitir que el usuario indique un partido y le muestre el total de votos recibidos.
+Además, en la página web se mostrarán:
+■ Una tabla con todos los colegios electorales y todos los partidos, y sus votos asociados.
+■ Calcular el número total de votos por partido y por colegio, y colocarlos al final de las filas y
+columnas de la tabla.
+■ Indicar por orden de mayor a menor votos recibidos el listado de colegios.
+■ Indicar por orden de mayor a menor votos recibidos el listado de candidatos.
+
+-->

@@ -49,7 +49,9 @@
         <script type="text/javascript" src="eleccions.js"></script>
         
         <script type="text/javascript">
-            
+            /**
+             * @returns {Elecciones}
+             */
             function Elecciones(){
                 
                 var _EL = {
@@ -60,7 +62,10 @@
                  * @returns {Array}
                  */
                 this.listar = () => _EL.recuento;
-                
+                /**
+                 * @param {Object|Array} tabla
+                 * @returns {Elecciones}
+                 */
                 this.importar = function( tabla ){
                     
                     if( typeof tabla === 'object' ){
@@ -101,7 +106,9 @@
                     
                     return out;
                 };
-                
+                /**
+                 * @returns {Elecciones}
+                 */
                 this.iniciar = function(){
                     
                     for( var c in Elecciones.Colegios ){
@@ -109,10 +116,12 @@
                         _EL.recuento[ c ] = [];
 
                         for( var p in Elecciones.Partidos ){
+                           
                             _EL.recuento[ c ][ p ] = 0;
                         }
                     }
                     
+                    return this;
                 };
                 
                 return this.iniciar();
@@ -133,10 +142,8 @@
                 'mes': 'Mes'
             };
             
-            /**
-             * @returns {Pantalla}
-             */
-            function Pantalla(){
+
+            (function Pantalla(){
                
                 var _componentes = {
                     'vistas':['view_resultados','view_modificar','view_entrada'],
@@ -144,15 +151,20 @@
                 };
                 
                 
-        
+                /**
+                 * @returns {Pantalla}
+                 */
                 this.iniciar = function(){
+                    
+                    
+                    
                     
                     
                     return this;
                 };
         
                 return this.iniciar();
-            }
+            }( /* AUTOCARGAR CONTROL y eventos DE VISTAS*/ ));
             
         </script>
     </body>

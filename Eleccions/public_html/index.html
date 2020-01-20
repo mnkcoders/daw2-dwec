@@ -16,6 +16,28 @@
                 font-family: 'Exo';
             }
             
+            #elecciones > .container{ display: none; }
+            #elecciones > .container.active{ display: block; }
+            
+            table > tr > th, table > tr > td{ min-width: 80px; }
+            table > tr > th, table > tr > td:not(:first-child){
+                text-align: center;
+            }
+            
+            select{
+                display: block;
+            }
+            table > tr > td > input[type="number"]{
+                text-align: center;
+            }
+            .red{
+                
+            }
+            fieldset{
+                border: 1px solid #dadada;
+                border-radius: 2px;
+                margin: 4px auto 8px;
+            }
         </style>
     </head>
     <body>
@@ -33,140 +55,53 @@
                     </li>
                 </ul>
             </nav>
-            <table id="view_resultados" class="container">
+            <div id="view_resultados" class="container ">
                 <!-- generar la tabla de inputs -->
-            </table>
-            <table id="view_entrada" class="container">
+                <table class="table">
+                    
+                </table>
+                <h4>Resultados por Centro</h4>
+                <ul class="centros">
+                    
+                </ul>
+                <h4>Resultados por Partido</h4>
+                <ul class="partidos">
+                    
+                </ul>
+            </div>
+            <div id="view_entrada" class="container active">
                 <!-- mostrar todo el recuento ordenado -->
-                <button class="btn btn-small" id="importar_resutlados">Guardar</button>
-            </table>
-            <div id="view_modificar">
+                <table class="table">
+                    
+                </table>
+                <hr class="spacer">
+                <button class="btn btn-small" id="btn_importar_resutlados">Guardar</button>
+            </div>
+            <div id="view_modificar" class="container">
                 <!-- modificar por voto y por partido -->
-                <button class="btn btn-small" id="actualizar_recuento">Guardar</button>
+                
+                <fieldset>
+                    <label for="partido">Seleccionar Partido</label>
+                    <select id="partido">
+                
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <label for="colegio">Seleccionar Colegio</label>
+                    <select id="colegio">
+
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <label for="votos">Votos</label>
+                    <input type="number" min="0" value="0" id="votos" />
+                </fieldset> 
+                <button class="btn btn-small" id="btn_actualizar_recuento">Guardar</button>
             </div>
         </div>
         
         <script type="text/javascript" src="eleccions.js"></script>
-        
-        <script type="text/javascript">
-            /**
-             * @returns {Elecciones}
-             */
-            function Elecciones(){
-                
-                var _EL = {
-                    'recuento':[ /**/ ]
-                };
-                
-                /**
-                 * @returns {Array}
-                 */
-                this.listar = () => _EL.recuento;
-                /**
-                 * @param {Object|Array} tabla
-                 * @returns {Elecciones}
-                 */
-                this.importar = function( tabla ){
-                    
-                    if( typeof tabla === 'object' ){
-                        for( var c in tabla){
-                            if( _EL.recuento.hasOwnProperty(c) && Array.isArray(tabla[c])){
-                                for( var p in tabla[c]){
-                                    if( _EL.recuento[c].hasOwnProperty(p) && tabla[c].hasOwnProperty(p) ){
-                                      
-                                        _EL.recuento[c][p] = tabla[c][p];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    return this;
-                };
-                /**
-                 * Recuento de votos por colegio
-                 * @param {String} colegio
-                 * @returns {Array}
-                 */
-                this.resultadoPorColegio = function( colegio ){
-                    
-                    var out = [];
-                    
-                    
-                    return out;
-                };
-                /**
-                 * Recuento de votos por partido
-                 * @param {String} partido
-                 * @returns {Array}
-                 */
-                this.resultadoPorPartido = function( partido ){
-                    
-                    var out = [];
-                    
-                    return out;
-                };
-                /**
-                 * @returns {Elecciones}
-                 */
-                this.iniciar = function(){
-                    
-                    for( var c in Elecciones.Colegios ){
-
-                        _EL.recuento[ c ] = [];
-
-                        for( var p in Elecciones.Partidos ){
-                           
-                            _EL.recuento[ c ][ p ] = 0;
-                        }
-                    }
-                    
-                    return this;
-                };
-                
-                return this.iniciar();
-            };
-            
-            Elecciones.Colegios = {
-                'claustre':'Claustre',
-                'verge-del-carme':'Verge del Carme',
-                'verge-de-gracua':'Verge de Gracia',
-                'sa-graduada':'Sa Graduada'
-            };
-            
-            Elecciones.Partidos = {
-                'psoe': 'PSOE',
-                'pp': 'PP',
-                'ciudadanos': 'Ciudadanos',
-                'podemos': 'Podemos',
-                'mes': 'Mes'
-            };
-            
-
-            (function Pantalla(){
-               
-                var _componentes = {
-                    'vistas':['view_resultados','view_modificar','view_entrada'],
-                    'botones':['btn_resutados','btn_modificar','btn_entrada']
-                };
-                
-                
-                /**
-                 * @returns {Pantalla}
-                 */
-                this.iniciar = function(){
-                    
-                    
-                    
-                    
-                    
-                    return this;
-                };
-        
-                return this.iniciar();
-            }( /* AUTOCARGAR CONTROL y eventos DE VISTAS*/ ));
-            
-        </script>
+        <script type="text/javascript" src="vista.js"></script>
     </body>
 </html>
 <!--

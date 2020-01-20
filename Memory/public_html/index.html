@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Memory</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link href="https://fonts.googleapis.com/css?family=Exo:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" type="text/css" rel="stylesheet" />
+     
+        <style type="text/css">
+            
+            body{
+                font-family:  Exo;
+                background-image: -webkit-linear-gradient(#c5cae9   , #9fa8da   );
+                background-image: -moz-linear-gradient(#c5cae9  , #9fa8da  );
+                background-image: -ms-linear-gradient(#c5cae9  , #9fa8da  );
+                background-image: -o-linear-gradient(#c5cae9  , #9fa8da  );
+                background-image: linear-gradient(#c5cae9  , #9fa8da  );
+                height: 100vh;
+            }
+            
+            #memory{
+                margin: 80px auto;
+                min-height: 300px;
+                border-radius: 4px;
+                padding: 10px;
+                box-shadow: 0 0 8px rgba(0,0,0,0.25);
+                background-image: -webkit-linear-gradient(#ffe0b2    , #ffcc80   );
+                background-image: -moz-linear-gradient(#ffe0b2  , #ffcc80  );
+                background-image: -ms-linear-gradient(#ffe0b2  , #ffcc80  );
+                background-image: -o-linear-gradient(#ffe0b2  , #ffcc80  );
+                background-image: linear-gradient(#ffe0b2  , #ffcc80  );
+            }
+            
+            #memory > .card{
+                padding: 26px 10px;
+                border-radius: 4px;
+                width: 100px;
+                height: 100px;
+                display: inline-block;
+                position: relative;
+                margin: 4px;
+                box-shadow: 0 0 2px rgba(0,0,0,0.25);
+                
+                transition: ease-in 250ms;
+                
+                background-image: -webkit-linear-gradient(  #ce93d8  , #673ab7 );
+                box-sizing: border-box !important;
+                color: rgba(255,255,255,0);
+                font-weight: bold;
+                font-size: 48px;
+                line-height: 48px;
+                text-align: center;
+            }
+            #memory > .card:not(.active){ cursor: pointer; }
+            #memory > .card.active{
+                border: 2px solid #673ab7;
+                background: #fafafa;
+                color: #673ab7;
+                cursor: default;
+            }
+            #memory > .card.found{
+                border: 2px solid #673ab7;
+                background: #fff3e0;
+                color: #673ab7;
+            }
+            #memory > .card:not(.found):not(.active):before{
+                font-family: 'Material Icons';
+                font-size: 64px;
+                line-height: 64px;
+                padding: 12px 0;
+                content: 'brightness_5';
+                position: absolute;
+                top: 0; left: 0; bottom: 0; right: 0;
+                text-align: center;
+                text-shadow: none;
+                color: rgba(255,255,255,0.25);
+                transition: ease-in 850ms;
+            }
+            #memory > .card:not(.found):not(.active):hover{
+                box-shadow: 0 0 4px rgba(0,0,0,0.75);
+            }
+            #memory > .card:not(.found):not(.active):hover:before{
+                color: rgba(255,255,255,0.45);
+            }
+            
+            select{
+                display: block;
+            }
+            
+        </style>
+    </head>
+    <body>
+        
+        <nav>
+            <ul class="container">
+                <li>
+                    <select id="nivel">
+                        <optgroup label="Selecciona un nivel">
+                            <option value="1">Principiante</option>
+                            <option value="2">Intermedio</option>
+                            <option value="3">Experto</option>
+                        </optgroup>
+                    </select>
+                </li>
+                <li><button class="btn light-red darken-2" id="btn_restart">Reiniciar</button></li>
+                <li class="right">
+                    <strong class="btn green"><span id="puntuacion"></span> puntos</strong>
+                    <strong class="btn blue"><span id="intentos"></span> intentos</strong>
+                </li>
+            </ul>
+        </nav>
+        <div class="container">
+            <div id="memory">
+
+
+
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            /**
+             * @returns {View}
+             */
+            (function(){
+                
+                var _G = {
+                    /**
+                     * @type {View}
+                     */
+                    'this':this,
+                    'T': {'A':-1,'B':-1},
+                    /**
+                     * @type {Memory}
+                     */
+                    'game': new Memory()
+                };
+                /**
+                 * @param {Boolean} marcar
+                 * @returns {Vista}
+                 */
+                this.resetear = function( marcar ){
+
+                    document.getElementById('puntuacion').innerHTML = _G.game.puntos();
+
+                    document.getElementById('intentos').innerHTML = _G.game.intentos();
+                    
+                    document.querySelectorAll( '.card.active' ).forEach( function( card ){
+                        if( !card.classList.contains('found' ) ){
+                            if( marcar ){
+                                card.classList.add( 'found' );
+                            }
+                            else{
+                                card.classList.remove( 'active' );
+                            }
+                        }
+                    });
+                    
+                    //resetear
+                    _G.T.A = -1;
+                    _G.T.B = -1;
+                    
+                    if( _G.game.ganado() ){
+                        alert( 'Has ganado!' );
+                    }
+
+
+                    return this;
+                };
+                /**
+                 * @param {Int} carta
+                 * @returns {Boolean}
+                 */
+                this.evaluar = function( carta ){
+                    
+                    if(typeof carta === 'number' ){
+
+                        if( _G.T.A < 0 ){
+                                //preparar para buscar su pareja
+                                _G.T.A = carta;
+                                return true;
+                        }
+                        else if( _G.T.B < 0 ){
+                                _G.T.B = carta;
+                                window.setTimeout( function(){
+                                    //verificar y validar
+                                    if( _G.game.turno(_G.T.A, _G.T.B ) ){
+
+                                        _G.this.resetear( true );
+                                    }
+                                    else{
+                                        _G.this.resetear();
+                                    }
+                                    
+                                } , 1200 );
+                                return true;
+                        }
+                    }
+                    return false;
+                };
+                /**
+                 * @returns {View}
+                 */
+                this.nuevaPartida = function( ){
+
+                    var tab = document.getElementById('memory');
+                    
+                    var nivel = document.getElementById('nivel');
+                    
+                    _G.game.setup( parseInt( nivel.value ) );
+
+                    tab.innerHTML = '';
+
+                    var collection = _G.game.cards();
+
+                    for( var c = 0 ; c < collection.length ; c++ ){
+                        var card = document.createElement('span');
+                        card.className = 'card';
+                        //card.data = collection[ c ];
+                        card.setAttribute('data-id', c );
+                        card.innerHTML = collection[ c ];
+                        card.addEventListener( 'click' , function(e){
+                            e.preventDefault();
+
+                            if( _G.this.evaluar( parseInt( this.getAttribute('data-id') ) ) ){
+                                //prevenir marcar mas de 2 veces por turno
+                                this.classList.add('active');
+                            }
+                            
+                            return true;
+                        });
+                        tab.appendChild( card );
+                    }
+
+                    return this.resetear();
+                };
+                /**
+                 * @returns {View}
+                 */
+                this.init = function(){
+                    
+                    document.addEventListener( 'DOMContentLoaded', function(e){
+
+                        document.getElementById('btn_restart').addEventListener( 'click', function(e){
+
+                            e.preventDefault();
+                            
+                            _G.this.nuevaPartida();
+                            
+                            return true;
+                        });
+
+                        _G.this.nuevaPartida();
+                    });
+                    
+                    return this;
+                };
+                
+                return this.init();
+            }(/*autoejecutar*/));
+            /**
+             * @param {Int} nivel
+             * @returns {Memory}
+             */
+            function Memory( nivel ){
+                
+                var _game = {
+                    /**
+                     * @type Memory
+                     */
+                    'this': this,
+                    /**
+                     * @type Int
+                     */
+                    'nivel': 1,
+                    /**
+                     * @type Int
+                     */
+                    'puntos': 0,
+                    /**
+                     * @@type Int
+                     */
+                    'intentos':0,
+                    /**
+                     * @type Array
+                     */
+                    'cards':[]
+                };
+                /**
+                 * Definir aqui las condiciones para ganar o perder el juego
+                 * @returns {Boolean}
+                 */
+                this.ganado = function(){
+
+                    return _game.puntos >= _game.cards.length;
+                };
+                /**
+                 * @returns {Number}
+                 */
+                this.puntos = () => _game.puntos;
+                /**
+                 * @returns {Number}
+                 */
+                this.intentos = () => _game.intentos;
+                /**
+                 * @param {Int} C1
+                 * @param {Int} C2
+                 * @returns {Boolean}
+                 */
+                this.turno = function( C1 , C2 ){
+
+                    _game.intentos++;
+
+                    if( C1 < _game.cards.length && C2 < _game.cards.length ){
+                        
+                        if( _game.cards[ C1 ] === _game.cards[ C2 ] ){
+                            _game.puntos += 2;
+                            return true;
+                        }
+                    }
+                    
+                    return false;
+                };
+                /**
+                 * @returns {Array}
+                 */
+                this.cards = () => _game.cards;
+                /**
+                 * @returns {Memory}
+                 */
+                this.setup = function( nivel ){
+                    
+                    _game.cards = [];
+
+                    _game.nivel = typeof nivel === 'number' && nivel ? nivel : 1;
+                    _game.puntos = 0;
+                    _game.intentos = 0;
+                    
+                    for( var i = 0 ; i < 5 * _game.nivel ; i++ ){
+                        _game.cards.push( i + 1 );
+                        _game.cards.push( i + 1 );
+                    }
+                    
+                    console.log( _game.cards );
+                    
+                    for( var i = 0 ; i < _game.cards.length ; i++ ){
+                        
+                        var rand = parseInt( Math.random() * _game.cards.length / 2 ) + parseInt( Math.random() * _game.cards.length / 2 );
+                        //console.log( rand );
+                        if( rand !== i ){
+                            
+                            var tmp = _game.cards[ i ];
+                            _game.cards[ i ] = _game.cards[ rand ];
+                            _game.cards[ rand ] = tmp;
+                        }
+                    }
+
+                    console.log( _game.cards );
+                    
+                    return this;
+                };
+                
+                
+                return this;
+            }
+            
+        </script>
+    </body>
+</html>

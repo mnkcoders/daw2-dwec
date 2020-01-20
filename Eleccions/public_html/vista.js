@@ -3,8 +3,18 @@
 
     var _componentes = {
         'instance': this,
-        'vistas': ['view_resultados', 'view_modificar', 'view_entrada'],
-        'botones': ['btn_resultados', 'btn_modificar', 'btn_entrada', 'btn_importar_resutlados', 'btn_actualizar_recuento'],
+        'vistas': [
+            'view_resultados', 
+            'view_modificar', 
+            'view_entrada'
+            ],
+        'botones': [
+            'btn_resultados',
+            'btn_modificar',
+            'btn_entrada', 
+            'btn_importar_resutlados', 
+            'btn_actualizar_recuento',
+            'btn_demo'],
         /**
          * @type Elecciones
          */
@@ -110,15 +120,15 @@
         var recuento_partidos = document.createElement('tr');
         var total_votos = document.createElement('td');
         var footer_total = document.createElement('td');
-        footer_total.className = 'yellow';
+        footer_total.className = 'yellow lighten-5';
         footer_total.innerHTML = '<strong>Total</strong>';
         total_votos.innerHTML = _componentes.datos.totalVotos();
-        total_votos.className = 'orange';
+        total_votos.className = 'orange lighten-5';
 
         recuento_partidos.appendChild(footer_total);
         Object.keys(Elecciones.Partidos).forEach(function (partido) {
             var r = document.createElement('td');
-            r.className = 'yellow';
+            r.className = 'yellow lighten-5';
             r.innerHTML = '<strong>' + _componentes.datos.totalPartido(partido) + '</strong>';
             recuento_partidos.appendChild(r);
         });
@@ -134,7 +144,7 @@
 
             colegio.innerHTML = Elecciones.Colegios[ c ];
             total_centro.innerHTML = _componentes.datos.totalColegio(c);
-            total_centro.className = 'green';
+            total_centro.className = 'red lighten-5';
 
             linea.appendChild(colegio);
             for (var p in Elecciones.Partidos) {
@@ -158,16 +168,19 @@
     this.refrescarListaPartidos = function(){
         
         var lista = document.querySelector('#view_resultados .partidos');
+
         lista.innerHTML = '';
-        var partidos = _componentes.datos.resultadoPorPartido( ) ;
-        console.log( partidos.sort() );
-        console.log( partidos );
-        Object.keys( partidos ).forEach( function( partido ){
-            console.log( typeof partidos[ partido ]);
-            lista.innerHTML += '<li>'
-                    + Elecciones.Partidos[ partido ]
-                    + '<strong class="yellow right">'
-                    + partidos[ partido ] + '</strong></li>';
+        
+        _componentes.datos.resultadoPorPartido( ).sort( function( a , b ){
+            //ordenar de mayor a menor voto
+            return a.votos > b.votos ? -1 : b.votos > a.votos ? 1 : 0;
+        }).forEach( function( p ){
+
+            lista.innerHTML += '<li class="pad-sm">'
+                    + p.partido
+                    + '<strong class="right">'
+                    + p.votos
+                    + '</strong></li>';
             
         });
         
@@ -180,15 +193,19 @@
     this.refrescarListaCentros = function(){
         
         var lista = document.querySelector('#view_resultados .centros');
-        console.log( centros) ;
+
         lista.innerHTML = '';
-        var centros = _componentes.datos.resultadoPorColegio( ) ;
-        Object.keys( centros ).forEach( function( centro ){
+
+        _componentes.datos.resultadoPorColegio( ).sort( function( a , b ){
+            //ordenar de mayor a menor voto
+            return a.votos > b.votos ? -1 : b.votos > a.votos ? 1 : 0;
+        }).forEach( function( c ){
             
-            lista.innerHTML += '<li>'
-                    + Elecciones.Colegios[ centro ]
-                    + '<strong class="yellow right">'
-                    + centros[ centro ] + '</strong></li>';
+            lista.innerHTML += '<li class="pad-sm">'
+                    + c.centro
+                    + '<strong class="right">'
+                    + c.votos
+                    + '</strong></li>';
             
         });
          
@@ -198,6 +215,7 @@
      * @returns {Pantalla}
      */
     this.refrescarModificar = function () {
+        document.getElementById('votos').value = 0;
         return this;
     };
     /**
@@ -253,6 +271,14 @@
                             break;
                         case 'btn_entrada':
                             _componentes.instance.toggle('view_entrada').refrescarEntrada('view_entrada');
+                            break;
+                        case 'btn_demo':
+                            _componentes.datos.demo();
+                            _componentes.instance
+                                    .refrescarEntrada()
+                                    .refrescarResultados()
+                                    .refrescarListaPartidos()
+                                    .refrescarListaCentros();
                             break;
                         case 'btn_actualizar_recuento':
                             _componentes.datos.actualizar(

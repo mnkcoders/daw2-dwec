@@ -48,7 +48,6 @@ function Elecciones() {
             var antes = _EL.recuento[ colegio ][ partido ];
             
             _EL.recuento[ colegio ][ partido ] = typeof votos === 'number' ? votos : 0;
-            //console.log( votos + ' votos actualizados en ' + colegio + ' de ' + partido );
             
             if( _EL.recuento[ colegio ][ partido ] != antes ){
                 return this.guardar();
@@ -124,9 +123,11 @@ function Elecciones() {
         
         Object.keys( Elecciones.Colegios ).forEach( function( centro ){
             
-            out.push({
-                'centro': Elecciones.Colegios[ centro ],
-                'votos':_EL.instance.totalColegio( centro )});
+            out.push( {
+                'centro': Elecciones.Colegios[centro],
+                'votos': _EL.instance.totalColegio( centro )
+            });
+            //out[ centro] = _EL.instance.totalColegio( centro );
             
         });
         
@@ -136,14 +137,17 @@ function Elecciones() {
      * Recuento de votos por partido
      * @returns {Array}
      */
-    this.resultadoPorPartido = function () {
+    this.resultadoPorPartido = function ( ) {
 
         var out = [];
         
         Object.keys( Elecciones.Partidos ).forEach( function( partido ){
-            out.push({
-                'partido':Elecciones.Partidos[partido],
-                'votos':_EL.instance.totalPartido( partido )});
+            
+            //out[ partido ] = _EL.instance.totalPartido( partido );
+            out.push( {
+                'partido': Elecciones.Partidos[ partido ],
+                'votos': _EL.instance.totalPartido( partido )
+            });
         });
         
         return out;
@@ -211,7 +215,7 @@ function Elecciones() {
         return this;
     };
 
-    return this.iniciar().demo();
+    return this.iniciar();
 }
 Elecciones.Colegios = {
     'claustre': 'Claustre',

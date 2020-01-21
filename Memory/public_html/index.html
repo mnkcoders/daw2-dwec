@@ -38,8 +38,8 @@
             #memory > .card{
                 padding: 26px 10px;
                 border-radius: 4px;
-                width: 100px;
-                height: 100px;
+                width: 140px;
+                height: 140px;
                 display: inline-block;
                 position: relative;
                 margin: 4px;
@@ -51,12 +51,13 @@
                 box-sizing: border-box !important;
                 color: rgba(255,255,255,0);
                 font-weight: bold;
-                font-size: 48px;
+                font-size: 0;
                 line-height: 48px;
                 text-align: center;
             }
             #memory > .card:not(.active){ cursor: pointer; }
             #memory > .card.active{
+                font-size: 48px;
                 border: 2px solid #673ab7;
                 background: #fafafa;
                 color: #673ab7;
@@ -71,7 +72,7 @@
                 font-family: 'Material Icons';
                 font-size: 64px;
                 line-height: 64px;
-                padding: 12px 0;
+                padding: 38px 0;
                 content: 'brightness_5';
                 position: absolute;
                 top: 0; left: 0; bottom: 0; right: 0;
@@ -339,7 +340,7 @@
                     _game.puntos = 0;
                     _game.intentos = 0;
                     
-                    for( var i = 0 ; i < 5 * _game.nivel ; i++ ){
+                    for( var i = 0 ; i < 6 * _game.nivel ; i++ ){
                         _game.cards.push( i + 1 );
                         _game.cards.push( i + 1 );
                     }

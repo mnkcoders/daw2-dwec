@@ -23,6 +23,14 @@
                 margin: 40px auto;
             }
             
+            .message{
+                display: none;
+            }
+            .message.error{ color: red; }
+            .message.show{
+                display: block;
+            }
+            
         </style>
         
     </head>
@@ -43,6 +51,7 @@
             <fieldset>
                 <label>Cuenta</label>
                 <input class="datos" type="text" id="cuenta" placeholder="Nº cuenta" />
+                <span class="cuenta" id="validacion_cuenta">--</span>
             </fieldset>
 
             <button class="btn red right" id="btn_validar">Validar</button>
@@ -50,8 +59,12 @@
         <script type="text/javascript">
 
             var Validador = {
+                /**
+                 * @type {String} email
+                 * @return {Boolean}
+                 */
                 'email': function (email) {
-
+                    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test( email );
                 },
                 /** 
                  * @param {String} fecha
@@ -61,56 +74,140 @@
                     
                     return /^\d{1,2}[\/.]\d{1,2}[\/.]\d{4}$/.test( fecha );
                 },
+                /**
+                 * @param {String} cocinero
+                 * @returns {Boolean}
+                 */
                 cocinero: function (cocinero) {
                     
-                    return /^[A-Z][@#$%^&?!+=]\d{4}/.test( cocinero );
+                    return /^[A-Z]{2}[@#$%^&?!+=]\d{4}$/.test( cocinero );
                 },
+                /**
+                 * @param {String} destinatario
+                 * @returns {Boolean}
+                 */
                 'destinatario': function (destinatario) {
-
+                    return /^[A-Z]{2}_\w+:[0-9]{4}$/.test( destinatario );
                 },
+                /** 
+                 * @param {String|Number} gramos
+                 * @returns {Boolean}
+                 */
                 'gramos': function (gramos) {
-
+                    return !Number.isNaN( gramos ) ? 
+                        parseInt( gramos ) >= 100 && parseInt( gramos ) <= 5000 :
+                        false;
                 },
-                'composicion': function (composicion) {
-
+                /**
+                 * @param {String} composicion
+                 * @returns {Boolean}
+                 */
+                'composicion': function ( composicion ) {
+                    //200gC3OH7
+                    return /^[0-9]{3,4}g[A-Z]+?\d$/.test( composicion );
                 },
                 /**
                  * aa00-000000000000-00
+                 * 
+                 * 
                  * @param {String} cuenta
                  * @returns {Boolean}
                  */
                 'cuenta': function (cuenta) {
+                    console.log( cuenta );
+                    if( /^[A-Za-z]{2}\d{2}-\d{12}-\d{2}$/.test( cuenta ) ){
 
-
+                        var head_code = parseInt( cuenta.substr( 2 , 2 ) );
+                        var tail_code = parseInt( cuenta.substr( cuenta.length - 2 , 2 ) );
+                        
+                        var head_validation = cuenta.charCodeAt(0) - 65 + cuenta.charCodeAt( 1 ) - 65;
+                        
+                        //var block_code1 = cuenta.substr( 0 , 6 );
+                        var block_code2 = cuenta.substr( 11 , 6 );
+                        var tail_validation = block_code2.split('').reduce( ( a , b ) => parseInt( a ) + parseInt( b ) , 0 );
+                        
+                        
+                        return head_validation === head_code && tail_code === tail_validation;
+                    }
+                    
                     return false;
                 }
             };
             
             function notificar_error( id , value ){
+                
+                var msgbox = document.querySelectorAll('#' + id + ' + .message');
+                
+                if( msgbox.length === 0 ){
+                    msgbox = document.createElement('span');
+                    msgbox.className = 'message error show';
+                    msgbox.innerHTML = value;
+                    var input = document.getElementById(id);
+                    input.parentNode.insertBefore(msgbox,input.nextSibling);
+                }
+                else{
+                    msgbox.className = 'message error show';
+                    msgbox.innerHTML = value;
+                }
                 console.log('Error de ' + id );
             }
-
+            notificar_error.limpiar = () => {
+                document.querySelectorAll('.message.show').forEach( function( item ){
+                    item.classList.remove('show');
+                } );
+            };
 
             document.getElementById('btn_validar').addEventListener('click', function (e) {
 
                 e.preventDefault();
+                
+                notificar_error.limpiar();
 
                 var campos = document.querySelectorAll('input.datos');
                 
                 for( var i = 0 ; i < campos.length ; i++ ) {
-                    var value = campos[i].vaule;
+                    var value = campos[i].value;
                     var id = campos[i].id;
                     switch ( id ) {
                         case 'fecha':
                             if( !Validador.fecha( value ) ){
-                                notificar_error( id , value );
+                                notificar_error( id , 'Fecha inv&aacute;lida: ' + value );
                                 return false;
                             }
+                            break;
                         case 'cocinero':
-                        if( !Validador.cocinero( value ) ){
-                            notificar_error( id , value );
-                            return false;
-                        }
+                            if( !Validador.cocinero( value ) ){
+                                notificar_error( id , 'Cocinero inv&aacute;lido: ' + value );
+                                return false;
+                            }
+                            break;
+                        case 'destinatario':
+                            if( !Validador.destinatario( value ) ){
+                                notificar_error( id , 'Destinatario inv&aacute;lido: ' + value );
+                                return false;
+                            }
+                            break;
+                        case 'gramos':
+                            if( !Validador.gramos( value ) ){
+                                notificar_error( id , 'Valor inv&aacute;lido: ' + value );
+                                return false;
+                            }
+                            break;
+                        case 'composicion':
+                            if( !Validador.composicion( value ) ){
+                                notificar_error( id , 'Composici&oacute;n inv&aacute;lida: ' + value );
+                                return false;
+                            }
+                            break;
+                        case 'cuenta':
+                            if( Validador.cuenta( value ) ){
+                                document.getElementById('validacion_cuenta').innerHTML = value.replace(/-/g,'');
+                            }
+                            else{
+                                notificar_error( id , 'Cuenta inv&aacute;lida: ' + value );
+                                return false;
+                            }
+                            break;
                         default:
                             //validado = false;
                             break;
@@ -121,6 +218,18 @@
                 return true;
             });
 
+
+            console.log( 'Fecha ( 10/10/2020 ) :' + Validador.fecha( '10/10/2020' ) );
+            console.log( 'Cocinero ( WW$1234 ) :' + Validador.cocinero( 'WW$1234' ) );
+            console.log( 'Destino ( NM_alburquerque:1234 ) :' + Validador.destinatario( 'NM_alburquerque:1234' ) );
+            console.log( 'Gramos ( 600 ) :' + Validador.gramos( 600 ) );
+            //console.log( 'Composicion ( 600gC3OH7 ) :' + Validador.composicion( '600gC3OH7' ) );
+            console.log( 'Cuenta ( ES22-123456456789-39 ) :' + Validador.cuenta( 'ES22-123456456789-39' ) );
+            
+            ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'].forEach( function( c ){
+               
+                //console.log( c + ':' + parseInt(c.charCodeAt( 0 ) - 65 ) );
+            });
         </script>
     </body>
 </html>

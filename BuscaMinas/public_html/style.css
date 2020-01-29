@@ -1,0 +1,101 @@
+body{
+    background-image: -webkit-linear-gradient( #a2b5c3 , #586e7d  );
+    background-image: -moz-linear-gradient( #a2b5c3 , #586e7d );
+    background-image: -ms-linear-gradient( #a2b5c3 , #586e7d );
+    background-image: -o-linear-gradient( #a2b5c3 , #586e7d );
+    background-image: linear-gradient( #a2b5c3 , #586e7d );
+    
+    font-family: 'Exo';
+    color: #353535;
+    height: 100vh;
+}
+.hidden{ opacity: 0; pointer-events: none; z-index: -1; }
+#chuscaminas{
+    box-sizing: border-box;
+    box-shadow: 0 0 8px rgba(0,0,0,0.25);
+    margin: 40px auto;
+}
+#chuscaminas:after{
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+}
+#chuscaminas + .opciones{
+    transition: ease-in 680ms;
+}
+#chuscaminas.status-1 + .opciones.fixed{ bottom: -100%; opacity: 0; pointer-events: none; }
+#chuscaminas > .grid{
+    display: inline-block;
+    float: left;
+    height: 0;
+    padding-bottom: 0;
+    position: relative;
+}
+#chuscaminas .grid .celda{
+    position: absolute;
+    top: 0 ; left: 0;
+    width: 100%; height: 100%;
+
+    box-sizing: border-box;
+    border: 1px solid rgba(0,0,0,0.25);
+    transition: 250ms ease-in;
+    background-color: rgba( 255,255,255,0.25);
+    cursor: pointer;
+}
+#chuscaminas .grid .celda.cuidao:after{
+    content: '!';
+    color: #ffffff;
+    background-color: rgba(255,255,255,0.25);
+    font-size: 24px;
+    position: absolute;
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-align: center;
+}
+#chuscaminas .grid .celda.show{
+    background-color: rgba(255,255,255,0.75);
+}
+#chuscaminas .grid .celda.show.mine:before{
+    content: 'my_location';
+    font-family: 'Material Icons';
+    text-align: center;
+    display: block;
+    color: #5a5a5a;
+    font-size: 38px;
+    line-height: 38px;
+    padding: 20% 0 0;
+    vertical-align: middle;
+}
+#chuscaminas.status-3{ background-color: rgba(224,224,224,0.75); }
+#chuscaminas.status-1 .grid .celda:hover{
+    background-color: rgba(255,255,255,0.75);
+}
+#chuscaminas.grid-6 > .grid{ width: 16.66%; padding-bottom: 16.66%; }
+#chuscaminas.grid-8 > .grid{ width: 12.5%; padding-bottom: 12.5%; }
+#chuscaminas.grid-10 > .grid{ width: 10%; padding-bottom: 10%; }
+#chuscaminas.grid-12 > .grid{ width: 8.33%; padding-bottom: 8.33%; }
+
+.message{
+    color: #586e7d;
+    display: block;
+    background-color: rgba(255,255,255,0.25);
+    padding: 10px;
+    font-size: 24px;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.25);
+}
+.message.success{ color: #a2fab5; }
+.message.error{ background-color: #faa2a2; }
+.message.advice{ background-color: #fafaa2; }
+.message.warning{ background-color: #fafaa2; }
+.center{ text-align: center; }
+
+.fixed{ position: fixed; }
+.fixed.bottom{ bottom: 0; left: 0; right: 0; }
+
+.container.pad-sm{ padding: 20px 0; }
+
+select{display: initial; }

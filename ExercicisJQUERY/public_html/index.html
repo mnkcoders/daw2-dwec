@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JQUERY</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css"
+        type="text/css"
+        rel="stylesheet" />
+      
+        <style type="text/css">
+            
+            body{
+                background-color: #dadada;
+                font-family: 'Roboto';
+            }
+            
+            .container{
+                display: block;
+            }
+            .container.white{
+                background-color: #ffffff;
+            }
+            .container.shadowed{
+                box-shadow: 0 0 8px rgba(0,0,0,0.25);
+            }
+            .container.rounded{
+                border-radius: 4px;
+            }
+            .container.spa-md{
+                margin: 20px auto;
+            }
+            .container.pad-sm{
+                padding: 20px;
+            }
+            
+            .container .cuadro{
+                text-align: center;
+                text-transform: uppercase;
+                color: #5a5a5a;
+                width: 100px;
+                height: 100px;
+                display: block;
+                position: relative;
+                top: 10px; left: 0;
+                border: 2px solid #dadada;
+                border-radius: 2px;
+                box-shadow: 0 0 4px rgba(0,0,0,0.25);
+            }
+            
+            .container.oculto{ display: none; }
+            
+            .container input[type="text"]{
+                display: inline-block !important;
+                width: 100px !important;
+                position: relative;
+            }
+            .container{ transition: 250ms; }
+            
+        </style>
+    </head>
+    <body>
+        <h1>1.- Ocultar Divs</h1>
+        <div class="container white spa-md pad-sm rounded">
+            <p>Contenido</p>
+            <button class="btn btn-small green ocultar" type="button">Ocultar</button>
+        </div>
+        <div class="container white spa-md pad-sm rounded">
+            <p>Contenido</p>
+            <button class="btn btn-small green ocultar" type="button">Ocultar</button>
+        </div>
+        
+        <h1>2.- fadeToggle()</h1>
+        <div class="container white rounded pad-sm spa-md fade">
+            <p>Desvanecer</p>
+            <button class="btn btn-small desvanecer" type="button">Oculta</button>
+        </div>
+        <div class="container white rounded pad-sm spa-md fade">
+            <p>Desvanecer lento</p>
+            <button class="btn btn-small desvanecer lento" type="button">Oculta</button>
+        </div>
+        <div class="container white rounded pad-sm spa-md fade">
+            <p>Desvanecer 3ms</p>
+            <button class="btn btn-small desvanecer lento-3ms" type="button">Oculta</button>
+        </div>
+        
+        <h1>3.- Animar cuadro</h1>
+        <div class="container white pad-sm rounded spa-md mover-cuadro">
+             <button class="btn btn-small green">Animar</button>
+             <span class="cuadro"></span>
+        </div>
+        
+        <h1>4.- Esconder enlaces</h1>
+        <ul class="container white pad-sm rounded spa-md">
+            <li>
+                <p><a href="#" target="_blank">Abrir en nueva ventana</a></p>
+                <p><button class="btn btn-small green esconder-blank">Ocultar enlace interno</button></p>
+            </li> 
+            <li>
+                <p><a href="#" target="_self">Abrir en misma ventana</a></p>
+                <p><button class="btn btn-small green esconder-self">Ocultar enlace externo</button></p>
+            </li> 
+        </ul>
+        
+        <h1>5 y 6.- Animar cuadro</h1>
+        <ul class="container white pad-sm rounded spa-md mover-cuadro-2">
+            
+            <li><input type="text" value="Hello" /></li>
+            <li><button class="btn btn-small green">Start</button></li>
+            <li><button class="btn btn-small green">Stop</button></li>
+            <li><button class="btn btn-small green">Stop All</button></li>
+            <li><button class="btn btn-small green">Stop but Finish</button></li>
+        </ul>
+        
+        <h1>7.- Parrafo</h1>
+        <div class="container white pad-sm spa-md rounded ejercicio-7">
+            <p>Hola Mundo</p>
+            <button class="btn green">Cambiar</button>
+        </div>
+        
+        <h1>8.- Cambiar parrafo hover</h1>
+        <div class="container white rounded spa-md pad-sm ejercicio-8">
+            <p>Lorem Ipsum de mierda</p>
+        </div>
+        
+        <h1>9.- Eventos click, mouseover, mouseout</h1>
+        <div class="container white rounded pad-sm spa-md ejercicio-9">
+            
+        </div>
+        <h1>10.- Start, Stop</h1>
+        <div class="container white rounded pad-sm spa-md ejercicio-10">
+            
+        </div>
+        <h1>11.- Text area</h1>
+        <div class="container white rounded pad-sm spa-md ejercicio-11">
+            
+        </div>
+        <h1>12.- Slider JQuery</h1>
+        <div class="container white rounded pad-sm spa-md ejercicio-12">
+            
+        </div>
+        
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript">
+            
+            $(document).ready( function(e){
+                //.bind está obsoleto, se implementa .on
+                //$( '.ejercicio-7 button' ).bind('click',function(e){
+                $( '.ejercicio-8').on('mouseenter',function(e){
+                    console.log('hover');
+                    $(this).addClass('blue').removeClass('white');
+                });
+                $( '.ejercicio-8').on('mouseleave',function(e){
+                    console.log('out');
+                    $(this).addClass('white').removeClass('blue');
+                });
+
+                $( '.ejercicio-7 button' ).on('click',function(e){
+                    jQuery( '.ejercicio-7 p').html( 'Hola <b>jQuery</b>' );
+                });
+
+                $( '.esconder-blank').on('click',function(e){
+                    $('a[target="_blank"]').toggle();
+                });
+                $( '.esconder-self').on('click',function(e){
+                    $('a[target="_self"]').toggle();
+                });
+                //mover caja
+                $( '.mover-cuadro-2 .btn' ).on('click',function(e){
+                    var input = $('.mover-cuadro-2 input[type="text"]');
+                            
+                    if( $(input).val() === 'HELLO' ){
+                         $(input).animate({'left':'100px','font-size':'200%'});
+                    }
+                    else{
+                        $(input).animate({'left':'100px'});
+                    }
+                });
+                //mover caja
+                $( '.mover-cuadro .btn' ).on('click',function(e){
+                    $('.mover-cuadro .cuadro').animate({'width':'150px','height':'150px','left':'250px'});
+                });
+                
+                //botones ocultar panel
+                $( '.container button.ocultar' ).on( 'click', function(e){
+                    var top = $(this).parent('.container');
+                    if( $(top).hasClass('oculto' ) ){
+                        $( top ).removeClass( 'oculto' );
+                    }
+                    else{
+                        $( top ).addClass('oculto');
+                    }
+                });
+                //toggleFade
+                $( '.container button.desvanecer').on('click',function(e){
+                    var top = $(this).parent('.container');
+                    switch( true ){
+                        case $( this ).hasClass('lento'):
+                            console.log('slow');
+                            top.fadeToggle('slow');
+                            break;
+                        case $( this ).hasClass('lento-3ms'):
+                            console.log(' 3ms ');
+                            top.fadeToggle('3ms');
+                            break;
+                        default:
+                            top.fadeToggle();
+                            break;
+                    }
+                });
+            });
+            
+        </script>
+    </body>
+</html>
+<!-- Exercicis JQuery
+1. Crea un documento con dos tag div, dentro de cada uno de los cuales debe haber un botón para esconder dichos tag.
+2. Crea un documento con un botón, tal que al hacer clic, agregue o quite la opacidad de tres
+elementos div mediante el método fadeToggle(). El primer fadeToggle() ejecútalo sin
+parámetros, el segundo de manera lenta y el tercero en tres milisegundos.
+3. Crea un programa tal que al clickar en un botón anime un cuadrado moviéndolo a la derecha
+250 px y lo agrande 150 px.
+4. Crea un documento con dos enlaces y dos botones. Uno se tiene que abrir en una nueva
+ventana (target="_blank") y     el otro no. Cada botón debe ocultar uno de los enlaces en función
+de su atributo target.
+5. Crear un programa, tal que al clickar en un botón se mueva un cuadrado 100 px a la derecha y
+si dentro del cuadrado pone HELLO aumente el tamaño de la letra.
+6. Mejora el ejercicio 5 añadiendo cuatro botones.
+    1. Start: Comienza la animación
+    2. Stop: Para la animación actual pero continúa con el resto.
+    3. Stop All: Detiene todas las animaciones de inmediato.
+    4. Stop but finish: Detiene las animaciones pero acabando primero la que se encuentra en
+    ejecución.
+7. Crea un documento con un botón y un párrafo. Mediante un evento asociado al botón cambia el
+texto del párrafo. Para escribir el código jQuery libera el acceso $ y utiliza el identificador
+completo “ jQuery”.
+8. Mediante el posicionamiento del ratón dentro y fuera de un párrafo, éste debe cambiar de estilo
+mediante el método bind.
+9. Utilizar con el método bind() un mapa de eventos para unir los eventos click, mouseover y
+mouseout. Con el primero se debe deslizar un párrafo hacia arriba/abajo slideToggle(), con
+mouseover, el fondo de la página será azul y con mouseout roja.
+10. Crea un documento con dos botones, start y stop. Mediante el primero se debe producir la
+siguiente animación. Debe aparecer un elemento div cuadrado de 40 x 40, desplazarse a la
+izquierda 200 px, cambiar de color a azul y ocultarse desplazándose hacia arriba.
+11. Contar caracteres en un textarea.Crea un plugin para conseguir que un campo textarea de un
+formulario, informe en todo momento de los caracteres que ha escrito el usuario. Es decir,
+vamos a hacer un método del objeto jQuery que servirá para que cuente los caracteres en una
+capa de texto detrás de un textarea.
+12. Realiza un Slider con JQuery.
+
+-->

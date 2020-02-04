@@ -4,21 +4,596 @@
         <title>Buscaminas</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <link href="https://fonts.googleapis.com/css?family=Exo:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" type="text/css" rel="stylesheet" />
-        <link href="style.css" type="text/css" rel="stylesheet" />
-    
+
+        <style type="text/css">
+            body{
+                background-image: -webkit-linear-gradient( #a2b5c3 , #586e7d  );
+                background-image: -moz-linear-gradient( #a2b5c3 , #586e7d );
+                background-image: -ms-linear-gradient( #a2b5c3 , #586e7d );
+                background-image: -o-linear-gradient( #a2b5c3 , #586e7d );
+                background-image: linear-gradient( #a2b5c3 , #586e7d );
+
+                font-family: 'Exo';
+                color: #353535;
+                height: 100vh;
+            }
+            .hidden{ opacity: 0; pointer-events: none; z-index: -1; }
+            #chuscaminas{
+                box-sizing: border-box;
+                box-shadow: 0 0 8px rgba(0,0,0,0.25);
+                margin: 40px auto;
+            }
+            #chuscaminas:after{
+                content: '';
+                display: block;
+                clear: both;
+                height: 0;
+            }
+            #chuscaminas + .opciones{
+                transition: ease-in 680ms;
+            }
+            #chuscaminas.status-1 + .opciones.fixed{ bottom: -100%; opacity: 0; pointer-events: none; }
+            #chuscaminas > .grid{
+                display: inline-block;
+                float: left;
+                height: 0;
+                padding-bottom: 0;
+                position: relative;
+            }
+            #chuscaminas .grid .celda{
+                position: absolute;
+                top: 0 ; left: 0;
+                width: 100%; height: 100%;
+
+                box-sizing: border-box;
+                border: 1px solid rgba(0,0,0,0.25);
+                transition: 250ms ease-in;
+                background-color: rgba( 255,255,255,0.25);
+                cursor: pointer;
+
+                font-size: 18px;
+                line-height: 18px;
+                padding: 8px;
+                color: rgba(0,0,0,0.25);
+            }
+            #chuscaminas .grid .celda.cuidao:after{
+                content: '!';
+                color: #ffffff;
+                background-color: rgba(255,255,255,0.25);
+                font-size: 24px;
+                position: absolute;
+                display: block;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                text-align: center;
+            }
+            #chuscaminas .grid .celda.show{
+                background-color: rgba(255,255,255,0.75);
+            }
+            #chuscaminas .grid .celda.show.mine:before{
+                content: 'my_location';
+                font-family: 'Material Icons';
+                text-align: center;
+                display: block;
+                width: 100%;
+                color: #5a5a5a;
+                font-size: 38px;
+                line-height: 38px;
+                margin: 20% auto 0;
+                text-shadow: 0 0 8px rgba(0,0,0,0.25);
+                vertical-align: middle;
+                position: absolute;
+                top: 0; left: 0;
+            }
+            #chuscaminas.status-3{ background-color: rgba(224,224,224,0.75); }
+            #chuscaminas.status-1 .grid .celda:hover{
+                background-color: rgba(255,255,255,0.75);
+            }
+            #chuscaminas.grid-6 > .grid{ width: 16.66%; padding-bottom: 16.66%; }
+            #chuscaminas.grid-8 > .grid{ width: 12.5%; padding-bottom: 12.5%; }
+            #chuscaminas.grid-10 > .grid{ width: 10%; padding-bottom: 10%; }
+            #chuscaminas.grid-12 > .grid{ width: 8.33%; padding-bottom: 8.33%; }
+
+            .message{
+                color: #586e7d;
+                display: block;
+                background-color: rgba(255,255,255,0.25);
+                padding: 10px;
+                font-size: 24px;
+                text-align: center;
+                text-shadow: 0 1px 0 rgba(255,255,255,0.25);
+            }
+            .message.success{ color: #a2fab5; }
+            .message.error{ background-color: #faa2a2; }
+            .message.advice{ background-color: #fafaa2; }
+            .message.warning{ background-color: #fafaa2; }
+            .center{ text-align: center; }
+
+            .opciones {
+                background-color: rgba(255,255,255,0.5);
+            }
+
+            .fixed{ position: fixed; }
+            .fixed.bottom{ bottom: 0; left: 0; right: 0; }
+
+            .container.pad-sm{ padding: 20px 0; }
+
+            select{display: inline-block; }
+            input[type="number"]{
+                display: inline-block;
+                text-align: center;
+            }
+
+        </style>
+
     </head>
     <body>
         <div id="notificador" class="message">Buscaminas!</div>
         <ul id="chuscaminas" class="container"></ul>
-        <div class="container opciones pad-sm center fixed bottom">
-            <select id="nivel"></select>
-            <button id="iniciar" class="center btn btn-small">Iniciar juego</button>
+        <div class="fixed bottom opciones">
+            <div class="pad-sm center container">
+                <select id="nivel"></select>
+                <label for="minas" class="white big">% de minas</label>
+                <input id="minas" type="number" value="10" min="10" max="50"/>
+                <button id="iniciar" class="center btn btn-small">Iniciar juego</button>
+            </div>
         </div>
-        <script type="text/javascript" src="script.js"></script>
+        <script type="text/javascript">
+
+            /**
+             * @param {Number} nivel 
+             * @returns {BuscaMinas}
+             */
+            function BuscaMinas(nivel, minas) {
+
+                var _BM = {
+                    /**
+                     * @type Array
+                     */
+                    'celdas': [],
+                    'nivel': nivel || BuscaMinas.Nivel.Novato,
+                    'tablero': {
+                        'rows': nivel || BuscaMinas.Nivel.Novato,
+                        'cols': nivel || BuscaMinas.Nivel.Novato,
+                        'minas': minas || 0,
+                        'puntos': 0
+                    },
+                    /**
+                     * @type Int
+                     */
+                    'status': BuscaMinas.Estado.Iniciado
+                };
+                /**
+                 * @returns {Number}
+                 */
+                this.estado = () => _BM.status;
+                /**
+                 * @returns {Number}
+                 */
+                this.nivel = () => _BM.nivel;
+                /**
+                 * @returns {Object}
+                 */
+                this.tablero = () => _BM.tablero;
+                /**
+                 * @param {Number} id
+                 * @returns {Number|Boolean}
+                 */
+                this.getUp = function (id) {
+
+                    return id > _BM.nivel - 1 ? id - _BM.nivel : false;
+                };
+                /**
+                 * @param {Number} id
+                 * @returns {Number|Boolean}
+                 */
+                this.getDown = function (id) {
+
+                    return parseInt(id / _BM.nivel) < (_BM.nivel - 1) ?
+                            id + _BM.nivel :
+                            false;
+                };
+                /**
+                 * @param {Number} id
+                 * @returns {Boolean|_BM.celdas}
+                 */
+                this.getLeft = function (id) {
+
+                    return id % _BM.nivel > 0 ? id - 1 : false;
+                };
+                /**
+                 * @param {Number} id
+                 * @returns {Boolean|_BM.celdas}
+                 */
+                this.getRight = function (id) {
+
+                    return id % _BM.nivel < _BM.nivel - 1 ? id + 1 : false;
+                };
+                /**
+                 * @param {Int} id
+                 * @returns {Boolean}
+                 */
+                this.activar = function (id) {
+
+                    if (this.explorar(id)) {
+                        _BM.status = BuscaMinas.Estado.Perdido;
+                        return true;
+                    }
+
+                    _BM.tablero.puntos++;
+
+                    if (_BM.tablero.puntos >= _BM.celdas.length - _BM.tablero.minas) {
+                        _BM.status = BuscaMinas.Estado.Ganado;
+                    }
+
+                    false;
+                };
+                /**
+                 * @param {type} id
+                 * @returns {Boolean}
+                 */
+                this.explorar = function (id) {
+
+                    return id >= 0 && id < _BM.celdas.length ?
+                            _BM.celdas[ id ] :
+                            false;
+                };
+                /**
+                 * Revela celdas adjuntas
+                 * @param {Number} x
+                 * @param {Number} y
+                 * @returns {Boolean}
+                 */
+                this.revelar = function (x, y) {
+
+                    return this.explorar((y * _BM.nivel) + x);
+                };
+                /**
+                 * @param {Number} id
+                 * @returns {Number}
+                 */
+                this.contarMinas = function (id) {
+
+                    var contador = 0;
+                    var col = parseInt(id) % _BM.nivel;
+                    var row = parseInt(id / _BM.nivel);
+                    console.log(col + ':' + row);
+                    for (var x = col - 1; x < col + 2; x++) {
+                        //contar fila syperior e inferior
+                        contador += this.revelar(x, row - 1) ? 1 : 0;
+                        contador += this.revelar(x, row + 1) ? 1 : 0;
+                    }
+                    //contar laterales
+                    contador += this.explorar(id - 1) ? 1 : 0;
+                    contador += this.explorar(id + 1) ? 1 : 0;
+                    console.log(contador);
+                    return contador;
+                };
+                /**
+                 * @returns {Boolean[]}
+                 */
+                this.celdas = function () {
+                    return _BM.celdas;
+                };
+                /**
+                 * @returns {Number}
+                 */
+                this.minas = () => _BM.tablero.minas;
+                /**
+                 * 
+                 * @returns {BuscaMinas}
+                 */
+                this.crear = function ( ) {
+
+                    _BM.status = BuscaMinas.Estado.Iniciado;
+
+                    if (_BM.tablero.minas === 0) {
+                        _BM.tablero.minas = _BM.nivel;
+                    }
+
+                    /*for (var x = 0; x < _BM.nivel; x++) {
+                     var M = parseInt(Math.random() * _BM.nivel);
+                     for (y = 0; y < _BM.nivel; y++) {
+                     _BM.celdas.push(M === y);
+                     }
+                     }*/
+
+                    for (var c = 0; c < _BM.nivel * _BM.nivel; c++) {
+                        _BM.celdas.push(false);
+                    }
+                    for (var m = 0; m < _BM.tablero.minas; m++) {
+                        _BM.celdas[ parseInt(Math.random() * _BM.nivel * _BM.nivel) ] = true;
+                    }
+                    _BM.status = BuscaMinas.Estado.Jugando;
+
+                    console.log('Minas ' + this.minas());
+                    console.log('Celdas ' + _BM.celdas.length);
+                    console.log('Nivel ' + _BM.nivel);
+                    console.log('Estado ' + _BM.status);
+
+                    return this;
+                };
+
+                return this.crear( );
+            }
+            /**
+             * 
+             */
+            BuscaMinas.Estado = {
+                'Iniciado': 0,
+                'Jugando': 1,
+                'Ganado': 2,
+                'Perdido': 3
+            };
+            BuscaMinas.Nivel = {
+                'Novato': 6,
+                'Principiante': 8,
+                'Intermedio': 10,
+                'Avanzado': 12
+            };
+            (function () {
+
+                var _GAME = {
+                    /**
+                     * @returns {scriptL#143}
+                     */
+                    'this': this,
+                    /**
+                     * 
+                     * @returns {BuscaMinas}
+                     */
+                    'logica': null
+                };
+                /**
+                 * @param {String} texto
+                 * @param {String} tipo
+                 * @returns {scriptL#143.notificar}
+                 */
+                function notificar(texto, tipo) {
+
+                    if (typeof tipo === 'undefined') {
+                        tipo = notificar.Tipo.Informacion;
+                    }
+
+                    var msgbox = document.getElementById('notificador');
+
+                    msgbox.innerHTML = texto;
+                    msgbox.className = 'message ' + tipo;
+                }
+                /**
+                 * 
+                 */
+                notificar.Tipo = {
+                    'Informacion': 'info',
+                    'Confirmacion': 'success',
+                    'Aviso': 'advice',
+                    'Alerta': 'warning',
+                    'Error': 'error'
+                };
+                /**
+                 * Mostrar la celda en el tablero
+                 * @param {Number} id
+                 * @returns {indexL#137}
+                 */
+                this.descubrir = function (id, marcar) {
+
+                    document.getElementById('id-' + id).classList.add('show');
+
+                    if (_GAME.logica.explorar(id)) {
+                        document.getElementById('id-' + id).classList.add('mine');
+                    }
+
+                    if (typeof marcar !== 'undefined' && marcar > 0) {
+                        document.getElementById('id-' + id).innerHTML = marcar;
+                    }
+
+                    return this;
+                };
+                /**
+                 * 
+                 * @param {Number} id
+                 * @returns {indexL#137}
+                 */
+                this.activar = function (id) {
+
+                    //console.log('Activando ' + id);
+
+                    if (!_GAME.logica.activar(id)) {
+                        //no hay mina!
+                        var cerca = _GAME.logica.contarMinas(id);
+                        this.descubrir(id, cerca);
+                        //explorar alrededor!
+                        var up = _GAME.logica.getUp(id);
+                        var down = _GAME.logica.getDown(id);
+                        var left = _GAME.logica.getLeft(id);
+                        var right = _GAME.logica.getRight(id);
+                        if (up !== false && !_GAME.logica.explorar(up)) {
+                            //descrubrir mina encima
+                            this.descubrir(up);
+                            _GAME.logica.activar(up);
+                        }
+                        if (down !== false && !_GAME.logica.explorar(down)) {
+                            //descrubrir mina debajo
+                            this.descubrir(down);
+                            _GAME.logica.activar(down);
+                        }
+                        if (left !== false && !_GAME.logica.explorar(left)) {
+                            //descrubrir mina iqzuierda
+                            this.descubrir(left);
+                            _GAME.logica.activar(left);
+                        }
+                        if (right !== false && !_GAME.logica.explorar(right)) {
+                            //descrubrir mina derecha
+                            this.descubrir(right);
+                            _GAME.logica.activar(right);
+                        }
+
+                        if (cerca) {
+                            notificar(cerca + ' minas cerca!');
+                        }
+                    }
+
+                    return this.update();
+                };
+                /**
+                 * 
+                 * @returns {scriptL#184}
+                 */
+                this.revelar = function () {
+
+                    for (var i = 0; i < _GAME.logica.celdas().length; i++) {
+
+                        this.descubrir(i);
+                    }
+                    return this;
+                };
+                /**
+                 * @returns {scriptL#150}
+                 */
+                this.update = function ( ) {
+
+                    switch (_GAME.logica.estado()) {
+                        case BuscaMinas.Estado.Perdido:
+                            notificar('KABUUUUM!!!', notificar.Tipo.Error);
+                            //_GAME.this.tablero().classList.add('status-' + BuscaMinas.Estado.Perdido );
+                            return this.cambiarEstado(BuscaMinas.Estado.Perdido).revelar();
+                        case BuscaMinas.Estado.Ganado:
+                            notificar('Has encontrado todas las minas!', notificar.Tipo.Confirmacion);
+                            return this.cambiarEstado(BuscaMinas.Estado.Ganado).revelar();
+                            break;
+                        default:
+                            //notificar('Te quedan ' + _GAME.logica.minas() + ' minas');
+                            break;
+                    }
+
+                    return this;
+                };
+                /**
+                 * @returns {scriptL#143}
+                 */
+                this.crearJuego = function (nivel, minas) {
+
+                    var C = _GAME.this.tablero();
+
+                    _GAME.logica = new BuscaMinas(nivel || BuscaMinas.Nivel.Novato, minas);
+
+                    C.className = 'container grid-' + _GAME.logica.nivel();
+                    C.innerHTML = '';
+                    var celdas = _GAME.logica.celdas();
+
+                    for (var c = 0; c < celdas.length; c++) {
+
+                        var celda = document.createElement('span');
+                        celda.className = 'celda';
+                        if (_GAME.logica.explorar(c)) {
+                            //celda.className += ' cuidao';
+                        }
+                        celda.setAttribute('data-id', c);
+                        celda.id = 'id-' + c;
+                        celda.addEventListener('click', function (e) {
+
+                            e.preventDefault();
+
+                            if (_GAME.logica.estado() === BuscaMinas.Estado.Jugando) {
+                                console.log(e.button);
+                                switch (e.button) {
+                                    case 0:
+                                        var id = parseInt(this.getAttribute('data-id'));
+                                        _GAME.this.activar(id).update( );
+                                        return true;
+                                    case 1:
+                                        console.log('Etiquetar minas');
+                                        return false;
+                                }
+
+
+                            } else {
+                                console.log(_GAME.logica.estado());
+                            }
+
+                            return false;
+                        });
+
+                        var grid = document.createElement('li');
+                        grid.className = 'grid';
+                        grid.appendChild(celda);
+                        C.appendChild(grid);
+                    }
+
+                    return this.update().cambiarEstado(BuscaMinas.Estado.Jugando);
+                };
+                /**
+                 * @returns {Element}
+                 */
+                this.tablero = () => document.getElementById('chuscaminas');
+                /**
+                 * @param {Number} estado 
+                 * @returns {scriptL#152}
+                 */
+                this.cambiarEstado = function (estado) {
+
+                    var tab = this.tablero();
+
+                    tab.classList.remove('status-1', 'status-2', 'status-3');
+
+                    tab.classList.add('status-' + estado);
+
+                    return this;
+                };
+                /**
+                 * @returns {indexL#14}
+                 */
+                this.init = function () {
+
+                    document.addEventListener('DOMContentLoaded', e => {
+
+//            document.oncontextmenu = (e) => {
+//                e.preventDefault();
+//                return false;
+//            };
+
+                        var nivel = document.getElementById('nivel');
+                        Object.keys(BuscaMinas.Nivel).forEach(function (item) {
+                            var opt = document.createElement('option');
+                            opt.value = BuscaMinas.Nivel[item];
+                            opt.innerHTML = item;
+                            nivel.appendChild(opt);
+                        });
+
+                        var boton = document.getElementById('iniciar');
+                        boton.addEventListener('click', function (e) {
+
+                            e.preventDefault();
+
+                            var nivel = parseInt(document.getElementById('nivel').value);
+                            var minas = parseInt(parseInt(document.getElementById('minas').value) / 100 * nivel * nivel);
+
+                            if (minas < parseInt(nivel * nivel * .48)) {
+                                console.log('Iniciando nivel ' + nivel + ' con ' + minas + ' minas');
+                                _GAME.this.crearJuego(nivel, minas);
+                                notificar('Te quedan ' + _GAME.logica.minas() + ' minas');
+                            } else {
+                                notificar('Demasiadas minas!!', notificar.Tipo.Error);
+                            }
+
+
+                            return true;
+                        });
+
+                        return true;
+                    });
+                };
+
+                return this.init();
+            })();
+
+
+        </script>
     </body>
 </html>

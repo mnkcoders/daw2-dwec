@@ -9,6 +9,7 @@ function BuscaMinas( nivel ) {
          * @type Array
          */
         'celdas': [],
+        'nivel': nivel || BuscaMinas.Nivel.Novato,
         'tablero': {
             'rows': nivel || BuscaMinas.Nivel.Novato,
             'cols': nivel || BuscaMinas.Nivel.Novato,
@@ -25,6 +26,10 @@ function BuscaMinas( nivel ) {
      */
     this.estado = () => _BM.status;
     /**
+     * @returns {Number}
+     */
+    this.nivel = () => _BM.nivel;
+    /**
      * @returns {Object}
      */
     this.tablero = () => _BM.tablero;
@@ -34,7 +39,7 @@ function BuscaMinas( nivel ) {
      */
     this.getUp = function (id) {
 
-        return id > _BM.tablero.cols - 1 ? id - _BM.tablero.cols : false;
+        return id > _BM.nivel - 1 ? id - _BM.nivel : false;
     };
     /**
      * @param {Number} id
@@ -42,8 +47,8 @@ function BuscaMinas( nivel ) {
      */
     this.getDown = function (id) {
 
-        return parseInt(id / _BM.tablero.cols) < (_BM.tablero.rows - 1) ?
-                id + _BM.tablero.cols :
+        return parseInt(id / _BM.nivel) < (_BM.nivel - 1) ?
+                id + _BM.nivel :
                 false;
     };
     /**
@@ -52,7 +57,7 @@ function BuscaMinas( nivel ) {
      */
     this.getLeft = function (id) {
 
-        return id % _BM.tablero.cols > 0 ? id - 1 : false;
+        return id % _BM.nivel > 0 ? id - 1 : false;
     };
     /**
      * @param {Number} id
@@ -60,7 +65,7 @@ function BuscaMinas( nivel ) {
      */
     this.getRight = function (id) {
 
-        return id % _BM.tablero.cols < _BM.tablero.cols - 1 ? id + 1 : false;
+        return id % _BM.nivel < _BM.nivel - 1 ? id + 1 : false;
     };
     /**
      * @param {Int} id
@@ -95,11 +100,32 @@ function BuscaMinas( nivel ) {
      * Revela celdas adjuntas
      * @param {Number} x
      * @param {Number} y
-     * @returns {Number}
+     * @returns {Boolean}
      */
     this.revelar = function (x, y) {
 
-        return this.explorar((y * _BM.tablero.cols) + x);
+        return this.explorar((y * _BM.nivel) + x);
+    };
+    /**
+     * @param {Number} id
+     * @returns {Number}
+     */
+    this.contarMinas = function( id ){
+        
+        var contador = 0;
+        var col = parseInt(id) % _BM.nivel;
+        var row = parseInt(id / _BM.nivel);
+        console.log( col + ':' + row);
+        for( var x = col - 1 ; x < col + 2 ; x++ ){
+            //contar fila syperior e inferior
+            contador += this.revelar( x , row - 1 ) ? 1 : 0;
+            contador += this.revelar( x , row + 1 ) ? 1 : 0;
+        }
+        //contar laterales
+        contador += this.explorar( id - 1 ) ? 1 : 0;
+        contador += this.explorar( id + 1 ) ? 1 : 0;
+        console.log( contador );
+        return contador;
     };
     /**
      * @returns {Boolean[]}
@@ -117,27 +143,22 @@ function BuscaMinas( nivel ) {
 
         _BM.status = BuscaMinas.Estado.Iniciado;
 
-        var N = _BM.tablero.cols * _BM.tablero.rows;
-        var M = _BM.tablero.cols;
-        _BM.tablero.minas = 0;
+        //var N = _BM.tablero.cols * _BM.tablero.rows;
+        //var M = _BM.tablero.cols;
+        _BM.tablero.minas = _BM.nivel;
 
-        for (var i = 0; i < N; i++) {
-
-            var mina = M > 0 && parseInt(Math.random() * 5) > 3;
-
-            _BM.celdas.push(mina);
-
-            if (mina) {
-                M--;
-                _BM.tablero.minas++;
+        for( var x = 0 ; x < _BM.nivel ; x++ ){
+            var M = parseInt( Math.random() * _BM.nivel );
+            for( y = 0 ; y < _BM.nivel ; y++ ){
+                _BM.celdas.push( M === y );
             }
         }
-        
+
         _BM.status = BuscaMinas.Estado.Jugando;
         
         console.log('Minas ' + this.minas()) ;
         console.log('Celdas ' + _BM.celdas.length ) ;
-        console.log('Nivel ' + _BM.tablero.cols ) ;
+        console.log('Nivel ' + _BM.nivel ) ;
         console.log('Estado ' + _BM.status ) ;
 
         return this;
@@ -204,12 +225,16 @@ BuscaMinas.Nivel = {
      * @param {Number} id
      * @returns {indexL#137}
      */
-    this.descubrir = function (id, mine) {
+    this.descubrir = function (id, marcar ) {
 
         document.getElementById('id-' + id).classList.add('show');
-
-        if (typeof mine === 'boolean' && mine) {
+        
+        if( _GAME.logica.explorar( id ) ){
             document.getElementById('id-' + id).classList.add('mine');
+        }
+        
+        if( typeof marcar !== 'undefined' && marcar > 0 ){
+            document.getElementById('id-'+id).innerHTML = marcar;
         }
 
         return this;
@@ -223,14 +248,11 @@ BuscaMinas.Nivel = {
 
         console.log('Activando ' + id);
 
-        if (_GAME.logica.activar(id)) {
+        if (!_GAME.logica.activar(id)) {
 
-            //console.log(' KABUM!!');
-            return this.descubrir(id, true).update( BuscaMinas.Estado.Perdido );
-        }
-        else {
             //no hay mina!
-            this.descubrir(id);
+            var cerca = _GAME.logica.contarMinas( id );
+            this.descubrir(id , cerca );
             //explorar alrededor!
             var up = _GAME.logica.getUp(id);
             var down = _GAME.logica.getDown(id);
@@ -256,9 +278,28 @@ BuscaMinas.Nivel = {
                 this.descubrir(right);
                 _GAME.logica.activar( right );
             }
+            
+            if( cerca ){
+                notificar( cerca + ' minas cerca!' );
+            }
         }
 
         return this.update();
+    };
+    /**
+     * 
+     * @returns {scriptL#184}
+     */
+    this.revelar = function(){
+        document.querySelectorAll('.celda').forEach(item => {
+            var id = item.getAttribute('data-id');
+            if (_GAME.logica.explorar(parseInt(id))) {
+                item.classList.add('show', 'mine');
+            } else {
+                item.classList.add('show');
+            }
+        });
+        return this;
     };
     /**
      * @returns {scriptL#150}
@@ -269,23 +310,15 @@ BuscaMinas.Nivel = {
             case BuscaMinas.Estado.Perdido:
                 notificar( 'KABUUUUM!!!',notificar.Tipo.Error);
                 //_GAME.this.tablero().classList.add('status-' + BuscaMinas.Estado.Perdido );
-                return this.cambiarEstado( BuscaMinas.Estado.Perdido );
+                return this.cambiarEstado( BuscaMinas.Estado.Perdido ).revelar();
             case BuscaMinas.Estado.Ganado:
                 notificar( 'Has encontrado todas las minas!',notificar.Tipo.Confirmacion);
                 //_GAME.this.tablero().classList.add('status-' + BuscaMinas.Estado.Ganado );
-                document.querySelectorAll('.celda').forEach( item =>{
-                    var id = item.getAttribute('data-id');
-                    if( _GAME.logica.explorar( parseInt(id))){
-                        item.classList.add('show','mine');
-                    }
-                    else{
-                        item.classList.add('show');
-                    }
-                });
-                return this.cambiarEstado( BuscaMinas.Estado.Ganado );
+
+                return this.cambiarEstado( BuscaMinas.Estado.Ganado ).revelar();
                 break;
             default:
-                notificar('Te quedan ' + _GAME.logica.minas() + ' minas');
+                //notificar('Te quedan ' + _GAME.logica.minas() + ' minas');
                 break;
         }
 
@@ -299,7 +332,7 @@ BuscaMinas.Nivel = {
         _GAME.logica = new BuscaMinas( nivel || BuscaMinas.Nivel.Novato );
 
         var C = _GAME.this.tablero();
-        C.className = 'container grid-' + _GAME.logica.tablero().cols;
+        C.className = 'container grid-' + _GAME.logica.nivel();
         C.innerHTML = '';
         var celdas = _GAME.logica.celdas();
 
@@ -308,7 +341,7 @@ BuscaMinas.Nivel = {
             var celda = document.createElement('span');
             celda.className = 'celda';
             if( _GAME.logica.explorar( c ) ){
-                celda.className += ' cuidao';
+                //celda.className += ' cuidao';
             }
             celda.setAttribute('data-id', c);
             celda.id = 'id-' + c;
@@ -317,12 +350,18 @@ BuscaMinas.Nivel = {
                 e.preventDefault();
                 
                 if( _GAME.logica.estado() === BuscaMinas.Estado.Jugando ){
+                    console.log(e.button);
+                    switch( e.button ){
+                        case 0:
+                            var id = parseInt(this.getAttribute('data-id'));
+                            _GAME.this.activar( id ).update( );
+                            return true;
+                        case 1:
+                            console.log('Etiquetar minas');
+                            return false;
+                    }
                     
-                    var id = parseInt(this.getAttribute('data-id'));
-                    
-                    _GAME.this.activar( id ).update( );
 
-                    return true;
                 }
                 else{
                     console.log( _GAME.logica.estado() );
@@ -363,6 +402,11 @@ BuscaMinas.Nivel = {
     this.init = function () {
 
         document.addEventListener( 'DOMContentLoaded' , e => {
+            
+//            document.oncontextmenu = (e) => {
+//                e.preventDefault();
+//                return false;
+//            };
             
             var nivel = document.getElementById('nivel');
             Object.keys( BuscaMinas.Nivel).forEach( function( item ){

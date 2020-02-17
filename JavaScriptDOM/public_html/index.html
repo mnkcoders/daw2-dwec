@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ejercicios DOM</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css">
+        
+        <style type="text/css">
+            
+            body{
+                font-family: Roboto;
+                color: #353535;
+            }
+
+            .container > form{
+                display: block;
+                width: 80%;
+                max-width: 800px;
+                padding: 20px;
+                margin: 40px auto;
+                box-sizing: border-box;
+                border-radius: 4px;
+                border: 2px solid #d5d5d5;
+                box-shadow: 0 0 8px rgba(0,0,0,0.25);
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div class="container ejercicio-1">
+            <h2>Ejercicio 1</h2>
+            <ul id="lista">
+                
+            </ul>
+            <input id="txt_entrada" type="text" placeholder="Agregar a la lista" />
+            <button id="btn_agregar" class="btn btn-small" >Agregar</button>
+            <button id="btn_borrar_primero" class="btn btn-small">Borrar Primero</button>
+            <button id="btn_borrar_ultimo" class="btn btn-small">Borrar &Uacute;ltimo</button>
+        </div>
+        <div class="container ejercicio-2" id="ejercicio-2">
+            <h2>Ejercicio 2</h2>
+            
+        </div>
+        
+        <script type="text/javascript">
+
+        
+            ////////////////////////////////////////////////////////////////////////////////////////
+            ////////        EJERCICIO 2
+            ////////////////////////////////////////////////////////////////////////////////////////
+         
+            document.addEventListener( 'DOMContentLoaded', e => {
+                new FormManager('ejercicio-2');
+            });
+
+            function FormManager( name ){
+                
+                var _form = {
+                    'instance': this,
+                    'name': name || 'new-form',
+                    'form': document.createElement('form'),
+                    'inputs':[]
+                };
+
+                this.addInput = function( name , type , label , value ){
+
+                    _form.inputs.push( name );
+
+                    return this;
+                };
+                this.addList = function( name , items ){
+
+                    return this;
+                };
+
+                this.generateName = function(){
+                    return 'input_' + _form.inputs.length;
+                };
+                this.getForm = function(){
+                    return document.getElementById('form_' + _form.name );
+                },
+                this.getContainer = function(){
+                    return document.getElementById(_form.name);
+                };
+                this.createForm = function(){
+                    var form = document.createElement( 'form' );
+                    form.name= _form.name;
+                    form.id = 'form_' + _form.name;
+                    form.method = "post";
+                    form.action = "#";
+                    return form;
+                };
+                this.renderInputActions = function(  ){
+
+                    ['submit','checkbox','text','textarea','list','dropdown'].forEach( function( input ){
+
+                        var button = document.createElement('button');
+                        button.type = "button";
+                        button.className = 'btn btn-small';
+                        button.innerHTML = 'Crear ' + input;
+                        button.setAttribute('data-item',input);
+                        button.addEventListener( 'click' , function(e) {
+                            console.log( 'Adding ' + this.getAttribute('data-item') );
+                            e.preventDefault();
+                            var name = _form.instance.addInput( input ).generateName();
+                            switch( this.getAttribute('data-item') ){
+                                case 'list':
+                                    _form.instance.getForm().innerHTML += '<p>' + FormManager.Inputs.List( name , name , ['item-1'] ) + '</p>';
+                                    break;
+                                case 'dropdown':
+                                    _form.instance.getForm().innerHTML += '<p>' + FormManager.Inputs.DropDown( name , name , ['item-1'] ) + '</p>';
+                                    break;
+                                case 'checkbox':
+                                    _form.instance.getForm().innerHTML += '<p>' + FormManager.Inputs.CheckBox( name , name , '' ) + '</p>';
+                                    break;
+                                case 'textarea':
+                                    _form.instance.getForm().innerHTML += '<p>' + FormManager.Inputs.TextArea( name , name , '' , '' , 'Entrar texto' ) + '</p>';
+                                    break;
+                                case 'submit':
+                                    _form.instance.getForm().innerHTML += '<p>' + FormManager.Inputs.Submit( name , 'Submit' ) + '</p>';
+                                    break;
+                                default:
+                                    _form.instance.getForm().innerHTML += '<p>' + FormManager.Inputs.Text( name , name , '' , '' , 'Entrar texto' ) + '</p>';
+                                break;
+                            }
+                            return true;
+                        });
+
+                        _form.instance.getContainer().appendChild( button );
+
+                    });
+
+                    return this;
+                };
+
+                this.init = function( ){
+
+                    var container = this.getContainer();                    
+                    var form = this.createForm();
+                    container.appendChild( form );
+
+                    return this.renderInputActions();
+                };
+
+
+                return this.init();
+            };
+            
+            FormManager.Inputs = {
+                'Label': function( text , id ){
+                    return typeof id === 'string' && id.length ?
+                        '<label for="id_' + id + '">' + text + '</label>' :
+                        '<label>' + text + '</label>';
+                },
+                'CheckBox': function( name , label , cls ){
+                    return '<input type="checkbox" id="id_'
+                            + name + '" class="form-input '
+                            + ( typeof cls === 'string' ? cls : '') + '" name="'
+                            + name + '" value="1" />'
+                            + this.Label( label , name );
+                },
+                'Text': function( name , label , value , cls , placeholder ){
+                    return this.Label( label , name ) + '<input type="text" id="id_'
+                            + name + '" name="' + name + '" class="'
+                            + ( typeof cls === 'string' ? cls : '' ) + '" value="'
+                            + ( typeof value !== 'undefined' ? value : '' ) + '" placeholder="'
+                            + ( typeof placeholder === 'string' ? placeholder : '' ) + '"  />';
+                },
+                'TextArea': function( name , label , value , cls , placeholder ){
+                    return this.Label( label , name ) + '<textarea id="id_'
+                            + name + '" name="' + name + '" class="'
+                            + ( typeof cls === 'string' ? cls : '' ) + '" value="'
+                            + ( typeof value !== 'undefined' ? value : '' ) + '" placeholder="'
+                            + ( typeof placeholder === 'string' ? placeholder : '' ) + '"></textarea>';
+                },
+                'Submit': function( name , label ){
+                    return '<button type="submit" class="btn btn-small" name="'
+                            + name + '">'
+                            + label + '</button>';
+                },
+                'List': function( name , label , items , value , cls , size ){
+                    var collection = [];
+                    switch( true ){
+                        case Array.isArray( items ):
+                            collection = items;
+                            break;
+                        case typeof items === 'string':
+                            collection = items.split( ' ' );
+                            break;
+                        default:
+                            return '<!-- lista invalida [' + name + '] -->';
+                    }
+                    if( collection.length ){
+                        return this.Label( label , name ) + '<select id="id_'
+                                + name + '" name="'
+                                + name + '" class="'
+                                + ( typeof cls === 'string' ? cls : '' ) + '" size="'
+                                + ( typeof size === 'number' && size ? size : 6 )  + '">'
+                        + '<li>' + collection.join( '</li><li>' ) + '</li>'
+                        + '</select>';
+                    }
+                    return '<!-- no hay items para mostrar en la lista -->';
+                },
+                'DropDown': function( name , label , items , value, cls , size ){
+                    return this.List( name , label , items , value , cls , 1 );
+                }
+            };
+    
+    
+            ////////////////////////////////////////////////////////////////////////////////////////
+            ////////        EJERCICIO 1
+            ////////////////////////////////////////////////////////////////////////////////////////
+        
+
+            document.getElementById('btn_agregar').addEventListener('click', e => {
+                e.preventDefault();
+                var input = document.getElementById('txt_entrada').value.toString();
+                if( input.length ){
+                    var item = document.createElement('li');
+                    item.innerHTML = input;
+                    document.getElementById('lista').appendChild( item );
+                }
+                return true;
+            });
+            
+            document.getElementById('btn_borrar_primero').addEventListener( 'click' , e => {
+                e.preventDefault();
+                var list = document.getElementById('lista');
+                if( list.childElementCount ){
+                    list.removeChild( list.firstChild );
+                }
+                return true;
+            });
+            
+            document.getElementById('btn_borrar_ultimo').addEventListener('click', e => {
+                e.preventDefault();
+                var list = document.getElementById('lista');
+                if( list.childElementCount ){
+                    list.removeChild( list.lastChild );
+                }
+                return true;
+            });
+            
+     
+            
+            
+        </script>
+    </body>
+</html>
+
+    <!--
+
+        EJERCICIO 1
+        Crea una página web que tenga un listado de tipo <ul> con un <li> de muestra.
+        Introduce un botón en la página que, cuando lo pulses, te muestre un prompt para que el usuario
+        introduzca un texto.
+        Una vez cerrado el prompt el valor se añadirá como un nuevo <li> a la lista creada.
+        Añade dos botones más con texto “Borrar primer li” y “Borrar último li” de modo que cuando pulses el
+        primer botón borre el primer elemento de la lista y cuando pulses el último borre el último elemento de la
+        lista.
+
+EJERCICIO 2
+Crea una aplicación que te permitirá generar tus propios formularios de manera dinámica. Para ello
+dibuja una tabla de una sola fila y varias columnas. En cada columna habrá un botón que realice lo
+siguiente:
+1. Crear un input de tipo texto. Le preguntará al usuario mediante un prompt qué nombre (atributo
+name) tiene el input.
+2. Crear un input de tipo password. Le preguntará al usuario mediante un prompt qué nombre
+(atributo name) tiene el input.
+3. Crear un textarea. Le preguntará al usuario el nombre y generará automáticamente un textarea
+de 40 columnas y 5 filas.
+4. Crear un label. Preguntará al usuario a qué input va referido (atributo for).
+5. Crear una imagen. Preguntará al usuario qué ruta tiene la imagen (atributo src).
+6. Crear un checkbox. Preguntará al usuario el nombre y el valor (atributos name y value).
+7. Crear un radio. Preguntará al usuario el nombre y el valor (atributos name y value).
+8. Crear un botón (submit). Preguntará al usuario el nombre y el valor (atributos name y value).
+    
+    
+    -->
+
+
+

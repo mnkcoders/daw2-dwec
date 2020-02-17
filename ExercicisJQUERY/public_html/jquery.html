@@ -4,7 +4,7 @@
         <title>JQUERY</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link hlref="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css"
@@ -60,6 +60,42 @@
             }
             .container{ transition: 250ms; }
             
+            .container.click-me{ cursor: pointer; }
+            
+            .ejercicio-10{ position: relative; }
+            .ejercicio-10 .box{
+                box-shadow: 0 0 4px rgba(0,0,0,0.25);
+                border-radius: 2px;
+                position: absolute; right: 0; top: 0;
+                width: 10px; height: 10px;
+                margin: 10px;
+            }
+            
+            .container.ejercicio-12 .caption{
+                background-color: rgba(0,0,0,0.25);
+                color: #ffffff;
+                padding: 20% 0;
+                font-size: 24px;
+                line-height: 24px;
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                text-transform: uppercase;
+                text-align: center;
+            }
+            .container.ejercicio-12{
+                overflow: hidden;
+                height: 200px;
+                position: relative;
+            }
+            .ejercicio-12 .slide.active{ opacity: 1;}
+            .ejercicio-12 .slide{
+                width: 100%;
+                height: auto;
+                display: block;
+                opacity: 0;
+                transition: ease-in 250ms;
+                position: absolute; top: 0; left: 0;
+            }
         </style>
     </head>
     <body>
@@ -106,14 +142,16 @@
         </ul>
         
         <h1>5 y 6.- Animar cuadro</h1>
-        <ul class="container white pad-sm rounded spa-md mover-cuadro-2">
+        <div class="container white pad-sm rounded spa-md mover-cuadro-2 ejercicio-6 ejercicio-5">
             
-            <li><input type="text" value="Hello" /></li>
-            <li><button class="btn btn-small green">Start</button></li>
-            <li><button class="btn btn-small green">Stop</button></li>
-            <li><button class="btn btn-small green">Stop All</button></li>
-            <li><button class="btn btn-small green">Stop but Finish</button></li>
-        </ul>
+            <button class="btn btn-small green start">Start</button>
+            <button class="btn btn-small green stop">Stop</button>
+            <button class="btn btn-small green stop-all">Stop All</button>
+            <button class="btn btn-small green stop-finish">Stop but Finish</button>
+            <br/>
+            <input type="text" value="Hello" />
+
+        </div>
         
         <h1>7.- Parrafo</h1>
         <div class="container white pad-sm spa-md rounded ejercicio-7">
@@ -122,31 +160,150 @@
         </div>
         
         <h1>8.- Cambiar parrafo hover</h1>
-        <div class="container white rounded spa-md pad-sm ejercicio-8">
+        <div class="container white rounded spa-md pad-sm ejercicio-8 click-me">
             <p>Lorem Ipsum de mierda</p>
         </div>
         
         <h1>9.- Eventos click, mouseover, mouseout</h1>
-        <div class="container white rounded pad-sm spa-md ejercicio-9">
-            
+        <div class="container white rounded pad-sm spa-md ejercicio-9 click-me">
+            <div class="content">
+                <p>Lorem Ipsum de mierda</p>
+                <p>Lorem Ipsum de mierda</p>
+                <p>Lorem Ipsum de mierda</p>
+                <p>Lorem Ipsum de mierda</p>
+            </div>
         </div>
         <h1>10.- Start, Stop</h1>
         <div class="container white rounded pad-sm spa-md ejercicio-10">
-            
+            <button class="btn btn-small start">Start</button>
+            <button class="btn btn-small stop">Stop</button>
+            <button class="btn btn-small reset">Reset</button>
+            <div class="box"><!--  caja de animacion --></div>
         </div>
         <h1>11.- Text area</h1>
         <div class="container white rounded pad-sm spa-md ejercicio-11">
-            
+            <textarea placeholder="Escribe aqui..."></textarea>
+            <label>--</label>
         </div>
         <h1>12.- Slider JQuery</h1>
         <div class="container white rounded pad-sm spa-md ejercicio-12">
-            
+            <img src="img/a.webp" class="slide" />
+            <img src="img/b.webp" class="slide" />
+            <img src="img/c.webp" class="slide" />
+            <div class="caption">Puto slide!</div>
         </div>
         
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script type="text/javascript">
             
             $(document).ready( function(e){
+                
+                (function(){
+                    
+                    var _data = {
+                        'controller':this,
+                        'ID':0,
+                        'size':0,
+                        'elapsed': 3000,
+                        'loop': 0
+                    };
+                    
+                    this.current = () => _data.ID;
+                    
+                    this.next = function(){
+                            if( _data.ID < _data.size ){
+                                _data.ID++;
+                            }
+                            else{
+                                _data.ID = 1;
+                            }
+                            
+                            console.log( _data.ID + ' slide!!');
+                        return _data.ID;
+                    };
+                    this.prev = function(){
+                            if( _data.ID > 1 ){
+                                _data.ID--;
+                            }
+                            else{
+                                _data.ID = _data.size;
+                            }
+                        return _data.ID;
+                    };
+                    
+                    this.init = function(){
+                        //inicializar slides
+                        $( '.ejercicio-12 .slide' ).each( function(id,item){
+                            //console.log(item);
+                            var id = ++_data.size;
+                            $( item ).attr('data-id',id);
+                        });
+                        if( _data.size > 0 ){
+                            _data.ID = 1;
+                            console.log(_data.ID);
+                            $( '.ejercicio-12 .slide').first().addClass('active');
+                        }
+                        //inicializar contador
+                        _data.loop = window.setInterval( function(){
+                            
+                            var id = _data.controller.next();
+                            
+                            $( '.ejercicio-12 .slide' ).removeClass('active');
+                            $( '.ejercicio-12 .slide[data-id="'+id+'"]').addClass('active');
+                            
+                        }, _data.elapsed );
+                        
+                        return this;
+                    };
+                    
+                    return this.init();
+                })( /* autoejecutar controlador slideshow*/);
+
+                $( '.ejercicio-11 textarea').on('change',function(e){
+                    
+                    var counter = $( this ).val().length;
+                    
+                    $( this ).parent().find('label').html( counter > 0 ? counter + ' car&aacute;cteres' : '--' );
+                });
+                $( '.ejercicio-10 .reset').on('click',function(e){
+                    $( this ).parent()
+                            .find('.box')
+                            .attr('style','')
+                            .removeClass('blue');
+                });
+                $( '.ejercicio-10 .start').on('click',function(e){
+                    $( this ).parent().find('.box').animate({
+                            'opacity':'1',
+                            'width':'40px',
+                            'height':'40px',
+                            'margin-right':'200px'
+                        }, 1000 , null , function(){
+                            //la transicion a color desde animate no funciona
+                            $( this ).addClass('blue');
+                        }).animate({
+                            'top':'-100px',
+                            'opacity':'0'
+                        }, 1000 );
+                });
+                $( '.ejercicio-10 .stop').on('click',function(e){
+                    $( this ).parent()
+                            .find('.box')
+                            .stop();
+                });
+                $( '.ejercicio-9').on('mouseup',function(e){
+                    
+                    $( this ).find('.content').slideToggle();
+                });
+                //.bind está obsoleto, se implementa .on
+                $( '.ejercicio-9').on('mouseover',function(e){
+                    $( this ).addClass('blue');
+                    $( this ).removeClass('white');
+                    $( this ).removeClass('red');
+                });
+                $( '.ejercicio-9').on('mouseout',function(e){
+                    $( this ).removeClass('blue');
+                    $( this ).addClass('red');
+                });
                 //.bind está obsoleto, se implementa .on
                 //$( '.ejercicio-7 button' ).bind('click',function(e){
                 $( '.ejercicio-8').on('mouseenter',function(e){
@@ -168,15 +325,29 @@
                 $( '.esconder-self').on('click',function(e){
                     $('a[target="_self"]').toggle();
                 });
+                
+                $( '.ejercicio-6 button.stop').on('click',function(e){
+                    $( this ).parent().find('input[type="text"]').stop();
+                    
+                });
+                $( '.ejercicio-6 button.stop-all').on('click',function(e){
+                    $( this ).parent().find('input[type="text"]').stop(true);
+                });
+                $( '.ejercicio-6 button.stop-finish').on('click',function(e){
+                    $( this ).parent().find('input[type="text"]').stop(false,true);
+                });
                 //mover caja
-                $( '.mover-cuadro-2 .btn' ).on('click',function(e){
-                    var input = $('.mover-cuadro-2 input[type="text"]');
-                            
-                    if( $(input).val() === 'HELLO' ){
-                         $(input).animate({'left':'100px','font-size':'200%'});
+                $( '.ejercicio-5 button.start' ).on('click',function(e){
+                    
+                    var input = $( this ).parent().find('input[type="text"]');
+                    
+                    if( $(input).val().toUpperCase() === 'HELLO' ){
+                        $( input )
+                                .animate({'left':'100px'},2000)
+                                .animate({'font-size':'200%'},1000);
                     }
                     else{
-                        $(input).animate({'left':'100px'});
+                        $(input).animate({'left':'100px'},2000);
                     }
                 });
                 //mover caja

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Examen DWEC - Jaume Llopis</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" />
+
+        <style type="text/css">
+
+            #tablero{
+                width: 440px;
+                box-sizing: border-box;
+                padding: 20px;
+                border-radius: 4px;
+                box-shadow: 0 0 8px rgba(0,0,0,0.25);
+            }
+            .container{
+                margin: 50px auto;
+            }
+            #tablero > .color{
+                display: inline-block;
+                width: 200px;
+                height: 200px;
+                opacity: 0.35;
+                float: left;
+                text-align: center;
+                color: #fafafa;
+                font-size: 24px;
+                font-weight: bold;
+                padding: 20px;
+                box-sizing: border-box;
+                cursor: pointer;
+                transition: ease-in 250ms;
+            }
+            #tablero > .color:hover{
+                opacity: 0.75;
+            }
+            #tablero > .color.active{
+                opacity: 1;
+            }
+            #tablero:after{
+                content: '';
+                clear:both;
+                display: block;
+            }
+
+        </style>
+    </head>
+
+    <body contextmenu="false">
+
+        <div class="container">
+            <h4 id="log" class="">Simon Dice!</h4>
+            <ul id="tablero">
+                <li id="red" class="color red"></li>
+                <li id="green" class="color green"></li>
+                <li id="blue" class="color blue"></li>
+                <li id="yellow" class="color yellow"></li>
+            </ul>
+            <button class="btn btn-large green" id="reset">Iniciar</button>
+            <div id="resultado">
+
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+
+
+            function mensaje( msg , tipo ){
+                var M = document.getElementById('log');
+                M.className = tipo || 'info';
+                M.innerHTML = msg;
+            }
+            
+            /**
+             * 
+             */
+            function Simon() {
+
+                var _simon = {
+                    'this':this,
+                    'max': 25,
+                    'init': 3,
+                    'round': 0,
+                    'timer': 1000,
+                    'idx': 0,
+                    'estado': Simon.Estado.Iniciando,
+                    'secret': [/*rellenar aqui secuencia maquina*/],
+                    'player': [/*rellenar aqui secuencia usuario*/]
+                };
+                /**
+                 * @returns {String}
+                 */
+                this.nuevoColor = function(){
+                    
+                    var colores = Object.values(Simon.Colores);
+                    
+                    var C = parseInt( Math.floor( Math.random( ) * colores.length ) );
+                    
+                    console.log( C );
+                    
+                    return colores[ C ];
+                };
+                /**
+                 * @param {Number} nivel
+                 * @returns {Simon}
+                 */
+                this.subirNivel = function () {
+
+                    if (_simon.init + _simon.round < _simon.max) {
+
+                        _simon.round++;
+                        
+                        _simon.player = [];
+                        
+                        _simon.idx = 0;
+
+                        _simon.secret.push( this.nuevoColor());
+                        
+                        console.log( _simon.secret );
+                    }
+                    else{
+                        _simon.estado = Simon.Estado.Ganado;
+                        mensaje('Has Ganado!!');
+                    }
+
+                    return this.visualizar();
+                };
+                /**
+                 * Tiempo en función del nivel
+                 * @returns {Number}
+                 */
+                this.tiempo = function(){
+                    
+                    return _simon.timer - (25 * _simon.round);
+                };
+                /**
+                 * @returns {Simon}
+                 */
+                this.iluminar = function( color , id ){
+                    
+                    Object.values( Simon.Colores ).forEach( function( clr ){
+                        var c = document.getElementById( clr );
+                        c.classList.remove('active');
+                        c.innerHTML = '';
+                    });
+                    
+                    if( typeof color === 'string' ){
+                        var c = document.getElementById( color );
+                        c.classList.add('active');
+                        c.innerHTML = id || '';
+                    }
+                    
+                    return this;
+                };
+                /**
+                 *
+                 * @returns {Boolean}
+                 */
+                this.visualizar = function(){
+                  
+                  if( _simon.estado === Simon.Estado.Patron ){
+                    if( _simon.idx < _simon.secret.length ){
+                        this.iluminar( _simon.secret[ _simon.idx ] , _simon.idx + 1 );
+                        _simon.idx++;
+                        window.setTimeout( function(){
+                            
+                            _simon.this.visualizar();
+                            
+                        },this.tiempo());
+                    }
+                    else{
+                        _simon.estado = Simon.Estado.Jugador;
+                        _simon.idx = 0;
+                        console.log('Te toca');
+                        mensaje('Te toca');
+                        //reiniciar el marcador de colores
+                        return this.iluminar();
+
+                    }
+                  }
+                  else{
+                      //iniciar patrón
+                      _simon.estado = Simon.Estado.Patron;
+                      _simon.idx = 0;
+                      mensaje('Recuerda los colores');
+                      return this.visualizar();
+                  }
+                  
+                  return this;
+                };
+
+                this.turno = function (color) {
+
+                    if( _simon.estado === Simon.Estado.Jugador ){
+                        
+                        //_simon.player.push(color);
+
+                        //var last = _simon.player.length - 1;
+
+                        if (_simon.secret[ _simon.idx ] === color ) {
+                            
+                            _simon.player.push( color );
+                            
+                            _simon.idx++;
+
+                            //avanza
+                            if( _simon.idx < _simon.secret.length ){
+                                //continuar
+                                //console.log('Correcto!!');
+                                //mensaje('Correcto!!');
+                                console.log( color );
+                            }
+                            else{
+                                //nueva ronda
+                                mensaje('Turno '  + (_simon.round+1) + ' correcto!!');
+                                _simon.estado = Simon.Estado.Espera;
+                                window.setTimeout( function(){
+                                   
+                                     return _simon.this.subirNivel( );
+
+                                    
+                                }, 2000 );
+                            }
+                        }
+                        else {
+                            //pierde
+                            console.log('Error!!');
+                            mensaje('Has Perdido!! Inicia de nuevo!');
+                            _simon.estado = Simon.Estado.Perdido;
+                            //return this.iniciarNivel( 0 );
+                            return this.mostrarTurno();
+                        }
+                    }
+
+                    return this;
+                };
+                /**
+                 * 
+                 * @returns {Simon}
+                 */
+                this.mostrarTurno = function(){
+                    
+                    document.getElementById('resultado').innerHTML = JSON.stringify( _simon.player );
+                    
+                    return this;
+                };
+                /**
+                 * @returns {Boolean}
+                 */
+                this.reiniciar = function () {
+
+                    _simon.round = 0;
+                    _simon.secret = [];
+                    _simon.player = [];
+                                        
+                    for( var i = 0 ; i < _simon.init ; i++ ){
+    
+                        _simon.secret.push( this.nuevoColor() );
+                    }
+                    console.log(_simon.secret);
+                    console.log('Juego iniciado');
+
+                    return this.visualizar();
+                };
+            }
+            
+            Simon.Estado = {
+                'Iniciando': 'init',
+                'Patron': 'pattern',
+                'Jugador': 'player',
+                'Espera': 'wait',
+                'Ganado': 'win',
+                'Perdido': 'lost'
+            };
+
+            Simon.Colores = {
+                'Rojo': 'red',
+                'Verde': 'green',
+                'Azul': 'blue',
+                'Amarillo': 'yellow'
+            };
+
+            Simon.Juego = new Simon();
+
+
+            document.addEventListener('DOMContentLoaded', (e) => {
+
+                document.getElementById('reset').addEventListener('click', e => {
+
+                    e.preventDefault();
+
+                    Simon.Juego.reiniciar();
+
+                    return true;
+
+                });
+
+                document.getElementById('red').addEventListener('click', (e) => {
+
+                    e.preventDefault();
+
+                    Simon.Juego.turno(Simon.Colores.Rojo);
+
+                    return true;
+
+                });
+
+                document.getElementById('green').addEventListener('click', (e) => {
+
+                    e.preventDefault();
+
+                    Simon.Juego.turno(Simon.Colores.Verde);
+
+                    return true;
+
+                });
+
+                document.getElementById('blue').addEventListener('click', (e) => {
+
+                    e.preventDefault();
+
+                    Simon.Juego.turno(Simon.Colores.Azul);
+
+                    return true;
+
+                });
+
+                document.getElementById('yellow').addEventListener('click', (e) => {
+
+                    e.preventDefault();
+
+                    Simon.Juego.turno(Simon.Colores.Amarillo);
+
+                    return true;
+
+                });
+
+            });
+
+
+
+
+
+        </script>
+
+    </body>
+
+</html>
+
+
+
+
+
+
+
+

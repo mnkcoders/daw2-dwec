@@ -4,9 +4,11 @@
         <title>Ejercicios DOM</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" rel="stylesheet" type="text/css" />
+        
+        <script type="text/javascript" src="floristeria.js"></script>
         
         <style type="text/css">
             
@@ -27,6 +29,13 @@
                 box-shadow: 0 0 8px rgba(0,0,0,0.25);
             }
             
+            table tr td img{
+                height: 100px;
+                width: auto;
+            }
+            
+            .spacer{ margin: 80px auto;}
+            
         </style>
     </head>
     <body>
@@ -44,10 +53,51 @@
             <h2>Ejercicio 2</h2>
             
         </div>
-        
+        <div class="container ejercicio-3">
+            <h2>Ejercicio 3</h2>
+            <textarea id="txt_parrafo" placeholder="Escribe algun texto"></textarea>
+            <button class="btn btn-small" id="btn_agregar_parrafo">Agregar P&aacute;rafo</button>
+        </div>        
+        <div class="container ejercicio-4" id="ejercicio-4">
+            
+            <h2>Ejercicio 4</h2>
+
+            
+        </div>
+        <div class="spacer"></div>
         <script type="text/javascript">
 
         
+            ////////////////////////////////////////////////////////////////////////////////////////
+            ////////        EJERCICIO 4
+            ////////////////////////////////////////////////////////////////////////////////////////
+
+            var FLORISTERIA = new Floristeria();
+
+
+            ////////////////////////////////////////////////////////////////////////////////////////
+            ////////        EJERCICIO 3
+            ////////////////////////////////////////////////////////////////////////////////////////
+            document.getElementById('btn_agregar_parrafo').addEventListener('click',function(e){
+
+                e.preventDefault();
+
+                var input = document.getElementById('txt_parrafo');
+                var texto = input.value.toString();
+
+                if( texto.length ){
+                    var p = document.createElement('p');
+                    p.innerHTML = texto;
+                    input.parentNode.appendChild( p );
+                    input.value = '';
+                }
+                else{
+                    alert('Escribe algun texto cony!');
+                }
+
+                return true;
+            });
+
             ////////////////////////////////////////////////////////////////////////////////////////
             ////////        EJERCICIO 2
             ////////////////////////////////////////////////////////////////////////////////////////
@@ -221,6 +271,7 @@
                 if( input.length ){
                     var item = document.createElement('li');
                     item.innerHTML = input;
+                    document.getElementById('txt_entrada').value = '';
                     document.getElementById('lista').appendChild( item );
                 }
                 return true;
@@ -279,6 +330,27 @@ de 40 columnas y 5 filas.
 8. Crear un botón (submit). Preguntará al usuario el nombre y el valor (atributos name y value).
     
     
+
+EJERCICIO 3
+Crea una página web que tenga un TextArea y un botón "Crear párrafo". Cuando el usuario haga clic
+sobre el botón se creará un nuevo párrafo que contendrá el texto del TextArea. En caso de que el
+TextArea esté vacío, mostrará un mensaje de error y no creará ningún párrafo.
+
+
+EJERCICIO 4
+Queremos crear una página en la que generar una fila de una tabla con información de plantas de
+nuestra floristería haciendo uso del DOM del documento.
+Para ello, realiza un programa en Javascript en un archivo aparte que añadirás en el head del html y
+que se cargará tras cargar el documento. Realizará lo siguiente:
+1. Añade un botón al principio de la página con el texto “Generar planta”.
+1. Solicitará al usuario la información de la planta (nombre, ubicación, ejemplares y flor) con 4
+prompt.
+2. Una vez introducidos los datos se creará un nueva fila en la tabla.
+Junto al botón anterior añade otro con el texto “Borrar fila”. Este botón borrará la última fila introducida.
+3. Al final de la página añade un botón más con que permita mostrar el número de filas de la tabla.
+No utilices un contador al generar las imágenes: haz un programa que cuente el número de nodos de
+cada fila que haya.
+
     -->
 
 

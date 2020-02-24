@@ -1,0 +1,36 @@
+.viatge.panel.hide{
+    display: none;
+}
+.viatge.panel{
+    
+    transition: ease-out 250ms;
+    
+}
+.viatge.panel .btn-block{
+    
+    transition: ease-out 250ms;
+    opacity: 0;
+    pointer-events: none;
+}
+.viatge.panel:hover{
+    
+    background-color: rgba(255,255,255,0.25);
+    
+}
+.viatge.panel:hover .btn-block{
+    opacity: 1;
+    pointer-events: initial;
+}
+.viatge.panel.en-promocion .preu{
+    text-decoration: line-through;
+}
+.viatge.panel .precio-promo{
+    background-color: #53be53;
+    border-radius: 2px;
+    display: inline-block;
+    width: auto;
+    min-width: 180px;
+    padding: 4px 8px;
+    text-align: center;
+    color: #fff;
+}

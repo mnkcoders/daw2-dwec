@@ -3,7 +3,7 @@
 
 <head>
     <title> </title>
-    <meta charset="UTF-8"></meta>
+    <meta charset="UTF-8" />
     <link rel="stylesheet" href="css/estil.css" type="text/css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/slate/bootstrap.css" type="text/css" />
@@ -135,13 +135,16 @@
                         <div class="panel-body">
                             <ul class="sortable reserves">
                                 <li class="well well-sm">
-                                    <p><b>Londres:</b> reserva en nom de Maria López
-                                        <br>Nombre de persones: 2
-                                        <br>Preu Total: 2.000€ </p>
+                                    <h4>Londres</h4>
+                                    <p>reserva en nom de Maria López</p>
+                                    <p>Nombre de persones: 2</p>
+                                    <p>Preu Total: 2.000€ </p>
                                 </li>
-                                <li class="well well-sm"><b>Amsterdam:</b> reserva en nom de Dani Rovira
-                                    <br>Nombre de persones: 3
-                                    <br>Preu Total: 3.600€ </p>
+                                <li class="well well-sm">
+                                    <h4>Amsterdam</h4>
+                                    <p>reserva en nom de Dani Rovira</p>
+                                    <p>Nombre de persones: 3</p>
+                                    <p>Preu Total: 3.600€ </p>
                                 </li>
                             </ul>
                         </div>
@@ -155,18 +158,19 @@
                         <div class="panel-body">
                             <ul class="sortable reservesAcceptades">
                                 <li class="well well-sm">
-                                    <b>Madrid:</b> reserva en nom de Marc
-                                    <br>Nombre de persones: 2
-                                    <br>Preu Total: 1.200€ </p>
+                                    <h4>Madrid</h4>
+                                    <p>reserva en nom de Marc</p>
+                                    <p>Nombre de persones: 2</p>
+                                    <p>Preu Total: 1.200€ </p>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div id="papelera" class="well well-lg text-center" style="font-size:3em"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Papelera</div>
-
-
-
+                
+                <div id="papelera" class="well well-lg text-center" style="font-size:3em">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Papelera
+                </div>
             </div>
 
             <!-- Modal -->
@@ -185,6 +189,8 @@
                                 <input type="text" class="form-control" id="nomReserva" placeholder="Nom">
                                 <label for="numPersones">Número de persones:</label>
                                 <input type="text" class="form-control" id="numPersones" value="2">
+                                <label for="dataReserva">Data:</label>
+                                <input type="text" class="datepicker form-control" placeholder="Data des teu viatge" id="dataReserva" />
                             </div>
                         </div>
                         <div class="modal-footer">

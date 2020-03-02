@@ -1,0 +1,50 @@
+table.tablero{
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    margin: 40px auto 120px;
+    max-width: 960px;
+    width: 80%;
+    border-collapse: collapse;
+}
+table.tablero tr{
+    transition: ease-out 250ms;
+}
+table.tablero tr:hover{
+    background-color: rgba(255,255,255,0.5);
+}
+table.tablero td > span{
+    display: block;
+    width: 96%;
+    padding-bottom: 96%;
+    height: 0;
+    margin: 2%;
+    border-radius: 2px;
+    cursor: pointer;
+    
+    transition: ease-in 250ms;
+}
+table.tablero td > span:hover{
+    background-color: #ffffff;
+}
+table.tablero tr:nth-child(even) td:nth-child(even){ background-color: bisque;  }
+table.tablero tr:nth-child(even) td:nth-child(odd){ background-color: darkgoldenrod;  }
+table.tablero tr:nth-child(odd) td:nth-child(even){ background-color: darkgoldenrod;  }
+table.tablero tr:nth-child(odd) td:nth-child(odd){ background-color: bisque;  }
+
+.icon{ position: relative; overflow: hidden; }
+.icon:before{
+    font-family: 'Font Awesome 5 Pro';
+    text-align: center;
+    display: block;
+    font-size: 48px;
+    padding: 20% 0;
+    width: 100%;
+    position: absolute;
+    top: 0; left: 0;
+}
+.icon:before{ content: '\f43c'; }
+.icon.torre:before{ content: '\f447'; }
+.icon.alfil:before{ content: '\f447'; }
+.icon.caballo:before{ content: '\f441'; }
+.icon.rey:before{ content: '\f43f'; }
+.icon.reina:before{ content: '\f445'; }
+.icon.peon:before{ content: '\f443'; }

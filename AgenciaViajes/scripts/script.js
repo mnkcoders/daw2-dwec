@@ -26,9 +26,9 @@ function Booking(destination, price, discount) {
     this.salePrice = function () {
         return this.price - (this.price * (this.discount / 100));
     };
-    
-    this.getDate = function(){
-            
+
+    this.getDate = function () {
+
         return [
             this.date.getUTCDate(),
             this.date.getUTCMonth(),
@@ -70,7 +70,34 @@ function Booking(destination, price, discount) {
  * @type Booking
  */
 Booking.Form = null;
-Booking.Clear = () => Booking.Form = null;
+/**
+ * Fer net
+ */
+Booking.Clear = () => {
+    jQuery('#nomReserva').val('');
+    jQuery('#numPersones').val('');
+    jQuery('#dataReserva').val('');
+    Booking.Form = null;
+};
+/**
+ * @param {Array|String} paneles
+ */
+function actualizarPaneles( paneles ) {
+    if(!Array.isArray(paneles)){
+        paneles = [ paneles ];
+    }
+    for( var i = 0 ; i < paneles.length ; i++ ){
+        var cls = '.' + paneles[ i ];
+        if (jQuery( cls ).children().length > 0) {
+            if (jQuery( cls ).hasClass('empty')) {
+                jQuery( cls ).removeClass('empty');
+            }
+        }
+        else if (!jQuery( cls ).hasClass('empty')) {
+            jQuery( cls ).addClass('empty');
+        }
+    }
+}
 
 jQuery(document).ready(e => {
 
@@ -78,8 +105,24 @@ jQuery(document).ready(e => {
         dateFormat: 'yy-mm-dd',
         minDate: '+0d'
     });
+    //drag-drop sin perder la posición inicial
+    jQuery(".reservesAcceptades > li,.reserves > li").draggable({
+        revert: function (e, ui) {
+            $(this).data("uiDraggable").originalPosition = {top: 0, left: 0};
+            return !e;
+        }
+    });
+    jQuery(".reservesAcceptades, .reserves").droppable({
+        'drop': function (e, ui) {
+            var drag = ui.draggable;
+            jQuery(this).prepend(drag);
+            jQuery(drag).removeAttr('style');
 
-    jQuery(".reservesAcceptades > li,.reserves > li").draggable();
+            actualizarPaneles(['reservesAcceptades','reserves']);
+
+            return true;
+        }
+    });
 
     jQuery('#papelera').droppable({
         'drop': function (e, ui) {
@@ -92,7 +135,7 @@ jQuery(document).ready(e => {
         'out': function (e, ui) {
         }
     });
-
+    //ordenar
     jQuery('.sortable').sortable().disableSelection();
 
     //iicializar desc
@@ -133,20 +176,20 @@ jQuery(document).ready(e => {
         var name = jQuery('#nomReserva').val().toString();
         var date = jQuery('.datepicker').val().toString();
         if (Booking.Form !== null) {
-            if( name.length > 0 ){
+            if (name.length > 0) {
                 Booking.Form.slots = slots;
                 Booking.Form.name = name;
                 Booking.Form.date = new Date(date);
-                
-            jQuery('ul.reserves').append(Booking.Form.crearItem([
-                'well',
-                'well-sm',
-                'ui-draggable',
-                'ui-draggable-handle',
-                'ui-sortable-handle']));
-            Booking.Clear();
-            }
-            else{
+
+                jQuery('ul.reserves').prepend(Booking.Form.crearItem([
+                    'well',
+                    'well-sm',
+                    'ui-draggable',
+                    'ui-draggable-handle',
+                    'ui-sortable-handle']));
+
+                Booking.Clear();
+            } else {
                 window.alert('Escribe el nombre de la reserva');
                 return false;
             }
@@ -158,7 +201,7 @@ jQuery(document).ready(e => {
         e.preventDefault();
 
         var bloc = jQuery(this).parent().parent();
-        
+
         //console.log(jQuery( bloc ).attr("data-preu"));
         Booking.Form = new Booking(
                 jQuery(bloc).find('.panel-heading').html().toString(),

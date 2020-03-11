@@ -1,0 +1,231 @@
+<html>
+    <head>
+        <title>Exercicis AJAX</title>
+        <style type="text/css">
+            
+            
+        </style>
+    </head>
+    <body>
+        
+        <div class="meteo">
+            <label for="location">Pick your city!</label>
+            <select id="location"><!-- load cities here --></select>
+            <hr/>
+            <div id="output"><!-- response here --></div>
+            
+        </div>
+        
+        
+        <script type="text/javascript">
+            /**
+             * @returns {Meteo}
+             */
+            function Meteo(){
+                
+                var _meteo = {
+                    'key':'906a992f434bb3aca14ffb6ff41010fa',
+                    'api':'http:​//api.openweathermap.org/data/2.5/weather'
+                };
+                /**
+                 * @param {String|URL} url
+                 * @param {function} callback
+                 * @returns {Meteo}
+                 */
+                this.ajax = function( url , callback ){
+                                        
+                    var xhttp = new XMLHttpRequest();
+                    
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            callback( this.responseText );
+                        }
+                        else{
+                            console.log( this.responseText );
+                        }
+                    };
+                    
+                    xhttp.open('POST', url );
+                    
+                    xhttp.send();
+                    
+                    return this;
+                };
+                /** 
+                 * @param {String} city
+                 * @returns {Meteo}
+                 */
+                this.run = function( city ){
+                    var _self = this;
+                    return this.ajax(
+                            this.queryURL( city ),
+                            function(){
+                                _self.capture( this.responseText );
+                            });
+                };
+                /**
+                 * @param {String|JSON|HTML} response
+                 * @returns {Meteo}
+                 */
+                this.capture = function( response ){
+                    
+                    document.getElementById('output').innerHTML = response;
+                    
+                    return this;
+                };
+                /**
+                 * @returns {String|URL}
+                 */
+                this.queryURL = function( city ){
+                    
+                    return _meteo.api + '?q=' + city + '&mode=html&APPID=' + _meteo.key;
+                };
+                /**
+                 * @returns {JSON}
+                 */
+                this.template = function(){
+                    
+                    return {
+                        'temperature':0,
+                        'pressure':0,
+                        'humidity':0,
+                        'min':0,
+                        'max':0,
+                        'visibility':0,
+                        'wind':{
+                            'speed':0,
+                            'deg':0
+                        },
+                        'clouds':0,
+                        'sunrise':0,
+                        'sunset':0,
+                        'name':''
+                    };
+                };
+                /**
+                 * @param {String|Object} data
+                 * @returns {JSON|Object}
+                 */
+                this.response = function( data ){
+                    
+                    var output = this.template();
+                    
+                    if( typeof data === 'string' ){
+                        data = JSON.parse( data );
+                    }
+                    
+                    if( typeof data === 'object' ){
+                        
+                        if(data.hasOwnProperty('name')){
+                            output.name = data.name;
+                        }
+                        if(data.hasOwnProperty('wind')){
+                            output.wind.speed = data.wind.speed;
+                            output.wind.deg = data.wind.deg;
+                        }
+                        if(data.hasOwnProperty('weather')){
+
+                        }
+                        if(data.hasOwnProperty('sys')){
+                            output.sunrise = data.sys.sunrise;
+                            output.sunset = data.sys.sunset;
+                        }
+                        if(data.hasOwnProperty('clouds')){
+                            output.clouds = data.clouds.all;
+                        }
+                        if(data.hasOwnProperty('main')){
+                            output.temperature = data.main.temp;
+                            output.pressure = data.main.pressure;
+                            output.humidity = data.main.humidity;
+                            output.min = data.main.temp_min;
+                            output.max = data.main.temp_max;
+                        }
+                    }
+                };
+                /**
+                 * @returns {Meteo}
+                 */
+                this.fillCities = function(){
+                    
+                    var cities = [
+                        'London',
+                        'Madrid',
+                        'Roma'
+                    ];
+                    
+                    var list = document.getElementById('location');
+                            
+                    for( var i = 0; i < cities.length ; i++ ){
+                        var option = document.createElement('option');
+                        option.value = cities[i];
+                        option.innerHTML = cities[i];
+                        list.appendChild( option );
+                    }
+                    return this;
+                };
+                
+                /**
+                 * @returns {Meteo}
+                 */
+                this.initialize = function(){
+                    
+                    var _self = this;
+                    
+                    document.addEventListener('DOMContentLoaded',function(e){
+                        
+                        _self.fillCities();
+                        
+                        document.getElementById('location').addEventListener('change',function(){
+                            console.log('changed');
+                            _self.run( this.value );
+                            
+                        });
+                        
+                        
+                    });
+                    
+                    return this;
+                };
+                
+                return this.initialize();
+            }
+            
+            
+            var METEO = new Meteo();
+            
+        </script>
+    </body>
+</html>
+
+<!-- 
+
+
+Introducció a AJAX. Prediccions
+metereològiques
+En aquesta activitat utilitzarem AJAX ​per fer peticions a la API OpenWeatherMap ​ ​que ens
+donarà informació sobre la predicció metereològica d’una ciutat.
+Podem trobar tota la informació sobre aquesta API a http://openweathermap.org/api.
+Per fer ús d’aquesta API, necessitaràs disposar d’una API KEY​. Pots registrar-te a la web per
+obtenir-me una o bé fer ús de la següent clau.
+API KEY = "906a992f434bb3aca14ffb6ff41010fa";
+
+Activitat
+Exercici 1: Objecte XMLHttpRequest
+Fes una interfície web que et permeti escollir entre diverses ciutats europees i un cop
+seleccionada la ciutat, et mostri la predicció metereològica d’aquella ciutat.
+Utilitza el sistema que vulguis per seleccionar les ciutats (un desplegable, varis botons, etc).
+La ​API OpenWeatherMap ens permet sol·licitar la informació meteorològica en format html ​i
+per tant la visualitació en el web serà molt més sencilla.
+La petició AJAX ha d’anar dirigida a la següent url:
+http:​//api.openweathermap.org/data/2.5/weather?q="+*ciutat*+"&mode=html&APP
+ID=" + *api_key*
+
+Un cop obtinguda la predicció per AJAX, cal mostrar-la a la interfície sense recarregar la pàgina.
+Exercici 2: Mètodes AJAX de jQuery
+Fes el mateix exercici anterior, però ara utilitzant els mètodes que ens proporciona jQuery ​per
+fer peticions AJAX.
+
+
+->
+
+

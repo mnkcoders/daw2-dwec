@@ -1,0 +1,26 @@
+.row{
+  margin-bottom: 20px
+}
+
+#prediccio5dies .well,
+#prediccio16dies .well
+{
+  height: 150px;
+}
+
+ul
+{
+  width: 100%;
+  display: flex;
+}
+
+ul li
+{
+  flex: 1 1 12.5%;
+}
+
+#prediccio5dies p,
+#prediccio16dies p
+{
+  font-size: 0.8em;
+}

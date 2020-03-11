@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Exercici AJAX amb jQuery </title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cyborg/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="css/estil.css" type="text/css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="scripts/script.js"></script>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h2>Servei meteorològic</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cities buttons -->
+            <div class="row ">
+                <div class="col-xs-12">
+                    <div class="btn-group btn-group-justified" role="group" >
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default">Barcelona</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default">Mahón</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default">Ciutadella</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default">Madrid</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default">London</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default">Paris</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default">Roma</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Cities buttons -->
+
+
+            <div class="row">
+                <div class="col-xs-2">
+                    <div class="well well-sm" id="predicciohtml" >
+                    </div>
+                </div>
+                <div class="col-xs-10">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#5dies" aria-controls="5dies" data-toggle="tab">Predicció 5 dies</a>
+                        </li>
+                        <li>
+                            <a href="#16dies" aria-controls="16dies" data-toggle="tab">Predicció 16 dies</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div id="5dies" role="tabpanel" class="tab-pane active fade in" >
+                            <div id="prediccio5dies">
+                                <!-- Mostrar aquí les dades sobre la predicció a 5 dies -->
+                                <!-- Exemple de visualització -->
+                                <h6>15/3/2016</h6>
+                                <ul class="list-unstyled list-inline">
+                                    <!--li>
+                                        <div class="well well-sm text-center ">
+                                            <b>13:00</b><br>
+                                            <img src="http://openweathermap.org/img/w/10d.png" alt="">
+                                            <p>Pluja suau</p><p><span class="badge">12.8ºC</span>
+                                            </p>
+                                        </div>
+                                    </li-->
+                                </ul>
+                                <!-- Fi exemple de visualització -->
+                            </div>
+                        </div>
+
+                        <div id="16dies" role="tabpanel fade" class="tab-pane" >
+                            <div>
+                                <br>
+                                <ul id="prediccio16dies" class="list-unstyled list-inline">
+                                    <!-- Mostrar aquí les dades sobre la predicció a 16 dies -->
+                                    <!-- Exemple de visualització -->
+                                    <li>
+                                        <div class="well well-sm text-center ">
+                                            <p><b>15/3/2016</b></p>
+                                            <img src="http://openweathermap.org/img/w/10d.png" alt="">
+                                            <p>Pluja</p>
+                                            <span class="label label-warning">12.28ºC</span> <span class="label label-default">1.11ºC</span>
+                                        </div>
+                                    </li>
+                                    <!-- Fi exemple de visualització -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Tab panes -->
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <footer class="footer">
+                        <p>© 2017.</p>
+                    </footer>
+                </div>
+            </div>
+            <!-- Footer -->
+        </div>
+
+
+
+    </body>
+</html>

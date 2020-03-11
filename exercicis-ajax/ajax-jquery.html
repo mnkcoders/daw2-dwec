@@ -17,7 +17,7 @@
             <div id="output"><!-- response here --></div>
             
         </div>
-        
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         
         <script type="text/javascript">
             /**
@@ -27,54 +27,36 @@
                 
                 var _meteo = {
                     'key':'906a992f434bb3aca14ffb6ff41010fa',
-                    'api':'https://api.openweathermap.org/data/2.5/weather'
-                };
-                /**
-                 * @param {String|URL} url
-                 * @param {function} callback
-                 * @returns {Meteo}
-                 */
-                this.ajax = function( url , callback ){
-                                        
-                    var xhttp = new XMLHttpRequest();
-                    
-                    xhttp.onreadystatechange = function() {
-                        //console.log( 'Status: ' + this.status );
-                        switch( true ){
-                            case (this.readyState === 4 && this.status === 200):
-                                console.log( 'Response from ' + url );
-                                //console.log(this.response);
-                                callback( this.response );
-                                break;
-                            default:
-                                //console.log( 'Status: ' + this.status );
-                                //console.log('Error ' + this.status + ' - state: ' + this.readyState );
-                                break;
-                        }
-                    };
-                    
-                    xhttp.open('GET', url );
-
-                    xhttp.send();
-                    
-                    return this;
+                    'api':'https://api.openweathermap.org/data/2.5/weather',
+                    'city_source': 'https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json'
                 };
                 /** 
                  * @param {String} city
                  * @returns {Meteo}
                  */
                 this.run = function( city ){
+                    
                     var _self = this;
-                    return this.ajax(
-                            this.queryURL( city ),
-                            _self.capture );
+
+                    jQuery.ajax( this.queryURL(city),{
+                        'dataType':'html'
+                    }).fail(function( error ){
+                        console.log('Error: ' + JSON.stringify( error) );
+                    }).done(function( data ){
+                        console.log('Response: ' + typeof data );
+                        _self.capture( data );
+                    }).always( function(){
+                        console.log('Call completed');
+                    });
+                            
+                    return this;
                 };
                 /**
                  * @param {String|JSON|HTML} response
                  * @returns {Meteo}
                  */
                 this.capture = function( response ){
-                    
+
                     if( response.length ){
                         document.getElementById('output').innerHTML = response;
                     }
@@ -171,17 +153,21 @@
                 };
                 this.importCities = function(){
                     
-                    var url = 'https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json';
                     
                     var _self = this;
                     
-                    this.ajax( url , function( response ){
-                        
-                        if( response.length ){
-                            var parser = JSON.parse( response );
-                            //console.log( parser );
+                    jQuery.ajax( _meteo.city_source,{
+                        'dataType':'json',
+                        'beforeSend':function( xhr){
+                            
+                        }
+                    }).fail(function( error ){
+                        console.log('Error: ' + error);
+                    }).done(function( data ){
+                        console.log('Response Type: ' + typeof data );
+                        if( typeof data === 'object' && Array.isArray(data)){
                             var input = [];
-                            parser.forEach( function( city ){
+                            data.forEach( function( city ){
                                 if( city.hasOwnProperty('Name') ){
                                     input.push(city.Name);
                                 }
@@ -189,8 +175,11 @@
                             //console.log( input );
                             _self.fillCities( input );
                         }
-                        
+                    }).always( function(){
+                        console.log('Call completed');
                     });
+
+                    return this;
                 };
                 
                 /**

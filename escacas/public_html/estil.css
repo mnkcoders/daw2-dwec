@@ -1,7 +1,7 @@
 table.tablero{
     box-shadow: 0 0 8px rgba(0,0,0,0.5);
     margin: 40px auto 120px;
-    max-width: 960px;
+    max-width: 640px;
     width: 80%;
     border-collapse: collapse;
 }
@@ -13,12 +13,17 @@ table.tablero tr:hover{
 }
 table.tablero td > span{
     display: block;
-    width: 96%;
+    /*width: 96%;
     padding-bottom: 96%;
     height: 0;
     margin: 2%;
-    border-radius: 2px;
+    border-radius: 2px;*/
     cursor: pointer;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 32px;
+    margin: auto;
     
     transition: ease-in 250ms;
 }
@@ -30,6 +35,24 @@ table.tablero tr:nth-child(even) td:nth-child(odd){ background-color: darkgolden
 table.tablero tr:nth-child(odd) td:nth-child(even){ background-color: darkgoldenrod;  }
 table.tablero tr:nth-child(odd) td:nth-child(odd){ background-color: bisque;  }
 
+.icon{
+    text-shadow: 0 0 4px rgba(0,0,0,1);
+}
+.icon.white{ color: #ffffff; }
+.icon[data-id="torre-negra"]{ color: #000000; }
+.icon[data-id="caballo-negro"]{ color: #000000; }
+.icon[data-id="alfil-negro"]{ color: #000000; }
+.icon[data-id="peon-negro"]{ color: #000000; }
+.icon[data-id="rey-negro"]{ color: #000000; }
+.icon[data-id="reina-negra"]{ color: #000000; }
+.icon[data-id="torre-blanca"]{ color: #ffffff; }
+.icon[data-id="caballo-blanco"]{ color: #ffffff; }
+.icon[data-id="alfil-blanco"]{ color: #ffffff; }
+.icon[data-id="peon-blanco"]{ color: #ffffff; }
+.icon[data-id="rey-blanco"]{ color: #ffffff; }
+.icon[data-id="reina-blanca"]{ color: #ffffff; }
+
+/*
 .icon{ position: relative; overflow: hidden; }
 .icon:before{
     font-family: 'Font Awesome 5 Pro';
@@ -41,10 +64,16 @@ table.tablero tr:nth-child(odd) td:nth-child(odd){ background-color: bisque;  }
     position: absolute;
     top: 0; left: 0;
 }
-.icon:before{ content: '\f43c'; }
+.icon:before{ content: ''; }
 .icon.torre:before{ content: '\f447'; }
 .icon.alfil:before{ content: '\f447'; }
 .icon.caballo:before{ content: '\f441'; }
 .icon.rey:before{ content: '\f43f'; }
 .icon.reina:before{ content: '\f445'; }
 .icon.peon:before{ content: '\f443'; }
+
+.icon.rey:before{ content: '\0000a0'; }
+
+*/
+
+.notifier{ text-align: center; }
